@@ -86,7 +86,7 @@ Required Utilities (macOS)
 - dylibbundler
 - GNU make
 
-1.5 MACOS HOMEBREW
+1.1 MACOS HOMEBREW
 
 After you have installed Homebrew (https://brew.sh), simply do:
 
