@@ -86,6 +86,15 @@ Required Utilities (macOS)
 - dylibbundler
 - GNU make
 
+1.5 MACOS HOMEBREW
+
+After you have installed Homebrew (https://brew.sh), simply do:
+
+brew install jpeg jpeg-turbo bzip2 sdl2 sdl12-compat sdl_image sdl_mixer sdl_ttf smpeg libogg libvorbis make dylibbuilder
+
+You will want to make sure that homebrew's libraries directory is 
+added to your PATH variable.
+
 2. COMPILATION INSTRUCTIONS
 
 macOS
