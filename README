@@ -81,8 +81,8 @@ Recommended Libraries
 - libogg
 - libvorbis
 
-Utilities (macOS)
------------------
+Required Utilities (macOS)
+--------------------------
 - dylibbundler
 - GNU make
 
