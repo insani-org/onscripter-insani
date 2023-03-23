@@ -109,6 +109,8 @@ from mainline ONScripter.  Contact us through Github instead:
 - Added legacy_english_mode flag
 - Enter legacy_english_mode if ` is detected
 - Created line-break system for legacy_english_mode
+- Fixed a bug in which lines that begin with ` cannot be
+  advanced from in any circumstance
 - Minor tweaks to allow for usage of SDL2 + SDL12-compat
 - APPBUNDLE build flag which by default allows for saving of
   .sav and envdata files in ~/Documents/ONScripter/<game name>
