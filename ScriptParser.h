@@ -51,8 +51,8 @@
 #define DEFAULT_LOOKBACK_NAME2 "doncur.bmp"
 #define DEFAULT_LOOKBACK_NAME3 "doffcur.bmp"
 
-#define DEFAULT_START_KINSOKU "�v�x�j�n�p�A�B�C�D�E�H�I�R�S�T�U�X�["
-#define DEFAULT_END_KINSOKU   "�u�w�i�m�o"
+#define DEFAULT_START_KINSOKU "」』）］｝、。，．・？！ヽヾゝゞ々ー"
+#define DEFAULT_END_KINSOKU   "「『（［｛"
 
 #define MAX_LAYER_NUM 32
 
