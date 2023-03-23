@@ -101,6 +101,15 @@ Windows
 -------
 TBD
 
+All Other Platforms
+-------------------
+We only build for macOS and Windows; however, ONScripter itself
+has been successfully compiled for platforms as diverse as
+Android, iOS, Symbian, MacOS Classic, Linux, *BSD, and the list
+goes on.  However we have not modified the makefiles for these
+platforms, and we can't guarantee a successful compilation on
+any platform other than macOS and Windows.
+
 3. CONTACTS
 
 The original creator of ONScripter is Ogapee:
