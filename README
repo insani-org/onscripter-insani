@@ -45,6 +45,18 @@ branch.  Our goals in this branch are as follows:
   (one-byte, monospaced, using `) to work
 - Provide builds for modern architectures, most notably for Apple
   Silicon macOS
+
+All changes made by ONScripter-insani are wrapped in
+#if defined(INSANI) ... #endif blocks and this is done for the
+following reasons:
+
+- If you compile without the INSANI flag, you'll get baseline
+  ONScripter
+- Since this is a branch, this allows us to rapidly adapt to any
+  changes Ogapee might make in the future
+
+Should you wish to contribute code to ONScripter-insani, we'd ask
+that you follow that convention.
   
 1. REQUIRED AND RECOMMENDED LIBRARIES/UTILITIES
 
