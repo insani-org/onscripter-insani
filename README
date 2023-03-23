@@ -1,52 +1,122 @@
-ONScripter
+ONScripter-insani
 
-0. はじめに
+0. INTRODUCTION AND HISTORY
 
-	高橋直樹氏作の NScripter 用に作成されたスクリプトを独自に解釈して実行します。
+ONScripter-insani is a branch of ONScripter, which is an active
+project as of 2022 (https://onscripter.osdn.jp/onscripter.html).
+ONScripter is a clean-room open-source implementation of
+NScripter -- a novel game creation engine that arguably helped
+to bootstrap the novel game boom in Japan.  Many companies used
+NScripter in order to create some of the classics of the genre,
+notable examples being "Mizuiro" by Nekonekosoft and "Tsukihime"
+by TYPE-MOON.
 
+In 2005, a programmer named chendo contributed some patches back
+to ONScripter which, for the first time, allowed for one-byte
+characters to be used directly in ONScripter.  We at insani.org
+took on maintenance of a separate branch of ONScripter for the
+purposes of novel game localization.  This branch eventually
+became a full-on fork called ONScripter-EN (ons-en), which was
+maintained by Haeleth and Uncle Mion.  The last commits to this
+fork date back to 2011, and the project has not been actively
+maintained ever since.
 
-1. 動作環境
+As of 2023, the current existing binaries for ONScripter-EN have
+the following characteristics:
 
-	libjpeg 6b, bzip2-1.0.6, SDL-1.2.15, SDL_image-1.2.12, SDL_mixer-1.2.12, SDL_ttf-2.0.11, 及び SMPEG-0.4.5 が動作する環境です。
-	Linux 4.9.6 + Xvnc4 + g++ (gcc 6.3.0) で開発しています。
-	Linux, Windows 8 (Visual Studio 2017 C++), Xperia (Android 8.0.0), iPad2 Air (iOS 12.1) 上で動作確認をしています。
-	その他、MacOS X, MacOS 9, Android(Nexus One, Emulator), iPhone, iPad, PSP, FreeBSD, Solaris(on SPARC), Tru64 UNIX, OS/Warp, iPod, PocketPC, Playstation3, Wii, GP2X, NetWalker, Dreamcast 上での動作報告をいただいています。
+- They no longer function in modern macOS, likely related to
+  security changes brought about in Ventura and beyond
+- Many sound files do not play at all
 
+Furthermore, the source trees for ONScripter-EN and ONScripter
+are now very different -- which is to be expected when there is
+a 12 year gap between the two projects.  Over the course of
+these 12 years, ONScripter has ported in many of the enhancements
+that were in ONScripter-EN, and has had at least one complete
+reorganization of its files and filenames.  This means that
+direct comparisons between the code of ONScripter-EN and
+ONScripter are now very difficult.
 
-2. コンパイル・起動方法
+As a result, we have chosen to re-activate our ONScripter-insani
+branch.  Our goals in this branch are as follows:
 
-	コンパイル・起動方法は以下の通りです。
-	ただし、onscripter を実行する場所に default.ttf, スクリプト, アーカイブがなければいけません。
-	詳しくは同梱の www/onscripter.html を参照してください。
+- Stay as close to upstream ONScripter as possible
+- Write in functionality that truly allows legacy English mode
+  (one-byte, monospaced, using `) to work
+- Provide builds for modern architectures, most notably for Apple
+  Silicon macOS
+  
+1. REQUIRED AND RECOMMENDED LIBRARIES/UTILITIES
 
-	Linux もしくは FreeBSD, Solaris の場合
-	$ make -f Makefile.Linux
-	$ onscripter
+For macOS, our build system assumes that you are using
+homebrew.
 
-	Windows の場合 (DOS プロンプトで)
-	$ https://onscripter.osdn.jp/win/ を参考に SDL, SDL_image, SDL_mixer, SDL_ttf, smpeg, Lua, bzip2 をインストールしてください。
-	$ ONScripter.sln を Visual Studio で開いてビルドしてください。
-	$ onscripter.exe
+Required Libraries
+------------------
+- libjpeg
+- bzip2
+- SDL-2.0
+- SDL-1.2-compat
+- SDL_image
+- SDL_mixer
+- SDL_ttf
 
-	MacOS X の場合
-	$ make -f Makefile.MacOSX
-	$ onscripter
+Recommended Libraries
+---------------------
+- SMPEG
+- libogg
+- libvorbis
 
-	Zaurus (SL-5500, SL-A300, SL-B500, SL-C700) の場合
-	別のマシン(Linux 等)上でクロスコンパイル
-	$ make -f Makefile.ARMLinux
-	Zaurus の Qtopia 上から実行
-	$ onscripter
+Utilities (macOS)
+-----------------
+- dylibbundler
+- GNU make
 
-	それ以外のプラットフォームでは、Makefile.Linux を雛形にして Makefile.### を作ってください。
+2. COMPILATION INSTRUCTIONS
 
-	ONScripter は、カレントディレクトリの 0.txt もしくは nscript.dat を自動的に読み込み、それにしたがってカレントディレクトリの arc.sar もしくは arc.nsa を読み込みます。
+macOS
+-----
+gmake -f Makefile.MacOSX.insani
 
+If you wish to make a game-specific app bundle, you can do so by
+running ./makedist.MacOSX.sh -- however, if you wish to actually
+distribute your builds, you are going to need an Apple developer
+account and you will have to fork over $99 a year.
 
-3. 連絡先
+Windows
+-------
+TBD
 
-	本ソフトウェアに関する問い合わせは
+3. CONTACTS
 
-	ogapee@aqua.dti2.ne.jp
+The original creator of ONScripter is Ogapee.
 
-	まで電子メールにてお願いします。
+- https://onscripter.osdn.jp/onscripter.html
+- ogapee@aqua.dti2.ne.jp
+
+Please refrain from contacting Ogapee about anything you find in
+ONScripter-insani, though, as this branch does have differences
+from mainline ONScripter.  Contact us through Github instead:
+
+- http://nscripter.insani.org/
+- https://github.com/insani-org/onscripter-insani/
+
+4. CHANGELOG
+
+20230308
+--------
+- ONScripter upstream version: 20220816
+- Added legacy_english_mode flag
+- Enter legacy_english_mode if ` is detected
+- Created line-break system for legacy_english_mode
+- Minor tweaks to allow for usage of SDL2 + SDL12-compat
+- APPBUNDLE build flag which by default allows for saving of
+  .sav and envdata files in ~/Documents/ONScripter/<game name>
+  instead of in the same directory, and to allow for game
+  asset detection within the app bundle itself
+- Modified makefiles for macOS and Windows
+- Created macOS app bundle creation script
+
+All Previous Versions
+---------------------
+- http://nscripter.insani.org/changelog.html
