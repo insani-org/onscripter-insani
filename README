@@ -123,7 +123,17 @@ from mainline ONScripter.  Contact us through Github instead:
 - http://nscripter.insani.org/
 - https://github.com/insani-org/onscripter-insani/
 
-4. CHANGELOG
+4. LICENSE
+
+ONScripter-insani is distributed under the terms of the GNU
+Public License (GPL) v2.  This license does not extend to the
+assets for any game run in ONScripter-insani -- those rights
+remain with the original creators.
+
+A copy of the GPLv2 can be found under COPYING in this source
+directory.
+
+5. CHANGELOG
 
 20230308
 --------
