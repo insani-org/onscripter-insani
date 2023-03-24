@@ -293,10 +293,6 @@ void ONScripter::drawString(const char *str, uchar3 color, FontInfo *info, bool 
         if ( *str == '`' ){
             str++;
             skip_whitespace_flag = false;
-#if defined(INSANI)
-            if(legacy_english_mode == false) legacy_english_mode = true;
-            if(english_mode == false) english_mode = true;
-#endif
             continue;
         }
 #endif
@@ -643,7 +639,7 @@ bool ONScripter::clickNewPage( char *out_text )
 
 #if defined(INSANI)
     // this block is necessary because as it stands, onscripter will not properly advance the string buffer offset past the \ symbol when in 1 byte mode, causing an infinite stall.
-    if(english_mode)
+    if(english_mode || legacy_english_mode)
     {
         if(script_h.getStringBuffer()[ string_buffer_offset + 1 ] == '\\') string_buffer_offset += 2;
     }

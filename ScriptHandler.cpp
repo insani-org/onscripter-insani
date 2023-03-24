@@ -265,7 +265,7 @@ const char *ScriptHandler::readToken()
             }
         }
         if (ch == '`') buf++;
-        
+
         text_flag = true;
         end_status |= END_1BYTE_CHAR;
     }
@@ -824,8 +824,8 @@ int ScriptHandler::getStringFromInteger( char *buffer, int no, int num_column, b
     if (is_zero_inserted){
         if (code == Encoding::CODE_CP932){
             for (i=0; i<num_space; i++){
-                buffer[c++] = ((char*)"‚O")[0];
-                buffer[c++] = ((char*)"‚O")[1];
+                buffer[c++] = ((char*)"ï¿½O")[0];
+                buffer[c++] = ((char*)"ï¿½O")[1];
             }
         }
         if (code == Encoding::CODE_UTF8){
@@ -839,8 +839,8 @@ int ScriptHandler::getStringFromInteger( char *buffer, int no, int num_column, b
     else{
         if (code == Encoding::CODE_CP932){
             for (i=0; i<num_space; i++){
-                buffer[c++] = ((char*)"@")[0];
-                buffer[c++] = ((char*)"@")[1];
+                buffer[c++] = ((char*)"ï¿½@")[0];
+                buffer[c++] = ((char*)"ï¿½@")[1];
             }
         }
         if (code == Encoding::CODE_UTF8){
@@ -853,8 +853,8 @@ int ScriptHandler::getStringFromInteger( char *buffer, int no, int num_column, b
     }
     if (num_minus == 1){
         if (code == Encoding::CODE_CP932){
-            buffer[c++] = "|"[0];
-            buffer[c++] = "|"[1];
+            buffer[c++] = "ï¿½|"[0];
+            buffer[c++] = "ï¿½|"[1];
         }
         if (code == Encoding::CODE_UTF8){
             buffer[c++] = 0xef;
@@ -863,7 +863,7 @@ int ScriptHandler::getStringFromInteger( char *buffer, int no, int num_column, b
         }
     }
     c = (num_column-1)*n;
-    char num_str[] = "‚O‚P‚Q‚R‚S‚T‚U‚V‚W‚X";
+    char num_str[] = "ï¿½Oï¿½Pï¿½Qï¿½Rï¿½Sï¿½Tï¿½Uï¿½Vï¿½Wï¿½X";
     for (i=0; i<num_digit; i++){
         if (code == Encoding::CODE_CP932){
             buffer[c]   = num_str[no % 10 * 2];

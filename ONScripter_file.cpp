@@ -30,7 +30,9 @@
 #include <time.h>
 #elif defined(WIN32)
 #include <windows.h>
+#if not defined(INSANI)
 extern "C" { FILE __iob_func[3] = { *stdin,*stdout,*stderr }; }
+#endif
 #elif defined(MACOS9)
 #include <DateTimeUtils.h>
 #include <Files.h>

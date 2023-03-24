@@ -209,7 +209,8 @@ void ScriptParser::reset()
     linepage_mode = 0;
     english_mode = false;
 #if defined(INSANI)
-    legacy_english_mode = false;
+    english_mode = true;
+    legacy_english_mode = true;
 #endif
     
     /* ---------------------------------------- */

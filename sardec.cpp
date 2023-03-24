@@ -74,10 +74,15 @@ int main( int argc, char **argv )
                 file_name[j] = '/';
                 strncpy( dir_name, file_name, j );
                 dir_name[j] = '\0';
-
-                /* If the directory does'nt exist, create it */
+#if not defined(INSANI)
+                /* If the directory doesn't exist, create it */
                 if ( stat ( dir_name, &file_stat ) == -1 && errno == ENOENT )
                     mkdir( dir_name, 00755 );
+#else
+                /* Windows has no idea what chmod permissions are */
+                if ( stat ( dir_name, &file_stat ) == -1 && errno == ENOENT )
+                    mkdir( dir_name );
+#endif
             }
         }
     
