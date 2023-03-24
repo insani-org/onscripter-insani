@@ -3,7 +3,7 @@
 # Makefile.Win.insani - Makefile rules for Windows + MSYS2
 #
 # This makefile assumes an MSYS2 + MINGW64 environment, installed
-# to the default path (C:\msys64\).  See Readme for setup details.
+# to the default path (C:\msys64\).  See README for setup details.
 #
 INCS = `sdl-config --cflags` `smpeg-config --cflags` -IC:\msys64\mingw64\include\freetype2 -IC:\msys64\mingw64\include\libpng16
 
