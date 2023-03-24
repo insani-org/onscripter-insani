@@ -105,7 +105,7 @@ sure that you are logging into the MINGW64 environment.  By default
 MSYS2 launches into the UCRT64 environment, so be careful.  Once
 you are in, update MSYS2:
 
-pacman -Suy
+pacman -Syuu
 
 This will likely cause MSYS2 to close.  Relaunch into the MINGW64
 environment and run that command again until nothing further
