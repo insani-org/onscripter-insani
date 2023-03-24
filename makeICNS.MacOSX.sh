@@ -1,7 +1,7 @@
 ICNS="onscripter-insani.iconset"
 ICNS_OUT="onscripter-insani.icns"
 mkdir $ICNS
-cp icon.png icon_512x512@2x.png
+convert icon.png -resize 1024x1024 icon_512x512@2x.png
 convert icon.png -resize 512x512 icon_512x512.png
 cp icon_512x512.png icon_256x256@2x.png
 convert icon.png -resize 256x256 icon_256x256.png
