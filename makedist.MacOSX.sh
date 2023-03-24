@@ -1,6 +1,6 @@
 #!/bin/bash
 
-APP_NAME="Radiata"
+APP_NAME="onscripter-insani"
 
 rm -rf $APP_NAME.app
 
@@ -41,7 +41,7 @@ echo "<?xml version=\"1.0\" encoding=\"UTF-8\"?>
   <key>NSHumanReadableCopyright</key>
   <string>onscripter-insani is (c) 2002-present ogapee and (c) 2005-present insani.  It is licensed under the GPLv2.</string>
 </dict>
-</plist>" > $APP_NAME.app/Info.plist
+</plist>" > $APP_NAME.app/Contents/Info.plist
 
 rm *.o
 rm onscripter
