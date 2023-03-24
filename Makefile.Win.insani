@@ -4,6 +4,19 @@
 #
 # This makefile assumes an MSYS2 + MINGW64 environment, installed
 # to the default path (C:\msys64\).  See README for setup details.
+# If your MSYS2 install path is different from the default, you will
+# have to edit this makefile accordingly.
+#
+# Notice that unlike the macOS makefile, the Windows makefile does
+# not generate sardec.exe or nsadec.exe.  This has to do with the
+# fact that these two utilities make heavy usage of POSIX functionality
+# that simply doesn't exist in Windows, or at least didn't until
+# recently.  Unfortunately, executables that target such functionality
+# in Windows end up having to ship a POSIX compatibility layer like
+# msys2.dll or cygwin.dll, or have to be targetted at ucrt64 -- which
+# does not gracefully support Windows 7 and below.  This is why we
+# omit sardec and nsadec, and instead build using MINGW64 -- which is
+# maximally compatible with every modern Windows version in existence.
 #
 INCS = `sdl-config --cflags` `smpeg-config --cflags` -IC:\msys64\mingw64\include\freetype2 -IC:\msys64\mingw64\include\libpng16
 
