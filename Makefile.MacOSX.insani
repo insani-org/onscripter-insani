@@ -5,6 +5,49 @@
 # This makefile assumes homebrew, installed in its default location.
 # See README for setup details.
 #
+# The APPBUNDLE define needs to be explained further.  You should only
+# compile with this defined if you are creating a macOS app bundle for
+# a specific game.  It will have the following effects:
+#
+# - Save .sav and envdata files in ~/Documents/<executable name>
+# - Load from the above location
+# - Look for game assets in <executable name>.app/Contents/Resources
+#
+# After you compile the onscripter binary with APPBUNDLE defined, you
+# will want to generate an appropriate iconset (ICNS file) that you will
+# name icon.icns.  We've supplied an automated script for this -- it's
+# ./makeICNS.MacOSX.sh.  This script has several prerequisites, including
+# the xcode command line tools and ImageMagick (brew install ImageMagick).
+# You also need to supply a square image file of just about any sort --
+# we recommend PNGs of 1024x1024 resolution.  The script will handle all
+# of the resizing and the creation of the ICNS file.  After you have the
+# ICNS file, run ./makedist.MacOSX.sh after modifying it to put your
+# game name in as the APP_NAME variable (e.g. "Radiata").  You will
+# wind up with a fully-featured game-specific macOS app bundle.
+#
+# If you want to create a generic onscripter-insani that saves to and
+# loads from the same folder where the game assets are, then you should
+# categorically not use the APPBUNDLE define, but you should still run
+# ./makedist.MacOSX.sh after compilation.  You will wind up with a generic
+# macOS app bundle for onscripter-insani that will behave like a portable
+# executable -- just drag and drop it wherever the game assets are, and
+# start it up.
+#
+# In either case, if you want to actually distribute your app bundle, you
+# will need to:
+#
+# - Fork $99/year over to Apple for an Apple Developer account
+# - Get your Application Developer and Application Installer certificates
+# - Code-sign your app bundle properly
+# - Generate either your DMG or your PKG and code-sign *it* properly
+# - Notarize your DMG/PKG (which involves uploading it to Apple)
+# - Staple the successful notarization to your DMG/PKG
+# 
+# Discussion of how to do this is well beyond the scope of this Makefile,
+# but the below is quite a helpful resource:
+#
+# https://stackoverflow.com/questions/64652704/how-to-notarize-an-macos-command-line-tool-created-outside-of-xcode
+#
 INCS = `sdl-config --cflags` `smpeg-config --cflags` -I/opt/homebrew/include
 
 LIBS = `sdl-config --libs` `smpeg-config --libs` `freetype-config --libs` -lSDL_ttf -lSDL_image -lSDL_mixer -lbz2 -lm -ljpeg -framework AVFoundation -framework CoreFoundation -framework Foundation
