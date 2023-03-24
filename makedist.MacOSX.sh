@@ -25,7 +25,7 @@ echo "<?xml version=\"1.0\" encoding=\"UTF-8\"?>
   <key>CFBundleExecutable</key>
   <string>$APP_NAME</string>
   <key>CFBundleIdentifier</key>
-  <string>org.insani.nscripter</string>
+  <string>org.insani.$APP_NAME</string>
   <key>CFBundleName</key>
   <string>$APP_NAME</string>
   <key>CFBundleIconFile</key>
