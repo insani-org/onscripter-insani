@@ -1,3 +1,17 @@
+# -- makeICNS.MacOSX.sh --
+#
+# A handy script to generate ICNS icon sets.  Requires the
+# XCode command line utilities and ImageMagick.  Assumes
+# homebrew and that you've installed ImageMagick via:
+#
+# brew install ImageMagick
+#
+# Requires a square PNG of any resolution, although 1024x1024
+# is optimal.  Remember that these days, macOS icons are
+# rounded rects ... it is likely good to follow that
+# convention until the next time Cupertino decides on a major
+# UI shift.
+#
 ICNS="onscripter-insani.iconset"
 ICNS_OUT="onscripter-insani.icns"
 mkdir $ICNS
