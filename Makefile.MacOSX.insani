@@ -1,9 +1,10 @@
 # -*- Makefile -*-
 #
-# Makefile.MacOSX - Makefile rules for MacOS X
-#   Thanks adas-san, Takano-san and tmkk-san
+# Makefile.MacOSX.insani - Makefile rules for macOS + homebrew
 #
-
+# This makefile assumes homebrew, installed in its default location.
+# See README for setup details.
+#
 INCS = `sdl-config --cflags` `smpeg-config --cflags` -I/opt/homebrew/include
 
 LIBS = `sdl-config --libs` `smpeg-config --libs` `freetype-config --libs` -lSDL_ttf -lSDL_image -lSDL_mixer -lbz2 -lm -ljpeg -framework AVFoundation -framework CoreFoundation -framework Foundation
