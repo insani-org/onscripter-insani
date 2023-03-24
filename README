@@ -62,15 +62,16 @@ that you follow that convention.
   
 1. REQUIRED AND RECOMMENDED LIBRARIES/UTILITIES
 
-For macOS, our build system assumes that you are using
-homebrew.
+For macOS, our build system assumes that you are using homebrew.
+For Windows, our build system assumes that you are using MSYS2.
 
 Required Libraries
 ------------------
 - libjpeg
 - bzip2
-- SDL-2.0
-- SDL-1.2-compat
+- SDL-2.0 AND SDL1.2-compat
+  OR
+  SDL-1.2
 - SDL_image
 - SDL_mixer
 - SDL_ttf
@@ -96,6 +97,22 @@ You will want to make sure that Homebrew's libraries directory
 (/opt/homebrew/lib by default) is added to your PATH variable.  It
 should be added by default after Homebrew is installed.
 
+1.2 WINDOWS MSYS2
+
+Install MSYS2 (https://www.msys2.org) and accept the default
+install location (C:\msys64).  After you have installed MSYS2, make 
+sure that you are logging into the MINGW64 environment.  By default
+MSYS2 launches into the UCRT64 environment, so be careful.  Once
+you are in, update MSYS2:
+
+pacman -Suy
+
+This will likely cause MSYS2 to close.  Relaunch into the MINGW64
+environment and run that command again until nothing further
+happens.  Then run:
+
+pacman -S mingw-w64-x86_64-SDL mingw-w64-x86_64-SDL_ttf mingw-w64-x86_64-SDL_mixer mingw-w64-x86_64-SDL_image mingw-w64-x86_64-bzip2 mingw-w64-x86_64-libogg mingw-w64-x86_64-libvorbis mingw-w64-x86_64-freetype mingw-w64-x86_64-smpeg mingw-w64-x86_64-iconv mingw-w64-x86_64-zlib mingw-w64-x86_64-toolchain 
+
 2. COMPILATION INSTRUCTIONS
 
 macOS
@@ -109,7 +126,52 @@ account and you will have to fork over $99 a year.
 
 Windows
 -------
-TBD
+Within the MINGW64 environment of MSYS2:
+
+make -f Makefile.Win.insani
+
+The DLL dependencies for the resultant onscripter.exe are:
+
+- libbrotlicommon.dll
+- libbrotlidec.dll
+- libbz2-1.dll
+- libdeflate.dll
+- libfreetype-6.dll
+- libgcc_s_seh1.dll
+- libglib-2.0.0.dll
+- libgraphite2.dll
+- libharfbuzz-0.dll
+- libiconv-2.dll
+- libintl-8.dll
+- libjbig-0.dll
+- libjpeg-8.dll
+- libLerc.dll
+- liblzma-5.dll
+- libmad-0.dll
+- libogg-0.dll
+- libpcre2-8-0.dll
+- libpng16-16.dll
+- libSDL_image-1-2-0.dll
+- libSDL_mixer-1-2-0.dll
+- libsharpyuv0.dll
+- libstdc++-6.dll
+- libtiff-6.dll
+- libvorbis-0.dll
+- libvorbisfile-3.dll
+- libwebp-7.dll
+- libwinpthread-1.dll
+- libzstd.dll
+- SDL_ttf.dll
+- SDL.dll
+- zlib1.dll
+
+This list is exhaustive and likely many of the DLLs are not
+needed for normal running.  All DLLs can be found at:
+
+C:\msys64\mingw64\bin\
+
+If you are distributing your build, you'll want to package up
+all of these DLLs alongside your onscripter.exe.
 
 All Other Platforms
 -------------------
