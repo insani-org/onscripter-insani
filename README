@@ -91,7 +91,7 @@ Required Utilities (macOS)
 
 After you have installed Homebrew (https://brew.sh), simply do:
 
-brew install jpeg jpeg-turbo bzip2 sdl2 sdl12-compat sdl_image sdl_mixer sdl_ttf smpeg libogg libvorbis make dylibbuilder
+brew install jpeg jpeg-turbo bzip2 sdl2 sdl12-compat sdl_image sdl_mixer sdl_ttf smpeg libogg libvorbis make dylibbundler
 
 You will want to make sure that Homebrew's libraries directory
 (/opt/homebrew/lib by default) is added to your PATH variable.  It
