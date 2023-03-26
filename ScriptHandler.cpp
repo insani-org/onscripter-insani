@@ -120,6 +120,9 @@ void ScriptHandler::reset()
     text_flag = true;
     linepage_flag = false;
     english_mode = false;
+#if defined(INSANI)
+    legacy_english_mode = false;
+#endif
     skip_enabled = false;
     if (clickstr_list){
         delete[] clickstr_list;
