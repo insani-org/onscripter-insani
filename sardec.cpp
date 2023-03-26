@@ -74,7 +74,7 @@ int main( int argc, char **argv )
                 file_name[j] = '/';
                 strncpy( dir_name, file_name, j );
                 dir_name[j] = '\0';
-#if not defined(INSANI)
+#if not defined(WIN32)
                 /* If the directory doesn't exist, create it */
                 if ( stat ( dir_name, &file_stat ) == -1 && errno == ENOENT )
                     mkdir( dir_name, 00755 );
