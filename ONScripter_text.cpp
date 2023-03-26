@@ -812,6 +812,15 @@ int ONScripter::textCommand()
     int english_mode_check = script_h.getEnglishMode();
     if(english_mode_check == 1) english_mode = true;
     else if(english_mode_check == 2)
+    {
+        legacy_english_mode = true;
+        english_mode = true;
+    }
+    else if(english_mode_check == 0)
+    {
+        legacy_english_mode = false;
+        english_mode = false;
+    }
 
     if(legacy_english_mode)
     {
