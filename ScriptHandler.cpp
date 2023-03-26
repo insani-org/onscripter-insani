@@ -268,6 +268,11 @@ const char *ScriptHandler::readToken()
 
         text_flag = true;
         end_status |= END_1BYTE_CHAR;
+        
+#if defined(INSANI)
+        english_mode = true;
+        legacy_english_mode = true;
+#endif
     }
 #endif
     else if (english_mode && ch == '>'){
