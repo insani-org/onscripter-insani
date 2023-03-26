@@ -227,6 +227,7 @@ directory.
 - All-new makefile for Windows, based on MSYS2 rather than VC++
 - Edits to several files to allow proper MSYS2-based compilation
 - Created macOS app bundle creation script
+- Backported Windows window icon option (from 2005!)
 
 All Previous Versions
 ---------------------
