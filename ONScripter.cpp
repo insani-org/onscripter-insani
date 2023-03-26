@@ -71,6 +71,13 @@ void ONScripter::initSDL()
         exit(-1);
     }
 
+#if defined(INSANI)
+#if defined(WIN32)
+	 SDL_WM_SetIcon(IMG_Load("icon.png"), NULL);
+	 fprintf(stderr, "Autodetect: insanity spirit detected!\n");
+#endif
+#endif
+
 #if defined(BPP16)
     screen_bpp = 16;
 #else
