@@ -213,7 +213,8 @@ directory.
 --------
 - ONScripter upstream version: 20220816
 - Added legacy_english_mode flag
-- Force english_mode and legacy_english_mode to TRUE
+- Set english_mode and legacy_english_mode to TRUE when a line
+  that begins with ` is detected
 - Created line-break system for legacy_english_mode
 - Fixed a bug in which lines that begin with ` cannot be
   advanced from in any circumstance
