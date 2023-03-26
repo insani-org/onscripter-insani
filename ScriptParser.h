@@ -399,11 +399,9 @@ protected:
     int  line_enter_status; // 0 ... no enter, 1 ... pretext, 2 ... body
     int  page_enter_status; // 0 ... no enter, 1 ... body until @,\ used when pagetag is enabled
     bool in_textbtn_flag;
-#if not defined(INSANI)
     bool english_mode;
-#else
-    bool english_mode = true;
-    bool legacy_english_mode = true; // 0 ... not english, 1 ... english and fixed-width and using `
+#if defined(INSANI)
+    bool legacy_english_mode; // 0 ... not english, 1 ... english and fixed-width and using `
 #endif
 
     struct Kinsoku {
