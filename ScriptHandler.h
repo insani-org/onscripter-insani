@@ -120,7 +120,12 @@ public:
     inline char *getStringBuffer(){ return string_buffer; };
     char *saveStringBuffer();
     void addStringBuffer( char ch );
-    
+
+#if defined(INSANI)
+    // function for getting what the english mode is
+    inline int getEnglishMode(){ if(legacy_english_mode) return 2; else if (english_mode) return 1; else return 0; };
+#endif
+
     // function for direct manipulation of script address
     inline char *getCurrent(bool use_script=false){ return (use_script && !is_internal_script)?last_script_context->current_script:current_script; };
     inline char *getNext(){ return next_script; };
@@ -349,6 +354,9 @@ private:
     bool linepage_flag;
     char *clickstr_list;
     bool english_mode;
+#if defined(INSANI)
+    bool legacy_english_mode;
+#endif
 
     char *current_script;
     char *next_script;
