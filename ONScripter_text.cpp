@@ -639,7 +639,7 @@ bool ONScripter::clickNewPage( char *out_text )
 
 #if defined(INSANI)
     // this block is necessary because as it stands, onscripter will not properly advance the string buffer offset past the \ symbol when in 1 byte mode, causing an infinite stall.
-    if(english_mode || legacy_english_mode)
+    if(legacy_english_mode)
     {
         if(script_h.getStringBuffer()[ string_buffer_offset + 1 ] == '\\') string_buffer_offset += 2;
     }
@@ -808,6 +808,11 @@ int ONScripter::textCommand()
     }
 
 #if defined(INSANI)
+    // set english_mode and legacy_english mode here
+    int english_mode_check = script_h.getEnglishMode();
+    if(english_mode_check == 1) english_mode = true;
+    else if(english_mode_check == 2)
+
     if(legacy_english_mode)
     {
         // English monospaced line wrapping algorithm begins here
