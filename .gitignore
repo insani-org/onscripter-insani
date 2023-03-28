@@ -1,8 +1,11 @@
 .vscode/**
+.DS_Store
+www/.DS_Store
 *.o
 *.obj
 *.exe
 *.app
+*.icns
 onscripter
 nsadec
 nsaconv
