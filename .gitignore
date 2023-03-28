@@ -1,3 +1,10 @@
 .vscode/**
 *.o
 *.obj
+*.exe
+*.app
+onscripter
+nsadec
+nsaconv
+sardec
+sarconv
