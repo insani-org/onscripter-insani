@@ -8,9 +8,10 @@ mkdir $APP_NAME.app
 mkdir $APP_NAME.app/Contents
 mkdir $APP_NAME.app/Contents/MacOS
 mkdir $APP_NAME.app/Contents/Resources
+sudo xattr -cr $APP_NAME.app
 
 cp onscripter $APP_NAME.app/Contents/MacOS/$APP_NAME
-cp icon.icns $APP_NAME.app/Contents/Resources/$APP_NAME.icns
+cp $APP_NAME.icns $APP_NAME.app/Contents/Resources/$APP_NAME.icns
 
 dylibbundler -od -b -x $APP_NAME.app/Contents/MacOS/$APP_NAME -p @executable_path/../Frameworks/ -d $APP_NAME.app/Contents/Frameworks/
 
