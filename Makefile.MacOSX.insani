@@ -5,6 +5,14 @@
 # This makefile assumes homebrew, installed in its default location.
 # See README for setup details.
 #
+# The -mmacosx-version-min= CFLAGS option should be set based on the SDKs 
+# you have available, and in consideration for your target audience.  For 
+# an Apple Silicon Mac, 12.0 is reasonable, as 11.0 is the earliest version 
+# of macOS that supported Apple Silicon Macs and as of 2023, 12.0 is a 
+# major version behind the latest macOS release.  For Intel Macs, 10.15 is 
+# likely reasonable, as it supports any Intel Mac introduced in 2012 and 
+# beyond.
+#
 # The APPBUNDLE define needs to be explained further.  You should only
 # compile with this defined if you are creating a macOS app bundle for
 # a specific game.  It will have the following effects:
@@ -63,7 +71,7 @@ CC = c++
 LD = c++ -o
 
 #CFLAGS = -g -Wall -Wpointer-arith -pipe -c $(INCS) $(DEFS)
-CFLAGS = -ObjC++ -O3 -Wall -Wpointer-arith -pipe -c $(INCS) $(DEFS)
+CFLAGS = -ObjC++ -mmacosx-version-min=12.0 -O3 -Wall -Wpointer-arith -pipe -c $(INCS) $(DEFS)
 RM = rm -f
 
 TARGET = onscripter$(EXESUFFIX) sardec$(EXESUFFIX) nsadec$(EXESUFFIX) sarconv$(EXESUFFIX) nsaconv$(EXESUFFIX)
