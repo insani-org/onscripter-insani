@@ -15,7 +15,9 @@ cp $APP_NAME.icns $APP_NAME.app/Contents/Resources/$APP_NAME.icns
 
 dylibbundler -od -b -x $APP_NAME.app/Contents/MacOS/$APP_NAME -p @executable_path/../Frameworks/ -d $APP_NAME.app/Contents/Frameworks/
 
+# Change this to wherever the absolute path of the homebrew lbSDL2-2.0.0.dylib is -- it'll be in /opt or in /usr/local usually
 cp /opt/homebrew/Cellar/sdl2/2.26.3/lib/libSDL2-2.0.0.dylib $APP_NAME.app/Contents/Frameworks
+# cp /usr/local/Cellar/sdl2/2.26.4/lib/libSDL2-2.0.0.dylib $APP_NAME.app/Contents/Frameworks
 
 echo "<?xml version=\"1.0\" encoding=\"UTF-8\"?>
 <!DOCTYPE plist PUBLIC \"-//Apple Computer//DTD PLIST 1.0//EN\" \"http://www.apple.com/DTDs/PropertyList-1.0.dtd\">
