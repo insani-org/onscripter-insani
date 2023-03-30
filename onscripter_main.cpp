@@ -37,7 +37,9 @@ ONScripter ons;
 
 #if defined(MACOSX) && defined(INSANI)
 #import <CoreFoundation/CoreFoundation.h>
-#import <Foundation/Foundation.h>
+#import <Foundation/NSString.h>
+#import <Foundation/NSObject.h>
+#import <Foundation/NSFileManager.h>
 #endif
 
 #if defined(PSP)
