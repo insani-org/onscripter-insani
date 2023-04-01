@@ -98,6 +98,11 @@ certain targets:
 - ARM64: Ventura
 - x86-64: Catalina
 
+We recommend these two respective macOS versions because they are major
+breakpoints that brought about significant security changes -- binaries from
+prior versions of macOS often don't work in these versions, whereas binaries
+that do work in these versions will work in all subsequent versions to date.
+
 1.2 WINDOWS MSYS2
 
 Install MSYS2 (https://www.msys2.org) and accept the default install 
