@@ -23,7 +23,7 @@ As of 2023, the current existing binaries for ONScripter-EN have the following
 characteristics:
 
 - They no longer function in modern macOS, likely related to security changes 
-  brought about in Ventura and beyond
+  brought about in Catalina and beyond
 - Many sound files do not play at all
 
 Furthermore, the source trees for ONScripter-EN and ONScripter are now very 
