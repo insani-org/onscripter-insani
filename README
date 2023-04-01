@@ -90,6 +90,14 @@ You will want to make sure that Homebrew's libraries directory
 (/opt/homebrew/lib by default) is added to your PATH variable.  It should be
 added by default after Homebrew is installed.
 
+All binaries that you create through this methodology are specific to both the
+architecture (ARM64/x86-64) as well as the macOS version that you're compiling
+on.  We recommend maintaining virtual machines simply so you can build to
+certain targets:
+
+- ARM64: Ventura
+- x86-64: Catalina
+
 1.2 WINDOWS MSYS2
 
 Install MSYS2 (https://www.msys2.org) and accept the default install 
