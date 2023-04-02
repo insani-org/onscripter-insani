@@ -203,7 +203,7 @@ platforms, and we can't guarantee a successful compilation on any platform
 other than Linux, macOS, and Windows.  If you are compiling on any of those
 platforms, you will minimally want to make sure the -DINSANI define is present.
 If you succeed on one of our non-supported platforms, please get in touch with 
-us and contribute your modified Makefiles back.  
+us and contribute your modified Makefiles back.
 
 2.1 WHY DYNAMIC LIBRARIES
 
@@ -217,7 +217,7 @@ Our macOS build system depends on Homebrew, and you should never attempt to
 statically link Homebrew libraries as they tend to be truly OS version
 dependent in a way that the dylibs are not.  Furthermore, for the purposes of
 macOS, you're canonically supposed to distribute the required dylibs inside the
-app bundle as our makedist.MacOSX.insani does.
+app bundle as our makedist.MacOSX.sh does.
 
 For Windows, the MINGW64 DLLs are widely compatible with any modern version of
 x86-64 Windows, and in the case that they become incompatible, replacement with
