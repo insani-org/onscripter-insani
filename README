@@ -80,7 +80,12 @@ Required Utilities (macOS)
 - dylibbundler
 - GNU make
 
-1.1 MACOS HOMEBREW
+1.1 LINUX
+
+Every Linux distribution will have its own package manager.  Simply make sure
+you get the required libraries using that package manager.
+
+1.2 MACOS HOMEBREW
 
 After you have installed Homebrew (https://brew.sh), simply do:
 
@@ -103,7 +108,7 @@ breakpoints that brought about significant security changes -- binaries from
 prior versions of macOS often don't work in these versions, whereas binaries
 that do work in these versions will work in all subsequent versions to date.
 
-1.2 WINDOWS MSYS2
+1.3 WINDOWS MSYS2
 
 Install MSYS2 (https://www.msys2.org) and accept the default install 
 location (C:\msys64).  After you have installed MSYS2, make sure that you are
@@ -118,6 +123,13 @@ and run that command again until nothing further happens.  Then run:
 pacman -S mingw-w64-x86_64-SDL mingw-w64-x86_64-SDL_ttf mingw-w64-x86_64-SDL_mixer mingw-w64-x86_64-SDL_image mingw-w64-x86_64-bzip2 mingw-w64-x86_64-libogg mingw-w64-x86_64-libvorbis mingw-w64-x86_64-freetype mingw-w64-x86_64-smpeg mingw-w64-x86_64-iconv mingw-w64-x86_64-zlib mingw-w64-x86_64-toolchain 
 
 2. COMPILATION INSTRUCTIONS
+
+Linux
+-----
+make -f Makefile.Linux.insani
+
+On Linux and gcc, you can fairly easily make a static build of your binary by
+passing in the -static option to gcc in the right place in the Makefile.
 
 macOS
 -----
@@ -182,9 +194,9 @@ All Other Platforms
 -------------------
 We only build for macOS and Windows; however, ONScripter itself has been 
 successfully compiled for platforms as diverse as Android, iOS, Symbian, MacOS
-Classic, Linux, *BSD, and the list goes on.  However we have not modified the 
+Classic, PSP, *BSD, and the list goes on.  However we have not modified the 
 makefiles for these platforms, and we can't guarantee a successful compilation
-on any platform other than macOS and Windows.
+on any platform other than Linux, macOS, and Windows.
 
 3. CONTACTS
 
