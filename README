@@ -83,7 +83,10 @@ Required Utilities (macOS)
 1.1 LINUX
 
 Every Linux distribution will have its own package manager.  Simply make sure
-you get the required libraries using that package manager.
+you get the required libraries using that package manager.  If you are on a
+decently modern Linux distribution version, then make sure that you go the
+SDL2 + SDL1.2-compat route, as opposed to the pure SDL1.2 route.  You will get
+breakage otherwise.
 
 1.2 MACOS HOMEBREW
 
@@ -192,11 +195,33 @@ DLLs alongside your onscripter.exe.
 
 All Other Platforms
 -------------------
-We only build for macOS and Windows; however, ONScripter itself has been 
-successfully compiled for platforms as diverse as Android, iOS, Symbian, MacOS
-Classic, PSP, *BSD, and the list goes on.  However we have not modified the 
-makefiles for these platforms, and we can't guarantee a successful compilation
-on any platform other than Linux, macOS, and Windows.
+We only provide builds for macOS and Windows, and we only do testing on Linux,
+macOS, and Windows; however, ONScripter itself has been successfully compiled 
+for platforms as diverse as Android, iOS, Symbian, MacOS Classic, PSP, *BSD, 
+and the list goes on.  However we have not modified the makefiles for these 
+platforms, and we can't guarantee a successful compilation on any platform 
+other than Linux, macOS, and Windows.  If you are compiling on any of those
+platforms, you will minimally want to make sure the -DINSANI define is present.
+If you succeed on one of our non-supported platforms, please get in touch with 
+us and contribute your modified Makefiles back.  
+
+2.1 WHY DYNAMIC LIBRARIES
+
+Traditionally, there was a push to make sure that ONScripter-insani and
+ONScripter-EN builds were built with static libraries, for ease of distribution
+among other things.  The problem is, bitrot sets in quite quickly -- and the
+presence of those static libraries can sometimes lead to crashes as time goes
+on and there are major changes in the underlying OS.
+
+Our macOS build system depends on Homebrew, and you should never attempt to
+statically link Homebrew libraries as they tend to be truly OS version
+dependent in a way that the dylibs are not.  Furthermore, for the purposes of
+macOS, you're canonically supposed to distribute the required dylibs inside the
+app bundle as our makedist.MacOSX.insani does.
+
+For Windows, the MINGW64 DLLs are widely compatible with any modern version of
+x86-64 Windows, and in the case that they become incompatible, replacement with
+updated versions will be easy.
 
 3. CONTACTS
 
