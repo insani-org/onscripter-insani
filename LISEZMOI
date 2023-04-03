@@ -1,0 +1,303 @@
+=====================================
+LISEZMOI ONSCRIPTER-INSANI (20230308)
+=====================================
+
+-1. TRADUCTION
+
+Traduction par M. Floréal.  Merci beaucoup!
+
+0. INTRODUCTION ET HISTOIRE
+
+ONScripter-insani est une branche d'ONScripter, qui est un projet actif en
+date de 2022 (https://onscripter.osdn.jp/onscripter.html).  ONScripter est
+une implémentation libre, clone de NScripter -- un moteur de création de
+nouveaux jeux qui a sans doute contribué à l'essor des nouveaux jeux au
+Japon.  De nombreuses entreprises ont utilisé NScripter pour créer
+certains des classiques du genre, comme par exemple 'Mizuiro' de
+Nekonekosoft et 'Tsukihime' de TYPE-MOON.
+
+En 2005, un programmeur nommé chendo a apporté quelques correctifs à
+ONScripter qui, pour la première fois, permettait d'utiliser directement
+des caractères d'un octet directement dans ONScripter.  Nous, membres
+d'insani.org, avons pris en charge la maintenance d'une branche séparée
+d'ONScripter pour les besoins de la localisation de nouveaux jeux.
+Cette branche est finalement devenue une branche à part entière appelée
+ONScripter-EN (ons-en), qui a été maintenue par Haeleth et Uncle Mion.
+Les dernières modifications de cette branche remontent à 2011, et le
+projet n'a pas été activement maintenu depuis.
+
+En 2023, les binaires existants pour ONScripter-EN ont les
+caractéristiques suivantes :
+
+- Ils ne fonctionnent plus avec les versions modernes de macOS,
+probablement en raison des changements de sécurité apportés par Catalina
+et les versions supérieures
+- De nombreux fichiers sonores ne sont pas joués du tout
+
+De plus, les arborescences des sources d'ONScripter-EN et ONScripter sont
+maintenant très différents -- ce qui est normal puisqu'il y a 12 ans
+d'écart entre les deux projets.  Au cours de ces 12 années, ONScripter a
+porté en son sein  de nombreuses améliorations qui se trouvaient dans
+ONScripter-EN, et a subi au moins une réorganisation complète de ses
+fichiers et de ses noms de fichiers.  Cela signifie que les comparaisons
+directes entre le code d'ONScripter-EN et celui d'ONScripter sont
+désormais très difficiles.
+
+Par conséquent, nous avons choisi de relancer notre branche
+ONScripter-insani.  Les objectifs de cette branche sont les suivants :
+
+- Rester aussi proche que possible de la version amont d'ONScripter
+- Écrire des fonctionnalités qui permettent vraiment le fonctionnement de
+l'ancien mode anglais (un octet, chasse fixe, en utilisant `)
+- Fournir des versions pour les architectures modernes, plus
+particulièrement pour Apple Silicon macOS
+
+Tous les changements effectués par ONScripter-insani sont enveloppés dans
+des blocs #if defined(INSANI) ... #endif, pour les raisons suivantes :
+
+- Si vous compilez sans le paramètre INSANI, vous obtiendrez la version de
+base d'ONScripter.
+- Comme il s'agit d'une branche, cela nous permet de nous adapter
+rapidement à tous les changements qu'Ogapee pourrait apporter à l'avenir.
+
+Si vous souhaitez contribuer au code d'ONScripter-insani, nous vous
+demandons de suivre cette convention.
+
+1. BIBLIOTHÈQUES/UTILITAIRES REQUIS ET RECOMMANDÉS
+
+- Pour macOS, notre système de construction suppose que vous utilisez homebrew
+- Pour Windows, notre système de construction suppose que vous utilisez MSYS2
+
+Bibliothèques requises
+------------------
+- libjpeg
+- bzip2
+- SDL-2.0 ET SDL1.2-compat
+OU BIEN
+  SDL-1.2
+- SDL_image
+- SDL_mixer
+- SDL_ttf
+
+Bibliothèques recommandées
+---------------------
+- SMPEG
+- libogg
+- libvorbis
+
+Utilitaires requis (macOS)
+--------------------------
+- dylibbundler
+- GNU make
+
+1.1 GNU/LINUX
+
+Chaque distribution GNU/Linux dispose de son propre gestionnaire de
+paquets.  Assurez-vous simplement d'obtenir les bibliothèques nécessaires
+en utilisant ce gestionnaire de paquets.  Si vous êtes sur une dist. plus
+ou moins moderne, assurez-vous d'opter pour la SDL2 + SDL1.2-compat, par
+opposition à SDL1.2 pur.  Vous aurez des pannes dans le cas contraire.
+
+1.2 MACOS HOMEBREW
+
+Après avoir installé Homebrew (https://brew.sh), il suffit de faire :
+
+brew install jpeg jpeg-turbo bzip2 sdl2 sdl12-compat sdl_image sdl_mixer sdl_ttf smpeg libogg libvorbis make dylibbundler
+
+Vous devrez vous assurer que le répertoire des bibliothèques de Homebrew
+(/opt/homebrew/lib par défaut) soit ajouté à votre variable PATH.  Il doit
+l'être par défaut après l'installation de Homebrew.
+
+Tous les binaires que vous créez par cette méthode sont spécifiques à la
+fois à l'architecture architecture (ARM64/x86-64) ainsi qu'à la version de
+macOS sur laquelle vous compilez.  Nous recommandons de maintenir des
+machines virtuelles simplement pour pouvoir compiler vers certaines
+cibles :
+
+- ARM64 : Ventura
+- x86-64 : Catalina
+
+Nous recommandons ces deux versions respectives de macOS parce qu'il
+s'agit de versions majeures qui ont apporté des changements importants en
+matière de sécurité -- les binaires de versions antérieures de macOS ne
+fonctionnent souvent pas dans ces versions, alors que les binaires qui
+fonctionnent dans ces versions fonctionneront dans toutes les versions
+ultérieures à ce jour.
+
+1.3 WINDOWS MSYS2
+
+Installez MSYS2 (https://www.msys2.org) et acceptez l'emplacement
+d'installation par défaut (C:\Nmsysys2).  Après avoir installé MSYS2,
+assurez-vous que vous êtes dans l'environnement MINGW64.  Par défaut,
+MSYS2 se lance dans l'environnement UCRT64, soyez donc prudent.
+Une fois que vous êtes connecté, mettez à jour MSYS2 :
+
+pacman -Syuu
+
+Cette opération entraînera probablement la fermeture de MSYS2.
+Relancez dans l'environnement MINGW64 et exécutez à nouveau ceci
+jusqu'à ce qu'il ne se passe plus rien.
+Ensuite, exécutez la commande suivante :
+
+pacman -S mingw-w64-x86_64-SDL mingw-w64-x86_64-SDL_ttf mingw-w64-x86_64-SDL_mixer mingw-w64-x86_64-SDL_image mingw-w64-x86_64-bzip2 mingw-w64-x86_64- libogg mingw-w64-x86_64-libvorbis mingw-w64-x86_64-freetype mingw-w64-x86_64-smpeg mingw-w64-x86_64-iconv mingw-w64-x86_64-zlib mingw-w64-x86_64-toolchain 
+
+2. INSTRUCTIONS DE COMPILATION
+
+GNU/Linux
+-----
+make -f Makefile.Linux.insani
+
+Sous GNU/Linux et gcc, vous pouvez assez facilement faire une compilation
+statique de votre binaire en passant l'option -static à gcc au bon endroit
+dans le Makefile.
+
+macOS
+-----
+gmake -f Makefile.MacOSX.insani
+
+Si vous souhaitez créer un paquet d'app spécifique à un jeu, vous pouvez
+le faire en exécutant ./makedist.MacOSX.sh -- cependant, si vous souhaitez
+publier vos compilations, vous aurez besoin d'un compte dév. Apple et vous
+devrez débourser 99 $ par an.  Des instructions et des notes beaucoup plus
+détaillées peuvent être trouvées dans la section des commentaires de
+Makefile.MacOSX.insani.
+
+Windows
+-------
+Dans l'environnement MINGW64 de MSYS2 :
+
+make -f Makefile.Win.insani
+
+Les dépendances DLL pour le fichier onscripter.exe résultant sont :
+
+- libbrotlicommon.dll
+- libbrotlidec.dll
+- libbz2-1.dll
+- libdeflate.dll
+- libfreetype-6.dll
+- libgcc_s_seh1.dll
+- libglib-2.0.0.dll
+- libgraphite2.dll
+- libharfbuzz-0.dll
+- libiconv-2.dll
+- libintl-8.dll
+- libjbig-0.dll
+- libjpeg-8.dll
+- libLerc.dll
+- liblzma-5.dll
+- libmad-0.dll
+- libogg-0.dll
+- libpcre2-8-0.dll
+- libpng16-16.dll
+- libSDL_image-1-2-0.dll
+- libSDL_mixer-1-2-0.dll
+- libsharpyuv0.dll
+- libstdc++-6.dll
+- libtiff-6.dll
+- libvorbis-0.dll
+- libvorbisfile-3.dll
+- libwebp-7.dll
+- libwinpthread-1.dll
+- libzstd.dll
+- SDL_ttf.dll
+- SDL.dll
+- zlib1.dll
+
+Cette liste est exhaustive et il est probable que de nombreuses DLL ne
+soient pas nécessaires à un fonctionnement normal.
+Toutes les DLL se trouvent à l'adresse suivante :
+
+C:\msys64\mingw64\bin\
+
+Si vous distribuez votre version, vous devriez empaqueter toutes ces DLL
+avec votre onscripter.exe.
+
+Toutes les autres plateformes
+-------------------
+Nous ne fournissons des compilations que pour macOS et Windows, et nous ne
+faisons des tests que sur GNU/Linux, macOS et Windows ; cependant,
+ONScripter a été compilé avec succès pour des plateformes pour des
+plateformes aussi diverses qu'Android, iOS, Symbian, MacOS Classic, PSP,
+*BSD, et bien d'autres encore.  Cependant, nous n'avons pas modifié les
+makefiles pour ces plateformes, et nous ne pouvons pas garantir une
+compilation réussie sur toute plateforme autres que GNU/Linux, macOS et
+Windows.  Si vous compilez sur l'une d'elles vous devrez au minimum vous
+assurer que la définition -DINSANI est présente.  Si vous réussissez à
+compiler sur une plateforme non prise en charge, prière de nous joindre et
+nous renvoyer vos Makefiles modifiés.
+
+2.1 POURQUOI DES BIBLIOTHÈQUES DYNAMIQUES
+
+Traditionnellement, un effort a été fait pour s'assurer que les
+compilations ONScripter-insani et ONScripter-EN soient compilées avec des
+bibliothèques statiques, pour faciliter la distribution, entre autres.
+Le problème est qu'une tendance du logiciel à développer des bogues au fil
+du temps en raison d'incompatibilités mineures avec des environnements
+d'exploitation plus récents pourrait s'installer assez rapidement -- et
+que la présence de ces bibliothèques statiques peut parfois conduire à des
+plantages au fil du temps et que le système d'exploitation sous-jacent
+subit des modifications importantes.
+
+Notre système de compilation pour macOS dépend de Homebrew, et vous ne
+devriez jamais essayer de lier statiquement les bibliothèques Homebrew,
+car elles ont tendance à dépendre véritablement de la version du système
+d'exploitation, d'une manière que les bibliothèques dyn. ne sont pas.
+De plus, pour les besoins de macOS, vous êtes canoniquement supposé
+incorporer les bibliothèques dynamiques nécessaires à l'intérieur du
+paquet app comme le fait notre makedist.MacOSX.sh.
+
+Pour Windows, les DLL MINGW64 sont largement compatibles avec toutes les
+versions modernes de Windows x86-64, et dans le cas où elles deviendraient
+incompatibles, le remplacement par des versions mises à jour sera aisé.
+
+3. CONTACTS
+
+Le créateur original d'ONScripter est Ogapee :
+
+- https://onscripter.osdn.jp/onscripter.html
+
+Veuillez vous abstenir de contacter Ogapee à propos de tout ce que vous
+trouverez dans ONScripter-insani, car cette branche présente des
+différences par rapport à la version principale d'ONScripter.
+Joignez-nous plutôt via Github :
+
+- http://nscripter.insani.org/
+- https://github.com/insani-org/onscripter-insani/
+
+4. LICENCE
+
+ONScripter-insani est distribué sous les termes de la licence publique GNU
+(GPL) v2.  Cette licence ne s'éend pas aux ressources d'un jeu exécuté
+dans ONScripter-insani -- ces droits restent la propriété des créateurs
+d'origine.
+
+Une copie de la GPLv2 ('COPYING') est présente dans ce répertoire source.
+
+5. CHANGELOG
+
+20230308
+--------
+- Version amont d'ONScripter : 20220816
+- Ajout du paramètre legacy_english_mode
+- Passe english_mode et legacy_english_mode à VRAI lorsqu'une ligne
+commençant par ` est détectée.
+- Création d'un système de saut de ligne pour legacy_english_mode
+- Correction d'un bogue dans lequel les lignes commençant par ` ne peuvent
+être avancées dans aucune circonstance
+- Ajustements mineurs pour permettre l'utilisation de SDL2 + SDL12-compat
+- macOS :
+  + paramètre de compilation APPBUNDLE qui permet par défaut d'enregistrer
+  les fichiers .sav et envdata dans ~/Documents/ONScripter/<nom du jeu>
+  plutôt que dans le même répertoire, et de permettre la détection des
+  ressources du jeu dans le paquet app lui-même
+  + Modification du fichier makefile pour macOS
+  + Création d'un script de création d'app bundle pour macOS
+- Windows :
+  + Tout nouveau makefile pour Windows, reposant sur MSYS2 plutôt que VC++
+  + Modifications de plusieurs fichiers pour permettre une compilation
+  correcte basée sur MSYS2
+  + Fonctionnalité de l'icône de la fenêtre rétroportée (datant de 2005 !)
+
+Toutes les versions précédentes
+---------------------
+- http://nscripter.insani.org/fr/changelog.html

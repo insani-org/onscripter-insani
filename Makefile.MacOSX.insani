@@ -2,6 +2,9 @@
 #
 # Makefile.MacOSX.insani - Makefile rules for macOS + homebrew
 #
+# -------
+# ENGLISH
+# -------
 # This makefile assumes homebrew, installed in its default location.
 # See README for setup details.
 #
@@ -45,6 +48,59 @@
 # 
 # Discussion of how to do this is well beyond the scope of this Makefile,
 # but the below is quite a helpful resource:
+#
+# https://stackoverflow.com/questions/64652704/how-to-notarize-an-macos-command-line-tool-created-outside-of-xcode
+#
+# --------
+# FRANÇAIS
+# --------
+#
+# (Traduction par M. Floréal)
+#
+# Ce makefile présume que homebrew est installé dans son emplacement par
+# défaut. Consultez la note LISEZMOI pour les détails de l'installation.
+#
+# La définition APPBUNDLE doit être expliquée plus en détail.  Vous ne
+# devriez compiler avec cette définition que si vous créez un paquet
+# app macOS pour un jeu spécifique.  Elle aura les effets suivants :
+#
+# - Sauvegarder les fichiers .sav et envdata dans ~/Documents/<nom exéc.>
+# - Chargement à partir de l'emplacement ci-dessus
+# - Rechercher les ressources du jeu dans <exéc.>.app/Contents/Ressources
+#
+# Après avoir compilé le binaire onscripter avec APPBUNDLE défini, vous
+# devriez générer un jeu d'icônes approprié (fichier ICNS) que vous
+# nommerez icon.icns.  Nous avons fourni un script automatisé pour cela
+# -- il s'agit de ./makeICNS.MacOSX.sh.  Ce script a plusieurs pré-requis,
+# dont les outils xcode et ImageMagick (brew install ImageMagick).
+# Vous devez également fournir un fichier image carré de n'importe quelle
+# sorte -- nous recommandons les PNG de résolution 1 024 x 1 024.
+# Le script s'occupera de tout le redimensionnement et la création du
+# fichier ICNS.  Une fois que vous avez le fichier ICNS, exécutez
+# ./makedist.MacOSX.sh après l'avoir modifié pour y mettre le nom du jeu
+# dans la variable APP_NAME (par exemple 'Radiata').  Vous obtiendrez un
+# paquet app macOS spécifique au jeu, avec toutes ses fonctionnalités.
+#
+# Si vous voulez créer un onscripter-insani générique qui sauvegarde et
+# charge à partir du même dossier que les ressources du jeu, alors vous
+# devez catégoriquement ne pas utiliser la définition APPBUNDLE, mais vous
+# devriez quand même exécuter ./makedist.MacOSX.sh après la compilation.
+# Vous obtiendrez un paquet macOS générique pour onscripter-insani qui se
+# comportera comme un exécutable portable - il suffit de le glisser et
+# déposer là où se trouvent les ressources du jeu, et de le démarrer.
+#
+# Dans les deux cas, si vous souhaitez distribuer votre paquet app,
+# vous devrez :
+#
+# - Payer 99$/an à Apple pour un compte Apple Developer
+# - Obtenir vos certificats de dév. d'app. et d'installateur d'app.
+# - Signer le code de votre paquet app correctement
+# - Générer votre DMG ou votre PKG et signez-*le* correctement.
+# - Notariser votre DMG/PKG (ce qui implique de l'envoyer à Apple)
+# - Lier la notarisation réussie à votre DMG/PKG
+# 
+# La discussion sur la façon de procéder dépasse largement le cadre de ce
+# Makefile, mais le document ci-dessous est une ressource très utile :
 #
 # https://stackoverflow.com/questions/64652704/how-to-notarize-an-macos-command-line-tool-created-outside-of-xcode
 #
