@@ -402,6 +402,10 @@ protected:
     bool english_mode;
 #if defined(INSANI)
     bool legacy_english_mode; // 0 ... not english, 1 ... english and fixed-width and using `
+    bool skip_newline_mode; // 0 if / is not detected at end of line; 1 if / is detected at end of line
+    bool prev_skip_newline_mode;
+    int skip_newline_offset;
+    bool prev_atsign;
 #endif
 
     struct Kinsoku {

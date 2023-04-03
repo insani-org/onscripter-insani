@@ -641,7 +641,8 @@ bool ONScripter::clickNewPage( char *out_text )
     // this block is necessary because as it stands, onscripter will not properly advance the string buffer offset past the \ symbol when in 1 byte mode, causing an infinite stall.
     if(legacy_english_mode)
     {
-        if(script_h.getStringBuffer()[ string_buffer_offset + 1 ] == '\\') string_buffer_offset += 2;
+        if(script_h.getStringBuffer()[ string_buffer_offset + 1 ] == '\\' ||
+           script_h.getStringBuffer()[ string_buffer_offset + 1 ] == '@') string_buffer_offset += 2;
     }
 #endif
 
@@ -810,7 +811,11 @@ int ONScripter::textCommand()
 #if defined(INSANI)
     // set english_mode and legacy_english mode here
     int english_mode_check = script_h.getEnglishMode();
-    if(english_mode_check == 1) english_mode = true;
+    if(english_mode_check == 1)
+    {
+        legacy_english_mode = false;
+        english_mode = true;
+    }
     else if(english_mode_check == 2)
     {
         legacy_english_mode = true;
@@ -824,38 +829,111 @@ int ONScripter::textCommand()
 
     if(legacy_english_mode)
     {
+        // First, insert a newline if the previous line terminated with an @
+        if(prev_atsign == true) brCommand();
+
         // English monospaced line wrapping algorithm begins here
         int line_length = sentence_font.num_xy[0] * 2;
         char *original_text = script_h.getStringBuffer();
+        int current_line_length = 0;
+
+        prev_skip_newline_mode = skip_newline_mode;
+        skip_newline_mode = script_h.getSkipNewlineMode();
+        if(prev_skip_newline_mode && original_text[strlen(original_text) - 1] == '\\') skip_newline_mode = true;
+
+        printf("skip_newline_mode: %d\n", skip_newline_mode);
+        if(!skip_newline_mode) skip_newline_offset = 0;
+        else if(skip_newline_mode) current_line_length += skip_newline_offset;
+        printf("skip_newline_offset: %d\n", skip_newline_offset);
 
         // in ScriptHandler.cpp: #define STRING_BUFFER_LENGTH 4096 -- this is the max string buffer length ONScripter supports.
         char *temp_text = (char *) malloc(4096 * sizeof(char));
 
         int original_text_length = strlen(original_text);
+        bool char_is_token = true;
+        int char_is_token_counter;
         strcpy(temp_text, original_text);
 
         // now get the first two words in the script
         char *current_word = strtok(temp_text, " ");
         char *next_word = strtok(NULL, " ");
 
+        // check for padding spaces in the first word
+
+        if(&current_word[0] != &temp_text[0])
+        {
+            int space_counter = 0;
+            for(int i = 0; original_text[i] == ' '; i++)
+            {
+                temp_text[i] = ' ';
+                space_counter++;
+            }
+            if(current_line_length + strlen(current_word) + space_counter <= line_length) current_word = temp_text;
+        }
+
         // now parse special cases
         if(strlen(current_word) >= line_length)
         {
             // ... then there's no point in word-wrapping at all, as the word that the writer/translator put in is longer than the limit anyway, so do nothing
         }
-        else if(original_text_length <= line_length)
+        else if(original_text_length + current_line_length <= line_length)
         {
-            // ... the entire text fits on one display line anyway, so do nothing
+            // ... the entire text fits on one display line anyway, so just calculate the new skip_newline_offset
+            if(skip_newline_mode)
+            {
+                // remove all special ending tokens (\, @, /) from the character count
+                char_is_token = true;
+                char_is_token_counter = original_text_length - 1;
+                while(char_is_token)
+                {
+                    if(original_text[char_is_token_counter] == '\\' ||
+                       original_text[char_is_token_counter] == '@' ||
+                       original_text[char_is_token_counter] == '/')
+                    {
+                        original_text_length--;
+                        char_is_token_counter--;
+                    }
+                    else char_is_token = false;
+                }
+
+                // then set the skip_newline_offset to the corrected text length
+                skip_newline_offset += original_text_length;
+
+            }
+            else skip_newline_offset = 0;
         }
         else
         {
-            // ... first, iterate once on the current and next words, to initialize our word-wrapping
-            strcpy(original_text, current_word);
-            current_word = next_word;
-            next_word = strtok(NULL, " ");
+            // first attempt to iterate manually on current_word or next_word
+            if(current_line_length + strlen(current_word) + 1 <= line_length)
+            {
+                strcpy(original_text, current_word);
+                current_word = next_word;
+                next_word = strtok(NULL, " ");
 
-            // we capture this in a variable because we need to reset this to 0 whenever we line break
-            int current_line_length = strlen(original_text);
+                // we capture this in a variable because we need to reset this to 0 whenever we line break
+                current_line_length += strlen(original_text);
+            }
+            else
+            {
+                // the only time the above won't work is if we had a / before and need to word wrap on the first word
+                strcpy(original_text, "");
+                //current_line_length++;
+                while(current_line_length < line_length)
+                {
+                    strcat(original_text, " ");
+                    current_line_length++;
+                }
+                skip_newline_offset = 0;
+
+                // now we've begun the new line, and we set the current line length to the current word
+                strcat(original_text, current_word);
+                current_line_length = strlen(current_word);
+
+                // and finally, iterate current_word and next_word
+                current_word = next_word;
+                next_word = strtok(NULL, " ");
+            }
 
             // ...our setup is complete and now we can loop and line break
             while(current_word != NULL)
@@ -863,9 +941,13 @@ int ONScripter::textCommand()
                 /*
                 *
                 * Word wrap special cases.  Not appropriate to start lines with
-                * "--" or "...", so always stick these with the last word.
+                * "--" or "...", so always stick these with the last word.  Also,
+                * if you detect a double space, preserve that double space.
                 * 
                 */
+                int null_index = strlen(current_word);
+                null_index = null_index + 2;
+
                 if(next_word != NULL &&
                 (strcmp(next_word, "-") == 0 || 
                     strcmp(next_word, "--") == 0 ||
@@ -874,10 +956,18 @@ int ONScripter::textCommand()
                     next_word[2] == '.')))
                 {
                     // attempt to replace the null character that terminates current_word with a space; should have the effect of concatenating the two strings together
-                    int null_index = strlen(current_word);
+                    null_index = strlen(current_word);
                     current_word[null_index] = ' ';
 
                     next_word = strtok(NULL, " ");
+                }
+                else if(next_word != NULL && 
+                        (&current_word[null_index] == &next_word[0]))
+                {
+                    // replace the null character that terminates current_word with a space; this will not, unlike above, concatenate current_word and next_word together because there is another space
+                    null_index = null_index - 2;
+                    current_word[null_index] = ' ';
+                    current_word[null_index + 1] = '\0';
                 }
 
                 if(current_line_length + strlen(current_word) + 1 <= line_length)
@@ -893,6 +983,9 @@ int ONScripter::textCommand()
                 {
                     // we are in line break mode
 
+                    // skip_newline_offset reset to 0
+                    skip_newline_offset = 0;
+
                     // first fill the line with spaces all the way up to the line length limit
                     while(current_line_length < line_length)
                     {
@@ -907,12 +1000,31 @@ int ONScripter::textCommand()
                 }
 
                 // these are the last things that should happen before we loop
+                // remove all special ending tokens (\, @, /) from the character count
+                char_is_token = true;
+                char_is_token_counter = strlen(original_text) - 1;
+                while(char_is_token)
+                {
+                    if(original_text[char_is_token_counter] == '\\' ||
+                       original_text[char_is_token_counter] == '@' ||
+                       original_text[char_is_token_counter] == '/')
+                    {
+                        current_line_length--;
+                        char_is_token_counter--;
+                    }
+                    else char_is_token = false;
+                }
+
+                // then set the skip_newline_offset to the corrected character count
+                skip_newline_offset = current_line_length;
+
+                printf("%s %d\n", current_word, current_line_length);
+
+                // and finally iterate through the next set of words
                 current_word = next_word;
                 next_word = strtok(NULL, " ");
             }
         }
-
-        //printf("%s\n", original_text);
         free(temp_text);
     }
 #endif
@@ -929,6 +1041,11 @@ int ONScripter::textCommand()
     else
 #endif
     while(processText());
+
+#if defined(INSANI)
+    if(script_h.getStringBuffer()[strlen(script_h.getStringBuffer()) - 1] == '@') prev_atsign = true;
+    else prev_atsign = false;
+#endif
 
     return RET_CONTINUE;
 }

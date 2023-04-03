@@ -249,7 +249,15 @@ const char *ScriptHandler::readToken()
                     addStringBuffer( ch );
                     buf++;
                     if (ch == '_') ignore_clickstr_flag = true;
+#if not defined(INSANI)
                     if (!wait_script && !eng_flag && (ch == '@' || ch == '\\')) wait_script = buf;
+#else
+                    if (!wait_script && !eng_flag && (ch == '@' || ch == '\\'))
+                    {
+                        wait_script = buf;
+                        skip_newline_mode = false;
+                    }
+#endif
                 }
             }
             ch = *buf;
@@ -267,6 +275,12 @@ const char *ScriptHandler::readToken()
                 ch = *++buf;
             }
         }
+#if defined(INSANI)
+        // printf("string_buffer = %s\n", string_buffer);
+        int buf_last_char = strlen(string_buffer) - 1;
+        if(string_buffer[buf_last_char] == '/') skip_newline_mode = true;
+        else skip_newline_mode = false;
+#endif
         if (ch == '`') buf++;
 
         text_flag = true;

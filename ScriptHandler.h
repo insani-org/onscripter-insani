@@ -124,6 +124,9 @@ public:
 #if defined(INSANI)
     // function for getting what the english mode is
     inline int getEnglishMode(){ if(legacy_english_mode) return 2; else if (english_mode) return 1; else return 0; };
+
+    // function for getting the state of skip newline mode
+    inline bool getSkipNewlineMode() { return skip_newline_mode; }
 #endif
 
     // function for direct manipulation of script address
@@ -356,6 +359,7 @@ private:
     bool english_mode;
 #if defined(INSANI)
     bool legacy_english_mode;
+    bool skip_newline_mode;
 #endif
 
     char *current_script;
