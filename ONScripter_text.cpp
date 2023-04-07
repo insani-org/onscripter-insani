@@ -841,10 +841,10 @@ int ONScripter::textCommand()
         skip_newline_mode = script_h.getSkipNewlineMode();
         if(prev_skip_newline_mode && original_text[strlen(original_text) - 1] == '\\') skip_newline_mode = true;
 
-        printf("skip_newline_mode: %d\n", skip_newline_mode);
+        //printf("skip_newline_mode: %d\n", skip_newline_mode);
         if(!skip_newline_mode) skip_newline_offset = 0;
         else if(skip_newline_mode) current_line_length += skip_newline_offset;
-        printf("skip_newline_offset: %d\n", skip_newline_offset);
+        //printf("skip_newline_offset: %d\n", skip_newline_offset);
 
         // in ScriptHandler.cpp: #define STRING_BUFFER_LENGTH 4096 -- this is the max string buffer length ONScripter supports.
         char *temp_text = (char *) malloc(4096 * sizeof(char));
@@ -1018,7 +1018,7 @@ int ONScripter::textCommand()
                 // then set the skip_newline_offset to the corrected character count
                 skip_newline_offset = current_line_length;
 
-                printf("%s %d\n", current_word, current_line_length);
+                //printf("%s %d\n", current_word, current_line_length);
 
                 // and finally iterate through the next set of words
                 current_word = next_word;

@@ -106,7 +106,8 @@
 INCS = `sdl-config --cflags` `smpeg-config --cflags` -I/opt/homebrew/include
 
 LIBS = `sdl-config --libs` `smpeg-config --libs` `freetype-config --libs` -lSDL_ttf -lSDL_image -lSDL_mixer -lbz2 -lm -ljpeg -framework AVFoundation -framework CoreFoundation -framework Foundation
-DEFS = -DMACOSX -DUSE_CDROM -DUTF8_CAPTION -DUSE_OGG_VORBIS -DUTF8_FILESYSTEM -DENABLE_1BYTE_CHAR -DFORCE_1BYTE_CHAR -DINSANI -DAPPBUNDLE
+DEFS = -DMACOSX -DUSE_CDROM -DUTF8_CAPTION -DUSE_OGG_VORBIS -DUTF8_FILESYSTEM -DENABLE_1BYTE_CHAR -DFORCE_1BYTE_CHAR -DINSANI
+#DEFS += -DAPPBUNDLE
 
 EXESUFFIX =
 OBJSUFFIX = .o
