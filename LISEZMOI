@@ -2,29 +2,25 @@
 LISEZMOI ONSCRIPTER-INSANI (20230308)
 =====================================
 
--1. TRADUCTION
-
-Traduction par M. Floréal.  Merci beaucoup!
-
 0. INTRODUCTION ET HISTOIRE
 
 ONScripter-insani est une branche d'ONScripter, qui est un projet actif en
 date de 2022 (https://onscripter.osdn.jp/onscripter.html).  ONScripter est
 une implémentation libre, clone de NScripter -- un moteur de création de
-nouveaux jeux qui a sans doute contribué à l'essor des nouveaux jeux au
+romans vidéoludiques qui a sans doute contribué à l'essor de ceux-ci au
 Japon.  De nombreuses entreprises ont utilisé NScripter pour créer
 certains des classiques du genre, comme par exemple 'Mizuiro' de
 Nekonekosoft et 'Tsukihime' de TYPE-MOON.
 
 En 2005, un programmeur nommé chendo a apporté quelques correctifs à
 ONScripter qui, pour la première fois, permettait d'utiliser directement
-des caractères d'un octet directement dans ONScripter.  Nous, membres
-d'insani.org, avons pris en charge la maintenance d'une branche séparée
-d'ONScripter pour les besoins de la localisation de nouveaux jeux.
-Cette branche est finalement devenue une branche à part entière appelée
-ONScripter-EN (ons-en), qui a été maintenue par Haeleth et Uncle Mion.
-Les dernières modifications de cette branche remontent à 2011, et le
-projet n'a pas été activement maintenu depuis.
+des caractères d'un octet dans ONScripter.  Nous, membres d'insani.org,
+avons pris en charge la maintenance d'une branche séparée d'ONScripter
+pour les besoins de la localisation de nouveaux jeux.  Cette branche est
+finalement devenue une branche à part entière appelée ONScripter-EN
+(ons-en), qui a été maintenue par Haeleth et Uncle Mion.  Les dernières
+modifications de cette branche remontent à 2011, et le projet n'a pas été
+activement maintenu depuis.
 
 En 2023, les binaires existants pour ONScripter-EN ont les
 caractéristiques suivantes :
@@ -65,8 +61,8 @@ demandons de suivre cette convention.
 
 1. BIBLIOTHÈQUES/UTILITAIRES REQUIS ET RECOMMANDÉS
 
-- Pour macOS, notre système de construction suppose que vous utilisez homebrew
-- Pour Windows, notre système de construction suppose que vous utilisez MSYS2
+- Pour macOS, le système de compilation suppose l'utilisation de homebrew
+- Pour Windows, le système de compilation suppose l'utilisation de MSYS2
 
 Bibliothèques requises
 ------------------
@@ -215,7 +211,7 @@ avec votre onscripter.exe.
 Toutes les autres plateformes
 -------------------
 Nous ne fournissons des compilations que pour macOS et Windows, et nous ne
-faisons des tests que sur GNU/Linux, macOS et Windows ; cependant,
+faisons des essais que sur GNU/Linux, macOS et Windows ; cependant,
 ONScripter a été compilé avec succès pour des plateformes pour des
 plateformes aussi diverses qu'Android, iOS, Symbian, MacOS Classic, PSP,
 *BSD, et bien d'autres encore.  Cependant, nous n'avons pas modifié les
@@ -240,8 +236,7 @@ subit des modifications importantes.
 
 Notre système de compilation pour macOS dépend de Homebrew, et vous ne
 devriez jamais essayer de lier statiquement les bibliothèques Homebrew,
-car elles ont tendance à dépendre véritablement de la version du système
-d'exploitation, d'une manière que les bibliothèques dyn. ne sont pas.
+car elles ont tendance à dépendre de la version du système d'exploitation, d'une façon que les bibliothèques dynamiques ('dylibs') ne sont pas.
 De plus, pour les besoins de macOS, vous êtes canoniquement supposé
 incorporer les bibliothèques dynamiques nécessaires à l'intérieur du
 paquet app comme le fait notre makedist.MacOSX.sh.
@@ -273,7 +268,7 @@ d'origine.
 
 Une copie de la GPLv2 ('COPYING') est présente dans ce répertoire source.
 
-5. CHANGELOG
+5. JOURNAL DES MODIFICATIONS
 
 20230308
 --------
