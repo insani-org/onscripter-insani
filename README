@@ -51,7 +51,7 @@ not currently in ONScripter, as well as legacy Win32 (one of the stated
 targets for ONScripter-EN is 32-bit Windows XP virtual machines, for 
 instance).  We have chosen to re-activate our ONScripter-insani branch, as the 
 goals of ONScripter-EN and our goals are slightly different.  We consider 
-ONScripter-EN  to be a sister project to onscripter-insani and we collaborate 
+ONScripter-EN to be a sister project to onscripter-insani and we collaborate 
 closely with the maintainers of said project (for instance, we maintain the
 Windows Makefiles for MSYS2-based compilation).  Our goals for 
 onscripter-insani are as follows:
