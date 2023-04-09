@@ -96,6 +96,7 @@ Recommended Libraries
 - SMPEG
 - libogg
 - libvorbis
+- libmad
 
 Required Utilities (macOS)
 --------------------------
