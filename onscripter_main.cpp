@@ -382,6 +382,10 @@ int main( int argc, char **argv )
 {
     printf("ONScripter version %s(%d.%02d)\n", ONS_VERSION, NSC_VERSION/100, NSC_VERSION%100 );
 
+#if defined(INSANI)
+    printf("OYABB insanity spirit detected anew, in 20230410 flavor!\n");
+#endif
+
 #if defined(PSP)
     ons.disableRescale();
     ons.enableButtonShortCut();
