@@ -572,6 +572,14 @@ bool ONScripter::clickWait( char *out_text )
 
     string_buffer_offset += script_h.checkClickstr(script_h.getStringBuffer() + string_buffer_offset);
 
+#if defined(INSANI)
+    // this block is necessary because as it stands, onscripter will not properly advance the string buffer offset past the @ symbol when in 1 byte mode, causing an infinite stall.
+    if(legacy_english_mode)
+    {
+        if(script_h.getStringBuffer()[ string_buffer_offset + 1 ] == '@') string_buffer_offset += 2;
+    }
+#endif
+
     if ( (skip_mode & (SKIP_NORMAL | SKIP_TO_EOP) || ctrl_pressed_status) && !textgosub_label ){
         clickstr_state = CLICK_NONE;
         if ( out_text ){
@@ -641,8 +649,7 @@ bool ONScripter::clickNewPage( char *out_text )
     // this block is necessary because as it stands, onscripter will not properly advance the string buffer offset past the \ symbol when in 1 byte mode, causing an infinite stall.
     if(legacy_english_mode)
     {
-        if(script_h.getStringBuffer()[ string_buffer_offset + 1 ] == '\\' ||
-           script_h.getStringBuffer()[ string_buffer_offset + 1 ] == '@') string_buffer_offset += 2;
+        if(script_h.getStringBuffer()[ string_buffer_offset + 1 ] == '\\') string_buffer_offset += 2;
     }
 #endif
 
@@ -829,9 +836,6 @@ int ONScripter::textCommand()
 
     if(legacy_english_mode)
     {
-        // First, insert a newline if the previous line terminated with an @
-        if(prev_atsign == true) brCommand();
-
         // English monospaced line wrapping algorithm begins here
         int line_length = sentence_font.num_xy[0] * 2;
         char *original_text = script_h.getStringBuffer();
@@ -1041,11 +1045,6 @@ int ONScripter::textCommand()
     else
 #endif
     while(processText());
-
-#if defined(INSANI)
-    if(script_h.getStringBuffer()[strlen(script_h.getStringBuffer()) - 1] == '@') prev_atsign = true;
-    else prev_atsign = false;
-#endif
 
     return RET_CONTINUE;
 }
