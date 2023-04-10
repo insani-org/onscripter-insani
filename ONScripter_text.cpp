@@ -1233,6 +1233,53 @@ bool ONScripter::processText()
         
         return true;
     }
+#if defined(INSANI)
+    else if ( ch == '!' && english_mode ){
+        if( script_h.getStringBuffer()[ string_buffer_offset + 1 ] == 's' ||
+            script_h.getStringBuffer()[ string_buffer_offset + 1 ] == 'w')
+        {
+            string_buffer_offset++;
+            if ( script_h.getStringBuffer()[ string_buffer_offset ] == 's' ){
+                string_buffer_offset++;
+                if ( script_h.getStringBuffer()[ string_buffer_offset ] == 'd' ){
+                    sentence_font.wait_time = -1;
+                    string_buffer_offset++;
+                }
+                else{
+                    int t = 0;
+                    while( script_h.getStringBuffer()[ string_buffer_offset ] >= '0' &&
+                        script_h.getStringBuffer()[ string_buffer_offset ] <= '9' ){
+                        t = t*10 + script_h.getStringBuffer()[ string_buffer_offset ] - '0';
+                        string_buffer_offset++;
+                    }
+                    sentence_font.wait_time = t;
+                    while (script_h.getStringBuffer()[ string_buffer_offset ] == ' ' ||
+                        script_h.getStringBuffer()[ string_buffer_offset ] == '\t') string_buffer_offset++;
+                }
+            }
+            else if ( script_h.getStringBuffer()[ string_buffer_offset ] == 'w' ||
+                    script_h.getStringBuffer()[ string_buffer_offset ] == 'd' ){
+                bool flag = false;
+                if ( script_h.getStringBuffer()[ string_buffer_offset ] == 'd' ) flag = true;
+                string_buffer_offset++;
+                int t = 0;
+                while( script_h.getStringBuffer()[ string_buffer_offset ] >= '0' &&
+                    script_h.getStringBuffer()[ string_buffer_offset ] <= '9' ){
+                    t = t*10 + script_h.getStringBuffer()[ string_buffer_offset ] - '0';
+                    string_buffer_offset++;
+                }
+                while (script_h.getStringBuffer()[ string_buffer_offset ] == ' ' ||
+                    script_h.getStringBuffer()[ string_buffer_offset ] == '\t') string_buffer_offset++;
+                if (!skip_mode && !ctrl_pressed_status){
+                    event_mode = WAIT_TIMER_MODE;
+                    if (flag) event_mode |= WAIT_INPUT_MODE;
+                    waitEvent(t);
+                }
+            }
+            return true;
+        }
+    }
+#endif
     else if ( ch == '!' && !(script_h.getEndStatus() & ScriptHandler::END_1BYTE_CHAR) ){
         string_buffer_offset++;
         if ( script_h.getStringBuffer()[ string_buffer_offset ] == 's' ){

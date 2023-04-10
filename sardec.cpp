@@ -78,7 +78,7 @@ int main( int argc, char **argv )
                 /* If the directory doesn't exist, create it */
                 if ( stat ( dir_name, &file_stat ) == -1 && errno == ENOENT )
                     mkdir( dir_name, 00755 );
-#else if defined(WIN32)
+#elif defined(WIN32)
                 /* Windows has no idea what chmod permissions are */
                 if ( stat ( dir_name, &file_stat ) == -1 && errno == ENOENT )
                     mkdir( dir_name );
