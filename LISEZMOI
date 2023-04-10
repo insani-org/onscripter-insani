@@ -1,6 +1,6 @@
-=====================================
+===================================
 LISEZMOI ONSCRIPTER-INSANI (20230308)
-=====================================
+===================================
 
 0. INTRODUCTION ET HISTOIRE
 
@@ -22,7 +22,7 @@ finalement devenue une branche à part entière appelée ONScripter-EN
 modifications de cette branche remontent à 2011, et le projet n'a pas été
 activement maintenu depuis.
 
-En 2023, les binaires existants pour ONScripter-EN ont les
+En février 2023, les binaires existants pour ONScripter-EN avaient les
 caractéristiques suivantes :
 
 - Ils ne fonctionnent plus avec les versions modernes de macOS,
@@ -39,14 +39,33 @@ fichiers et de ses noms de fichiers.  Cela signifie que les comparaisons
 directes entre le code d'ONScripter-EN et celui d'ONScripter sont
 désormais très difficiles.
 
-Par conséquent, nous avons choisi de relancer notre branche
-ONScripter-insani.  Les objectifs de cette branche sont les suivants :
+Ceci étant dit, depuis avril 2023, le projet ONScripter-EN est de nouveau
+officiellement maintenu, et nous sommes en effet impliqués dans la mise en
+place du système de compilation sur Windows (x86-64 et i686).  Le projet
+peut être trouvé ici :
+
+- https://github.com/Galladite27/ONScripter-en
+- https://github.com/insani-org/onscripter-en-msys2-configure-makefile
+
+Cette itération d'ONScripter-EN se concentre principalement sur les
+fonctionnalités avancées qui ne sont pas actuellement dans ONScripter,
+et sur la prise en charge de Win32 (ONScripter-EN cible par exemple les
+machines virtuelles Windows XP 32 bits, par exemple).  Nous avons choisi
+de réactiver notre branche ONScripter-insani, car les objectifs
+d'ONScripter-EN et d'ONScripter-insani sont légèrement différents.  Nous
+considérons ONScripter-EN comme un projet frère d'ONScripter-insani et
+collaborons étroitement avec les mainteneurs de ce projet (par exemple,
+nous maintenons les Makefiles Windows pour la compilation reposant sur
+MSYS2).  Nos objectifs pour ONScripter-insani sont les suivants :
 
 - Rester aussi proche que possible de la version amont d'ONScripter
 - Écrire des fonctionnalités qui permettent vraiment le fonctionnement de
-l'ancien mode anglais (un octet, chasse fixe, en utilisant `)
+  l'ancien mode anglais (un octet, chasse fixe, en utilisant `)
 - Fournir des versions pour les architectures modernes, plus
-particulièrement pour Apple Silicon macOS
+  particulièrement pour Apple Silicon macOS
+- Mettre l'accent sur la portabilité et la compilation portable, plutôt
+  que sur la réplication des fonctionnalités d'ONScripter-EN
+- Prendre en charge la logithèque de l'insani pour la postérité
 
 Tous les changements effectués par ONScripter-insani sont enveloppés dans
 des blocs #if defined(INSANI) ... #endif, pour les raisons suivantes :
