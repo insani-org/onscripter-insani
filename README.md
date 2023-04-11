@@ -451,14 +451,10 @@ Une copie de la GPLv2 ('COPYING') est présente dans ce répertoire source.
 
 ## Sulla traduzione
 
-Questa traduzione non è stata effettuata da una persona di lingua natale
-italiana ma da un amatore francofono.  Tuttavia, è stata corretta da >zero<
-persone italofone con maggiore esperienza. Questa traduzione si rivolge a più
-persone e usa il pronome personale «voi».  Vedere la sezione RAGGIUNGERCI per
-l'indirizzo della persona responsabile del progetto in caso di errore.
+Questa traduzione non è stata effettuata da una persona di lingua natale italiana ma da un amatore francofono.  Tuttavia, è stata corretta da >zero< persone italofone con maggiore esperienza. Questa traduzione si rivolge a più persone e usa il pronome personale «voi».  Vedere la sezione RAGGIUNGERCI per l'indirizzo della persona responsabile del progetto in caso di errore.
 
 ## Introduzione e storia
-onscripter-insani è una diramazione di [ONScripter](https://onscripter.osdn.jp/onscripter.html), , che è un progetto attivo ancora nel 2022 (https://onscripter.osdn.jp/onscripter.html).  ONScripter è un'implementazione libera di NScripter, un motore per la creazione di romanzi videoludici che probabilmente ha contribuito a dare il via al fenomeno dei romanzi videoludici in Giappone.  Molte aziende hanno utilizzato NScripter per creare alcuni dei classici del genere, notevoli esempi sono *Mizuiro* di Nekonekosoft e *Tsukihime* di TYPE-MOON.
+onscripter-insani è una diramazione di [ONScripter](https://onscripter.osdn.jp/onscripter.html), che è un progetto attivo ancora nel 2022.  ONScripter è un'implementazione libera di NScripter, un motore per la creazione di romanzi videoludici che probabilmente ha contribuito a dare il via al fenomeno dei romanzi videoludici in Giappone.  Molte aziende hanno utilizzato NScripter per creare alcuni dei classici del genere, notevoli esempi sono *Mizuiro* di Nekonekosoft e *Tsukihime* di TYPE-MOON.
 
 Nel 2005, un programmatore chiamato chendo contribuì con alcune modifiche a ONScripter che, per la prima volta, permettevano di utilizzare direttamente i caratteri a un byte in ONScripter.  Noi, membri di insani.org, ci siamo occupati della manutenzione di una diramazione separata di ONScripter per la localizzazione di nuovi giochi.  Questa diramazione è stata poi trasformata in una vera e propria versione derivata chiamata ONScripter-EN (ons-en), mantenuta da Haeleth e Uncle Mion.  Gli ultimi commit di questa versione sono risalgono al 2011 e da allora il progetto non è più stato mantenuto attivamente.
 
@@ -624,8 +620,7 @@ Il creatore d'ONScripter è Ogapee:
 
 - https://onscripter.osdn.jp/onscripter.html
 
-Vi preghiamo di non contattare Ogapee per qualsiasi cosa troviate in onscripter-insani tuttavia, poiché questa diramazione presenta delle differenze rispetto alla versione principale di ONScripter.  Rivolgetevi invece a noi,
-preferibilmente tramite GitHub:
+Vi preghiamo di non contattare Ogapee per qualsiasi cosa troviate in onscripter-insani tuttavia, poiché questa diramazione presenta delle differenze rispetto alla versione principale di ONScripter.  Rivolgetevi invece a noi, preferibilmente tramite GitHub:
 
 - http://nscripter.insani.org/
 - https://github.com/insani-org/onscripter-insani/
@@ -633,7 +628,7 @@ preferibilmente tramite GitHub:
 ## Registro delle modifiche
 
 ### 20230410
-- Con il 100% di spirito di insanità in più!
+- Con il 100 % di spirito di insanità in più!
 - Correzioni al sistema di interruzione di riga
 - Corretto il comportamento di ```@```, ```\``` e ```/``` in legacy_english_mode
 - ```!s```, ```!w```, e ```#``` ora funzionano in modalità inglese e UTF8
