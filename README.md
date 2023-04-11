@@ -413,7 +413,7 @@ Veuillez vous abstenir de contacter Ogapee à propos de tout ce que vous trouver
 ### 20230410
 - Avec 100% plus d’esprit d'insanité!
 - Corrections apportées au système de sauts de ligne
-- Corrections du comportement de ```@```, ```/``` et ```/``` en legacy_english_mode
+- Corrections du comportement de ```@```, ```\``` et ```/``` en legacy_english_mode
 - ```!s```, ```!w```, et ```#``` fonctionnent maintenant en modes anglais et UTF8
 - Support expérimental initial pour UTF8 (0.utf)
 - Nouvelle documentation française et italienne
