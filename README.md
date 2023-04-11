@@ -195,12 +195,6 @@ ONScripter.  Contact us through Github instead:
 - http://nscripter.insani.org/
 - https://github.com/insani-org/onscripter-insani/
 
-## License
-onscripter-insani is distributed under the terms of the GNU Public  License (GPL) v2.  This license does not extend to the assets for any game run
-in onscripter-insani -- those rights remain with the original creators.
-
-A copy of the GPLv2 can be found under COPYING in this source directory.
-
 ## Changelog
 
 ### 20230410
@@ -227,8 +221,14 @@ A copy of the GPLv2 can be found under COPYING in this source directory.
   - Edits to several files to allow proper MSYS2-based compilation
   - Backported in window icon feature (from 2005!)
 
-## All Previous Versions
+### All Previous Versions
 - http://nscripter.insani.org/changelog.html
+
+## License
+onscripter-insani is distributed under the terms of the GNU Public  License (GPL) v2.  This license does not extend to the assets for any game run
+in onscripter-insani -- those rights remain with the original creators.
+
+A copy of the GPLv2 can be found under COPYING in this source directory.
 
 # Français
 
@@ -405,14 +405,6 @@ Veuillez vous abstenir de contacter Ogapee à propos de tout ce que vous trouver
 - http://nscripter.insani.org/
 - https://github.com/insani-org/onscripter-insani/
 
-## License
-onscripter-insani est distribué sous les termes de la licence publique GNU
-(GPL) v2.  Cette licence ne s'éend pas aux ressources d'un jeu exécuté
-dans onscripter-insani -- ces droits restent la propriété des créateurs
-d'origine.
-
-Une copie de la GPLv2 ('COPYING') est présente dans ce répertoire source.
-
 ## Journal des Modifications
 
 ### 20230410
@@ -441,6 +433,14 @@ Une copie de la GPLv2 ('COPYING') est présente dans ce répertoire source.
 
 ### Toutes les versions précédentes
 - http://nscripter.insani.org/fr/changelog.html
+
+## License
+onscripter-insani est distribué sous les termes de la licence publique GNU
+(GPL) v2.  Cette licence ne s'éend pas aux ressources d'un jeu exécuté
+dans onscripter-insani -- ces droits restent la propriété des créateurs
+d'origine.
+
+Une copie de la GPLv2 ('COPYING') est présente dans ce répertoire source.
 
 # Italiano
 
