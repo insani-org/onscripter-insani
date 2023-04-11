@@ -446,4 +446,4 @@ d'origine.
 Une copie de la GPLv2 ('COPYING') est présente dans ce répertoire source.
 
 # Italiano
-
+Si prega di consultare il file LEGGETEMI
