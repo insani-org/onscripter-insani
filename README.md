@@ -124,7 +124,7 @@ On Linux and gcc, you can fairly easily make a static build of your binary by pa
 ### macOS
 ```gmake -f Makefile.MacOSX.insani```
 
-If you wish to make a game-specific app bundle, you can do so by running ./makedist.MacOSX.sh -- however, if you wish to actually distribute your 
+If you wish to make a game-specific app bundle, you can do so by running ```./makedist.MacOSX.sh``` -- however, if you wish to actually distribute your 
 builds, you are going to need an Apple developer account and you will have to fork over $99 a year.  Much more detailed instructions and notes can be found in the comments section of Makefile.MacOSX.insani.
 
 ### Windows
