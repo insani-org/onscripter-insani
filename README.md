@@ -59,7 +59,7 @@ Should you wish to contribute code to onscripter-insani, we'd ask that you follo
 - libjpeg
 - bzip2
 - One of:
-  - SDL-2.0 AND SDL1.2-compat
+  - SDL-2.0 **and** SDL1.2-compat
   - SDL-1.2
 - SDL_image
 - SDL_mixer
@@ -241,6 +241,7 @@ En février 2023, les binaires existants pour ONScripter-EN avaient les caracté
 
 - Ils ne fonctionnent plus avec les versions modernes de macOS, probablement en raison des changements de sécurité apportés par Catalina et les versions supérieures
 - De nombreux fichiers sonores ne sont pas joués du tout
+- Ils contenaient un bogue sérieux dans lequel vous ne pouviez pas accéder au menu système NScripter (et donc vous n’étiez pas en mesure d’enregistrer) lorsque vous atteigniez un point de choix
 
 De plus, les arborescences des sources d'ONScripter-EN et ONScripter sont maintenant très différents -- ce qui est normal puisqu'il y a 12 ans d'écart entre les deux projets.  Au cours de ces 12 années, ONScripter a porté en son sein de nombreuses améliorations qui se trouvaient dans ONScripter-EN, et a subi au moins une réorganisation complète de ses fichiers et de ses noms de fichiers.  Cela signifie que les comparaisons directes entre le code d'ONScripter-EN et celui d'ONScripter sont désormais très difficiles.
 
@@ -272,8 +273,8 @@ Si vous souhaitez contribuer au code d'onscripter-insani, nous vous demandons de
 - libjpeg
 - bzip2
 - Votre choix de:
-  - SDL-2.0 ET SDL1.2-compat
-  -SDL-1.2
+  - SDL-2.0 **et** SDL1.2-compat
+  - SDL-1.2
 - SDL_image
 - SDL_mixer
 - SDL_ttf
