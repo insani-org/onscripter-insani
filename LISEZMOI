@@ -1,6 +1,6 @@
-===================================
+=====================================
 LISEZMOI ONSCRIPTER-INSANI (20230308)
-===================================
+=====================================
 
 0. INTRODUCTION ET HISTOIRE
 
@@ -33,7 +33,7 @@ et les versions supérieures
 De plus, les arborescences des sources d'ONScripter-EN et ONScripter sont
 maintenant très différents -- ce qui est normal puisqu'il y a 12 ans
 d'écart entre les deux projets.  Au cours de ces 12 années, ONScripter a
-porté en son sein  de nombreuses améliorations qui se trouvaient dans
+porté en son sein de nombreuses améliorations qui se trouvaient dans
 ONScripter-EN, et a subi au moins une réorganisation complète de ses
 fichiers et de ses noms de fichiers.  Cela signifie que les comparaisons
 directes entre le code d'ONScripter-EN et celui d'ONScripter sont
@@ -49,9 +49,9 @@ peut être trouvé ici :
 
 Cette itération d'ONScripter-EN se concentre principalement sur les
 fonctionnalités avancées qui ne sont pas actuellement dans ONScripter,
-et sur la prise en charge de Win32 (ONScripter-EN cible par exemple les
-machines virtuelles Windows XP 32 bits, par exemple).  Nous avons choisi
-de réactiver notre branche ONScripter-insani, car les objectifs
+et sur la prise en charge de Win32 (ONScripter-EN cible les machines
+virtuelles Windows XP 32 bits, par exemple).  Nous avons choisi de
+réactiver notre branche ONScripter-insani, car les objectifs
 d'ONScripter-EN et d'ONScripter-insani sont légèrement différents.  Nous
 considérons ONScripter-EN comme un projet frère d'ONScripter-insani et
 collaborons étroitement avec les mainteneurs de ce projet (par exemple,
@@ -59,21 +59,21 @@ nous maintenons les Makefiles Windows pour la compilation reposant sur
 MSYS2).  Nos objectifs pour ONScripter-insani sont les suivants :
 
 - Rester aussi proche que possible de la version amont d'ONScripter
-- Écrire des fonctionnalités qui permettent vraiment le fonctionnement de
-  l'ancien mode anglais (un octet, chasse fixe, en utilisant `)
-- Fournir des versions pour les architectures modernes, plus
+- Inclure une fonctionalité qui permet vraiment le fonctionnement du
+  mode anglais pré-existant (un octet, chasse fixe, en utilisant `)
+- Fournir des binaires pour les architectures modernes, plus
   particulièrement pour Apple Silicon macOS
 - Mettre l'accent sur la portabilité et la compilation portable, plutôt
   que sur la réplication des fonctionnalités d'ONScripter-EN
-- Prendre en charge la logithèque de l'insani pour la postérité
+- Prendre en charge la ludothèque de l'insani pour la postérité
 
 Tous les changements effectués par ONScripter-insani sont enveloppés dans
 des blocs #if defined(INSANI) ... #endif, pour les raisons suivantes :
 
 - Si vous compilez sans le paramètre INSANI, vous obtiendrez la version de
-base d'ONScripter.
+  base d'ONScripter.
 - Comme il s'agit d'une branche, cela nous permet de nous adapter
-rapidement à tous les changements qu'Ogapee pourrait apporter à l'avenir.
+  rapidement à tous les changements qu'Ogapee pourrait apporter à l'avenir.
 
 Si vous souhaitez contribuer au code d'ONScripter-insani, nous vous
 demandons de suivre cette convention.
@@ -247,7 +247,7 @@ Traditionnellement, un effort a été fait pour s'assurer que les
 compilations ONScripter-insani et ONScripter-EN soient compilées avec des
 bibliothèques statiques, pour faciliter la distribution, entre autres.
 Le problème est qu'une tendance du logiciel à développer des bogues au fil
-du temps en raison d'incompatibilités mineures avec des environnements
+du temps en raison d'incompatibilités mineures avec des systèmes
 d'exploitation plus récents pourrait s'installer assez rapidement -- et
 que la présence de ces bibliothèques statiques peut parfois conduire à des
 plantages au fil du temps et que le système d'exploitation sous-jacent
@@ -264,7 +264,7 @@ Pour Windows, les DLL MINGW64 sont largement compatibles avec toutes les
 versions modernes de Windows x86-64, et dans le cas où elles deviendraient
 incompatibles, le remplacement par des versions mises à jour sera aisé.
 
-3. CONTACTS
+3. JOIGNEZ-NOUS
 
 Le créateur original d'ONScripter est Ogapee :
 
@@ -273,7 +273,7 @@ Le créateur original d'ONScripter est Ogapee :
 Veuillez vous abstenir de contacter Ogapee à propos de tout ce que vous
 trouverez dans ONScripter-insani, car cette branche présente des
 différences par rapport à la version principale d'ONScripter.
-Joignez-nous plutôt via Github :
+À la place, joignez-nous - de préférence via GitHub :
 
 - http://nscripter.insani.org/
 - https://github.com/insani-org/onscripter-insani/
@@ -294,16 +294,16 @@ Une copie de la GPLv2 ('COPYING') est présente dans ce répertoire source.
 - Version amont d'ONScripter : 20220816
 - Ajout du paramètre legacy_english_mode
 - Passe english_mode et legacy_english_mode à VRAI lorsqu'une ligne
-commençant par ` est détectée.
+  commençant par ` est détectée.
 - Création d'un système de saut de ligne pour legacy_english_mode
 - Correction d'un bogue dans lequel les lignes commençant par ` ne peuvent
-être avancées dans aucune circonstance
+  être avancées dans aucune circonstance
 - Ajustements mineurs pour permettre l'utilisation de SDL2 + SDL12-compat
 - macOS :
-  + paramètre de compilation APPBUNDLE qui permet par défaut d'enregistrer
+  + Paramètre de compilation APPBUNDLE qui permet par défaut d'enregistrer
   les fichiers .sav et envdata dans ~/Documents/ONScripter/<nom du jeu>
   plutôt que dans le même répertoire, et de permettre la détection des
-  ressources du jeu dans le paquet app lui-même
+  ressources du jeu dans l'app bundle lui-même
   + Modification du fichier makefile pour macOS
   + Création d'un script de création d'app bundle pour macOS
 - Windows :
@@ -313,5 +313,5 @@ commençant par ` est détectée.
   + Fonctionnalité de l'icône de la fenêtre rétroportée (datant de 2005 !)
 
 Toutes les versions précédentes
----------------------
+-------------------------------
 - http://nscripter.insani.org/fr/changelog.html
