@@ -12,7 +12,7 @@
 # English
 
 ## Introduction and History
-onscripter-insani is a branch of ONScripter, which is an active project as of 2022 (https://onscripter.osdn.jp/onscripter.html).  ONScripter is a clean-room open-source implementation of NScripter -- a novel game creation engine that arguably helped to bootstrap the novel game boom in Japan.  Many companies used NScripter in order to create some of the classics of the genre, notable examples being みずいろ (*Mizuiro*) by Nekonekosoft and 月姫 (*Tsukihime*) by TYPE-MOON.
+onscripter-insani is a branch of [ONScripter](https://onscripter.osdn.jp/onscripter.html), which is an active project as of 2022.  ONScripter is a clean-room open-source implementation of NScripter -- a novel game creation engine that arguably helped to bootstrap the novel game boom in Japan.  Many companies used NScripter in order to create some of the classics of the genre, notable examples being みずいろ (*Mizuiro*) by Nekonekosoft and 月姫 (*Tsukihime*) by TYPE-MOON.
 
 In 2005, a programmer named chendo contributed some patches back to ONScripter which, for the first time, allowed for one-byte characters to be used directly in ONScripter.  We at insani.org took on maintenance of a separate branch of ONScripter for the purposes of novel game localization.  This branch eventually became a full-on fork called ONScripter-EN (ons-en), which was maintained by Haeleth and Uncle Mion.  The last commits to this fork date back to 2011, and the project has not been actively maintained ever since.
 
@@ -233,7 +233,7 @@ A copy of the GPLv2 can be found under COPYING in this source directory.
 # Français
 
 ## Introduction et Histoire
-onscripter-insani est une branche d'ONScripter, qui est un projet actif en date de 2022 (https://onscripter.osdn.jp/onscripter.html).  ONScripter est une implémentation libre, clone de NScripter -- un moteur de création de romans vidéoludiques qui a sans doute contribué à l'essor de ceux-ci au Japon.  De nombreuses entreprises ont utilisé NScripter pour créer certains des classiques du genre, comme par exemple 'Mizuiro' de Nekonekosoft et 'Tsukihime' de TYPE-MOON.
+onscripter-insani est une branche d'[ONScripter](https://onscripter.osdn.jp/onscripter.html), qui est un projet actif en date de 2022.  ONScripter est une implémentation libre, clone de NScripter -- un moteur de création de romans vidéoludiques qui a sans doute contribué à l'essor de ceux-ci au Japon.  De nombreuses entreprises ont utilisé NScripter pour créer certains des classiques du genre, comme par exemple 'Mizuiro' de Nekonekosoft et 'Tsukihime' de TYPE-MOON.
 
 En 2005, un programmeur nommé chendo a apporté quelques correctifs à ONScripter qui, pour la première fois, permettait d'utiliser directement des caractères d'un octet dans ONScripter.  Nous, membres d'insani.org, avons pris en charge la maintenance d'une branche séparée d'ONScripter pour les besoins de la localisation de nouveaux jeux.  Cette branche est finalement devenue une branche à part entière appelée ONScripter-EN (ons-en), qui a été maintenue par Haeleth et Uncle Mion.  Les dernières modifications de cette branche remontent à 2011, et le projet n'a pas été activement maintenu depuis.
 
