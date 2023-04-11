@@ -256,15 +256,15 @@ Ceci étant dit, depuis avril 2023, le projet ONScripter-EN est de nouveau offic
 Cette itération d'ONScripter-EN se concentre principalement sur les fonctionnalités avancées qui ne sont pas actuellement dans ONScripter, et sur la prise en charge de Win32 (ONScripter-EN cible les machines virtuelles Windows XP 32 bits, par exemple).  Nous avons choisi de réactiver notre branche onscripter-insani, car les objectifs d'ONScripter-EN et d'onscripter-insani sont légèrement différents.  Nous considérons ONScripter-EN comme un projet frère d'onscripter-insani et collaborons étroitement avec les mainteneurs de ce projet (par exemple, nous maintenons les Makefiles Windows pour la compilation reposant sur MSYS2).  Nos objectifs pour onscripter-insani sont les suivants :
 
 - Rester aussi proche que possible de la version amont d'ONScripter
-- Inclure une fonctionalité qui permet vraiment le fonctionnement du   mode anglais pré-existant (un octet, chasse fixe, en utilisant `)
+- Inclure une fonctionalité qui permet vraiment le fonctionnement du mode anglais pré-existant (un octet, chasse fixe, en utilisant `)
 - Fournir des binaires pour les architectures modernes, plus particulièrement pour Apple Silicon macOS
 - Mettre l'accent sur la portabilité et la compilation portable, plutôt que sur la réplication des fonctionnalités d'ONScripter-EN
 - Prendre en charge la ludothèque de l'insani pour la postérité
 
 Tous les changements effectués par onscripter-insani sont enveloppés dans des blocs #if defined(INSANI) ... #endif, pour les raisons suivantes :
 
-- Si vous compilez sans le paramètre INSANI, vous obtiendrez la version de   base d'ONScripter.
-- Comme il s'agit d'une branche, cela nous permet de nous adapter   rapidement à tous les changements qu'Ogapee pourrait apporter à l'avenir.
+- Si vous compilez sans le paramètre INSANI, vous obtiendrez la version de  base d'ONScripter.
+- Comme il s'agit d'une branche, cela nous permet de nous adapter  rapidement à tous les changements qu'Ogapee pourrait apporter à l'avenir.
 
 Si vous souhaitez contribuer au code d'onscripter-insani, nous vous demandons de suivre cette convention.
 
@@ -317,7 +317,7 @@ Tous les binaires que vous créez par cette méthode sont spécifiques à la foi
 Nous recommandons ces deux versions respectives de macOS parce qu'il s'agit de versions majeures qui ont apporté des changements importants en matière de sécurité -- les binaires de versions antérieures de macOS ne fonctionnent souvent pas dans ces versions, alors que les binaires qui fonctionnent dans ces versions fonctionneront dans toutes les versions ultérieures à ce jour.
 
 ### Windows
-Installez [MSYS2](https://www.msys2.org) et acceptez l'emplacement d'installation par défaut:
+Procédez à l'installation de [MSYS2](https://www.msys2.org) et acceptez l'emplacement d'installation par défaut :
 
 - ```C:\msys64```
 
@@ -381,12 +381,11 @@ Les dépendances DLL pour le fichier onscripter.exe résultant sont :
 - SDL.dll
 - zlib1.dll
 
-Cette liste est exhaustive et il est probable que de nombreuses DLL ne soient pas nécessaires à un fonctionnement normal. Toutes les DLL se trouvent à l'adresse suivante :
+Cette liste est exhaustive et il est probable que de nombreuses DLL ne soient pas nécessaires à un fonctionnement normal. Toutes les DLL se trouvent au chemin suivant :
 
 - ```C:\msys64\mingw64\bin\```
 
-Si vous distribuez votre version, vous devriez empaqueter toutes ces DLL
-avec votre onscripter.exe.
+Si vous distribuez votre version, vous devriez empaqueter toutes ces DLL avec votre onscripter.exe.
 
 ### Toutes les autres plateformes
 Nous ne fournissons des compilations que pour macOS et Windows, et nous ne faisons des essais que sur GNU/Linux, macOS et Windows ; cependant, ONScripter a été compilé avec succès pour des plateformes pour des plateformes aussi diverses qu'Android, iOS, Symbian, MacOS Classic, PSP, *BSD, et bien d'autres encore.  Cependant, nous n'avons pas modifié les makefiles pour ces plateformes, et nous ne pouvons pas garantir une compilation réussie sur toute plateforme autres que GNU/Linux, macOS et Windows.  Si vous compilez sur l'une d'elles vous devrez au minimum vous assurer que la définition -DINSANI est présente.  Si vous réussissez à compiler sur une plateforme non prise en charge, prière de nous joindre et nous renvoyer vos Makefiles modifiés.
@@ -411,7 +410,7 @@ Veuillez vous abstenir de contacter Ogapee à propos de tout ce que vous trouver
 ## Journal des modifications
 
 ### 20230410
-- Avec 100% plus d’esprit d'insanité !
+- Avec 100 % plus d’esprit d'insanité !
 - Corrections apportées au système de sauts de ligne
 - Corrections du comportement de ```@```, ```\``` et ```/``` en legacy_english_mode
 - ```!s```, ```!w```, et ```#``` fonctionnent maintenant en modes anglais et UTF8
@@ -423,15 +422,15 @@ Veuillez vous abstenir de contacter Ogapee à propos de tout ce que vous trouver
 - Ajout du paramètre legacy_english_mode
 - Passe english_mode et legacy_english_mode à VRAI lorsqu'une ligne commençant par ` est détectée.
 - Création d'un système de saut de ligne pour legacy_english_mode
-- Correction d'un bogue dans lequel les lignes commençant par ` ne peuvent   être avancées dans aucune circonstance
+- Correction d'un bogue dans lequel les lignes commençant par ` ne peuvent être avancées dans aucune circonstance
 - Ajustements mineurs pour permettre l'utilisation de SDL2 + SDL12-compat
 - macOS :
-  - Paramètre de compilation APPBUNDLE qui permet par défaut d'enregistrer les fichiers .sav et envdata dans ```~/Documents/ONScripter/nomdejeu``` plutôt que dans le même répertoire, et de permettre la détection des ressources du jeu dans l'app bundle lui-même
+  - Paramètre de compilation APPBUNDLE qui permet par défaut d'enregistrer les fichiers .sav et envdata dans ```~/Documents/ONScripter/nomdujeu``` plutôt que dans le même répertoire, et de permettre la détection des ressources du jeu dans l'app bundle lui-même
   - Modification du fichier makefile pour macOS
   - Création d'un script de création d'app bundle pour macOS
 - Windows :
   - Tout nouveau makefile pour Windows, reposant sur MSYS2 plutôt que VC++
-  - Modifications de plusieurs fichiers pour permettre une compilation correcte basée sur MSYS2
+  - Modifications de plusieurs fichiers pour permettre une compilation correcte avec MSYS2
   - Fonctionnalité de l'icône de la fenêtre rétroportée (datant de 2005 !)
 
 ### Toutes les versions précédentes
@@ -446,4 +445,223 @@ d'origine.
 Une copie de la GPLv2 ('COPYING') est présente dans ce répertoire source.
 
 # Italiano
-Si prega di consultare il file LEGGETEMI
+
+## Ultimo aggiornamento
+2023-04-11
+
+## Sulla traduzione
+
+Questa traduzione non è stata effettuata da una persona di lingua natale
+italiana ma da un amatore francofono.  Tuttavia, è stata corretta da <zero>
+persone italofone con maggiore esperienza. Questa traduzione si rivolge a più
+persone e usa il pronome personale «voi».  Vedere la sezione RAGGIUNGERCI per
+l'indirizzo della persona responsabile del progetto in caso di errore.
+
+## Introduzione e storia
+onscripter-insani è una diramazione di [ONScripter](https://onscripter.osdn.jp/onscripter.html), , che è un progetto attivo ancora nel 2022 (https://onscripter.osdn.jp/onscripter.html).  ONScripter è un'implementazione libera di NScripter, un motore per la creazione di romanzi videoludici che probabilmente ha contribuito a dare il via al fenomeno dei romanzi videoludici in Giappone.  Molte aziende hanno utilizzato NScripter per creare alcuni dei classici del genere, notevoli esempi sono *Mizuiro* di Nekonekosoft e *Tsukihime* di TYPE-MOON.
+
+Nel 2005, un programmatore chiamato chendo contribuì con alcune modifiche a ONScripter che, per la prima volta, permettevano di utilizzare direttamente i caratteri a un byte in ONScripter.  Noi, membri di insani.org, ci siamo occupati della manutenzione di una diramazione separata di ONScripter per la localizzazione di nuovi giochi.  Questa diramazione è stata poi trasformata in una vera e propria versione derivata chiamata ONScripter-EN (ons-en), mantenuta da Haeleth e Uncle Mion.  Gli ultimi commit di questa versione sono risalgono al 2011 e da allora il progetto non è più stato mantenuto attivamente.
+
+Alla data del febbraio 2023, i binari per ONScripter-EN avevano le seguenti caratteristiche:
+
+- Non funzionano più nei macOS moderni, probabilmente a causa di modifiche in materia di sicurezza apportate da Catalina e versioni successive
+- Molti file audio non vengono riprodotti
+- Contenevano un grave baco per cui non era possibile accedere al menu di sistema (e quindi non era possibile il salvataggio dei progressi) quando la scelta veniva raggiunta
+
+Inoltre, gli alberi dei sorgenti di ONScripter-EN e ONScripter sono ora molto diversi -- il che è normale dato che c'è un divario di 12 anni tra i due progetti.  In questi 12 anni, ONScripter ha apportato molti dei miglioramenti che erano presenti in ONScripter-EN, e ha subito almeno una riorganizzazione completa dei file e dei nomi dei file.  Ciò significa che il confronto diretto tra il codice di ONScripter-EN e quello di ONScripter è ora molto difficile.
+
+Detto questo, a partire dall'aprile 2023, il progetto ONScripter-EN è di nuovo ufficialmente mantenuto e siamo coinvolti nel fornire un sistema di compilazione su Windows (x86-64 e i686).  Il progetto è disponibile qui:
+
+- https://github.com/Galladite27/ONScripter-en
+- https://github.com/insani-org/onscripter-en-msys2-configure-makefile
+
+Questa iterazione di ONScripter-EN si concentra principalmente su funzionalità avanzate non presenti attualmente in ONScripter e sul supporto Win32 (ONScripter-EN mira alle macchine virtuali Windows XP a 32 bit, per esempio). Abbiamo scelto di riattivare la nostra diramazione ONScripter-insani, poiché gli obiettivi di ONScripter-EN e ONScripter-insani sono leggermente diversi. Consideriamo ONScripter-EN come un progetto gemello di ONScripter-insani e lavoriamo a stretto contatto con i manutentori di tale progetto (per esempio, manteniamo i Makefile di Windows per la compilazione tramite MSYS2).  I nostri obiettivi per ONScripter-insani sono i seguenti:
+
+- Rimanere il più vicino possibile all'ONScripter ascendente
+- Includere una funzionalità che permetta davvero la modalità inglese preesistente (un byte, spaziatura fissa, usando `) per funzionare
+- Fornire binari per le architetture moderne, in particolare per Apple Silicon macOS
+- Concentrarsi sulla portabilità e sulla compilazione portatile, piuttosto che sulla replica delle funzionalità di ONScripter-EN
+- Supportare la ludoteca dell'insani per posterità
+
+Tutte le modifiche apportate da ONScripter-insani sono racchiuse in blocchi #if defined(INSANI) ... #endif, per i seguenti motivi:
+
+- Se compilate senza il parametro INSANI, otterrete la versione di base di ONScripter
+- Poiché si tratta di una diramazione, questo ci permette di adattarci rapidamente a qualsiasi cambiamento che Ogapee potrebbe apportare in futuro.
+
+Se volete contribuire al codice di onscripter-insani, vi chiediamo di seguire questa convenzione.
+
+## Biblioteche/Utilità richieste e raccomandate
+- Per macOS, il sistema di compilazione utilizza [homebrew](https://brew.sh)
+- Per Windows, il sistema di compilazione utilizza [MSYS2](https://msys.org)
+
+### Biblioteche richieste
+- libjpeg
+- bzip2
+- Scelta tra:
+  - SDL-2.0 **e** SDL1.2-compat
+  - SDL-1.2
+- SDL_image
+- SDL_mixer
+- SDL_ttf
+
+### Biblioteche raccomandate
+- SMPEG
+- libogg
+- libvorbis
+- libmad
+
+### Utilità richieste (macOS)
+- dylibbundler
+- GNU make
+
+## Preparazione dell'ambiente di sviluppo e di compilazione
+
+### GNU/Linux
+Ogni distribuzione GNU/Linux ha il proprio gestore di pacchetti.  Assicuratevi semplicemente di ottenere le biblioteche necessarie usando quel gestore di pacchetti.  Se si utilizza una distribuzione GNU/Linux più o meno moderna, assicuratevi di utilizzare SDL2 + SDL1.2-compat, invece di utilizzare SDL1.2 puro.  Altrimenti otterrete delle rotture.
+
+### macOS
+Dopo aver installato [Homebrew](https://brew.sh), è sufficiente fare:
+
+```brew install jpeg jpeg-turbo bzip2 sdl2 sdl12-compat sdl_image sdl_mixer sdl_ttf smpeg libogg libvorbis make dylibbundler```
+
+È necessario assicurarsi che la cartella delle biblioteche di Homebrew
+
+- *ARM64*: ```/opt/homebrew/lib```
+- *x86-64*: ```/usr/local/lib```
+
+sia aggiunta alla variabile PATH.  Dovrebbe essere aggiunta per impostazione predefinita dopo l'installazione di Homebrew.
+
+Tutti i binari creati con questa metodologia sono specifici sia per l'architettura (ARM64/x86-64) che per la versione di macOS in cui vengono compilati. Si consiglia di mantenere delle macchine virtuali semplicemente per poter compilare su determinate piattaforme:
+
+- *ARM64* : Ventura
+- *x86-64* : Catalina
+
+Raccomandiamo queste due rispettive versioni di macOS perché sono versioni importanti che hanno apportato modifiche significative in materia di sicurezza -- i binari delle versioni precedenti di macOS spesso non funzionano in queste versioni, mentre i binari che funzionano in queste versioni funzioneranno in tutte le versioni successive fino a oggi.
+
+### Windows
+Procedete all'installazione di [MSYS2](https://www.msys2.org) e accettate il percorso di installazione predefinito:
+
+- ```C:\msys64```
+
+Dopo aver installato MSYS2, assicurarsi di essere accedere all'ambiente MINGW64.  Per impostazione predefinita, MSYS2 viene lanciato nell'ambiente UCRT64, quindi fate attenzione. Una volta entrati, aggiornate MSYS2:
+
+```pacman -Syuu```
+
+Questo probabilmente causerà la chiusura di MSYS2.  Rilanciare l'ambiente MINGW64 ed eseguire di nuovo il comando finché non succede più nulla. Quindi eseguire:
+
+```pacman -S mingw-w64-x86_64-SDL mingw-w64-x86_64-SDL_ttf mingw-w64-x86_64-SDL_mixer mingw-w64-x86_64-SDL_image mingw-w64-x86_64-bzip2 mingw-w64-x86_64- libogg mingw-w64-x86_64-libvorbis mingw-w64-x86_64-freetype mingw-w64-x86_64-smpeg mingw-w64-x86_64-iconv mingw-w64-x86_64-zlib mingw-w64-x86_64-toolchain```
+
+## Istruzioni di compilazione
+
+### GNU/Linux
+```make -f Makefile.Linux.insani```
+
+Su Linux e gcc, è possibile creare abbastanza facilmente una compilazione statica del proprio binario passando l'opzione -static a gcc nel posto giusto del Makefile.
+
+### macOS
+```gmake -f Makefile.MacOSX.insani```
+
+Se volete creare un app bundle specifico per un gioco, potete farlo eseguendo ```./makedist.MacOSX.sh```; tuttavia, se volete diffondere effettivamente le vostre compilazioni, avrete bisogno di un conto sviluppatore Apple e dovrete sborsare 99 dollari all'anno.  Istruzioni e note molto più dettagliate si trovano nella sezione commenti di ```Makefile.MacOSX.insani```.
+
+### Windows
+Nell'ambiente MINGW64 di MSYS2:
+
+```make -f Makefile.Win.insani```
+
+Le dipendenze DLL per il programma onscripter.exe risultante sono:
+
+- libbrotlicommon.dll
+- libbrotlidec.dll
+- libbz2-1.dll
+- libdeflate.dll
+- libfreetype-6.dll
+- libgcc_s_seh1.dll
+- libglib-2.0.0.dll
+- libgraphite2.dll
+- libharfbuzz-0.dll
+- libiconv-2.dll
+- libintl-8.dll
+- libjbig-0.dll
+- libjpeg-8.dll
+- libLerc.dll
+- liblzma-5.dll
+- libmad-0.dll
+- libogg-0.dll
+- libpcre2-8-0.dll
+- libpng16-16.dll
+- libSDL_image-1-2-0.dll
+- libSDL_mixer-1-2-0.dll
+- libsharpyuv0.dll
+- libstdc++-6.dll
+- libtiff-6.dll
+- libvorbis-0.dll
+- libvorbisfile-3.dll
+- libwebp-7.dll
+- libwinpthread-1.dll
+- libzstd.dll
+- SDL_ttf.dll
+- SDL.dll
+- zlib1.dll
+
+Questa lista è esaustiva e probabilmente molte DLL non sono necessarie per il funzionamento normale.  Tutte le DLL si trovano in:
+
+- ```C:\msys64\mingw64\bin\```
+
+Se distribuite la propria versione, è consigliabile impacchettare tutte queste DLL insieme al programma onscripter.exe.
+
+### Tutte le altre piattaforme
+Forniamo solo versioni per macOS e Windows e facciamo prove solo su GNU/Linux, macOS e Windows; tuttavia, ONScripter stesso è stato compilato con successo per piattaforme diverse come Android, iOS, Symbian, MacOS Classic, PSP, *BSD e la lista continua.  Tuttavia, non abbiamo modificato i makefile per queste piattaforme e non possiamo garantire il successo della compilazione su piattaforme diverse da GNU/Linux, macOS e Windows.  Se compilate su una di queste piattaforme, dovete assicurarvi che la definizione -DINSANI sia presente. Se riuscite a compilare su una delle nostre piattaforme non supportate, vi preghiamo di mettervi in comunicazione con noi e di contribuire con i vostri Makefile modificati.
+
+## Perché delle biblioteche dinamiche
+Tradizionalmente, si è cercato di garantire che le compilazioni di ONScripter-insani e ONScripter-EN fossero compilate con biblioteche statiche, tra l'altro per facilitare la distribuzione.  Il problema è che la tendenza del programma a sviluppare bachi nel corso del tempo a causa di piccole incompatibilità con i sistemi operativi più recenti potrebbe insorgere abbastanza rapidamente, e che la presenza di queste librerie statiche può talvolta portare a blocchi nel corso del tempo, quando il sistema operativo sottostante subisce cambiamenti significativi.
+
+Il nostro sistema di compilazione per macOS dipende da Homebrew e non dovreste mai cercare di collegare staticamente le biblioteche di Homebrew, in quanto tendono a dipendere dalla versione del sistema del sistema operativo, come non lo sono i dylibs.  Inoltre, per quanto riguarda macOS, canonicamente dovreste distribuire i dylibs richiesti all'interno del app bundle come fa il nostro ```makedist.MacOSX.sh```.
+
+Per Windows, le DLL MINGW64 sono ampiamente compatibili con qualsiasi versione moderna di Windows x86-64 e, nel caso in cui dovessero diventare incompatibili, la sostituzione con le versioni aggiornate sarà facile.
+
+## Raggiungerci
+Il creatore d'ONScripter è Ogapee:
+
+- https://onscripter.osdn.jp/onscripter.html
+
+Vi preghiamo di non contattare Ogapee per qualsiasi cosa troviate in onscripter-insani tuttavia, poiché questa diramazione presenta delle differenze rispetto alla versione principale di ONScripter.  Rivolgetevi invece a noi,
+preferibilmente tramite GitHub:
+
+- http://nscripter.insani.org/
+- https://github.com/insani-org/onscripter-insani/
+
+## Registro delle modifiche
+
+### 20230410
+- Con il 100% di spirito di insanità in più!
+- Correzioni al sistema di interruzione di riga
+- Corretto il comportamento di ```@```, ```\``` e ```/``` in legacy_english_mode
+- ```!s```, ```!w```, e ```#``` ora funzionano in modalità inglese e UTF8
+- Supporto sperimentale iniziale per UTF8 (0.utf)
+- Nuova documentazione in francese e italiano
+
+### 20230308
+- Versione ascendente di ONScripter: 20220816
+- Aggiunto il parametro legacy_english_mode
+- Imposta english_mode e legacy_english_mode su VERO quando viene rilevata una riga che inizia con `
+- Creato sistema di rottura di riga per legacy_english_mode
+- È stato risolto un baco per il quale le righe che iniziano con ` non possono essere avanzate in qualsiasi circostanza
+- Modifiche minori per permettere l'uso di SDL2 + SDL12-compat
+- macOS:
+  - Parametro di compilazione APPBUNDLE che, per impostazione predefinita, salva i dati .sav e envdata in ```~/Documents/ONScripter/nomedelgioco``` piuttosto che nella stessa cartella, e per rendere possibile il rilevamento delle risorse del gioco nell'app bundle stesso
+  - Makefile modificato per macOS
+  - Creato lo script per la creazione di app bundle per macOS
+- Windows:
+  - Nuovo makefile per Windows, utilizzato per MSYS2 anziché per VC++
+  - Alcune modifiche per permettere una corretta compilazione mediante MSYS2
+  - Funzionalità dell'icona della finestra retroportata (dal 2005!)
+
+### Tutte le versioni precedenti
+- http://nscripter.insani.org/changelog.html
+
+## Licenza
+onscripter-insani è diffuso secondo i termini della licenza pubblica GNU (GPL)
+v2.  Questa licenza non si estende alle risorse per qualsiasi gioco eseguito in
+ONScripter-insani - tali diritti rimangono ai creatori originali.
+
+Una copia della GPLv2 ('COPYING') è presente in questa cartella dei sorgenti.
