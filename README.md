@@ -4,7 +4,7 @@
 # Languages
 - [English](#English)
 - [Français](#Français)
-- [Italiano](Italiano)
+- [Italiano](#Italiano)
 
 # English
 
