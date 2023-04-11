@@ -751,6 +751,25 @@ void ONScripter::endRuby(bool flush_flag, bool lookback_flag, SDL_Surface *surfa
     ruby_struct.stage = RubyStruct::NONE;
 }
 
+#if defined(INSANI)
+/*
+ * int u8strlen(const char *s)
+ * --
+ * A simple function to grab the number of glyphs in a given UTF8-encoded string.
+ * Works just like standard strlen.  Necessary for the insani legacy linewrap algorithm
+ * with UTF8-encoded 0.utf.
+ */
+int ONScripter::u8strlen(const char *s)
+{
+    int len = 0;
+    while (*s) {
+        if ((*s & 0xC0) != 0x80) len++;
+        s++;
+    }
+    return len;
+}
+#endif
+
 int ONScripter::textCommand()
 {
     if (line_enter_status <= 1 && (!pretextgosub_label || saveon_flag) && internal_saveon_flag){
@@ -841,6 +860,9 @@ int ONScripter::textCommand()
         char *original_text = script_h.getStringBuffer();
         int current_line_length = 0;
 
+        bool utf8_check = false;
+        if(script_h.enc.getEncoding() == Encoding::CODE_UTF8) utf8_check = true;
+
         prev_skip_newline_mode = skip_newline_mode;
         skip_newline_mode = script_h.getSkipNewlineMode();
         if(prev_skip_newline_mode && original_text[strlen(original_text) - 1] == '\\') skip_newline_mode = true;
@@ -853,7 +875,8 @@ int ONScripter::textCommand()
         // in ScriptHandler.cpp: #define STRING_BUFFER_LENGTH 4096 -- this is the max string buffer length ONScripter supports.
         char *temp_text = (char *) malloc(4096 * sizeof(char));
 
-        int original_text_length = strlen(original_text);
+        int original_text_length = u8strlen(original_text);
+        int original_text_bytes = strlen(original_text);
         bool char_is_token = true;
         int char_is_token_counter;
         strcpy(temp_text, original_text);
@@ -872,11 +895,11 @@ int ONScripter::textCommand()
                 temp_text[i] = ' ';
                 space_counter++;
             }
-            if(current_line_length + strlen(current_word) + space_counter <= line_length) current_word = temp_text;
+            if(current_line_length + u8strlen(current_word) + space_counter <= line_length) current_word = temp_text;
         }
 
         // now parse special cases
-        if(strlen(current_word) >= line_length)
+        if(u8strlen(current_word) >= line_length)
         {
             // ... then there's no point in word-wrapping at all, as the word that the writer/translator put in is longer than the limit anyway, so do nothing
         }
@@ -887,7 +910,7 @@ int ONScripter::textCommand()
             {
                 // remove all special ending tokens (\, @, /) from the character count
                 char_is_token = true;
-                char_is_token_counter = original_text_length - 1;
+                char_is_token_counter = original_text_bytes - 1;
                 while(char_is_token)
                 {
                     if(original_text[char_is_token_counter] == '\\' ||
@@ -909,14 +932,14 @@ int ONScripter::textCommand()
         else
         {
             // first attempt to iterate manually on current_word or next_word
-            if(current_line_length + strlen(current_word) + 1 <= line_length)
+            if(current_line_length + u8strlen(current_word) + 1 <= line_length)
             {
                 strcpy(original_text, current_word);
                 current_word = next_word;
                 next_word = strtok(NULL, " ");
 
                 // we capture this in a variable because we need to reset this to 0 whenever we line break
-                current_line_length += strlen(original_text);
+                current_line_length += u8strlen(original_text);
             }
             else
             {
@@ -932,7 +955,7 @@ int ONScripter::textCommand()
 
                 // now we've begun the new line, and we set the current line length to the current word
                 strcat(original_text, current_word);
-                current_line_length = strlen(current_word);
+                current_line_length = u8strlen(current_word);
 
                 // and finally, iterate current_word and next_word
                 current_word = next_word;
@@ -974,17 +997,18 @@ int ONScripter::textCommand()
                     current_word[null_index + 1] = '\0';
                 }
 
-                if(current_line_length + strlen(current_word) + 1 <= line_length)
+                if(current_line_length + u8strlen(current_word) + 1 <= line_length)
                 {
                     // ... the length of the wrapped text and the current word are still less than the max line length, so ...
                     // ... add a space, then the current word.
                     strcat(original_text, " ");
                     strcat(original_text, current_word);
 
-                    current_line_length = current_line_length + strlen(current_word) + 1;
+                    current_line_length = current_line_length + u8strlen(current_word) + 1;
                 }
                 else
                 {
+                    //printf("current_line_length: %d\n", current_line_length);
                     // we are in line break mode
 
                     // skip_newline_offset reset to 0
@@ -999,14 +1023,16 @@ int ONScripter::textCommand()
 
                     // now we've begun the new line, and we set the current line length to the current word
                     strcat(original_text, current_word);
-                    current_line_length = strlen(current_word);
+                    current_line_length = u8strlen(current_word);
 
                 }
+
+                //printf("%s\n", original_text);
 
                 // these are the last things that should happen before we loop
                 // remove all special ending tokens (\, @, /) from the character count
                 char_is_token = true;
-                char_is_token_counter = strlen(original_text) - 1;
+                char_is_token_counter = u8strlen(original_text) - 1;
                 while(char_is_token)
                 {
                     if(original_text[char_is_token_counter] == '\\' ||
@@ -1022,7 +1048,7 @@ int ONScripter::textCommand()
                 // then set the skip_newline_offset to the corrected character count
                 skip_newline_offset = current_line_length;
 
-                //printf("%s %d\n", current_word, current_line_length);
+                //printf("%s %d %d\n", current_word, u8strlen(current_word), current_line_length);
 
                 // and finally iterate through the next set of words
                 current_word = next_word;
@@ -1031,6 +1057,7 @@ int ONScripter::textCommand()
         }
         free(temp_text);
     }
+
 #endif
 
     enterTextDisplayMode();
@@ -1159,7 +1186,12 @@ bool ONScripter::processText()
     char ch = script_h.getStringBuffer()[string_buffer_offset];
 
     int n = script_h.enc.getBytes(ch);
+#if defined(INSANI)
+//    if (n >= 2 && script_h.enc.getEncoding() != Encoding::CODE_UTF8){
     if (n >= 2){
+#else
+    if (n >= 2){
+#endif
         /* ---------------------------------------- */
         /* Kinsoku process */
         if (checkLineBreak(script_h.getStringBuffer() + string_buffer_offset, &sentence_font)){

@@ -760,7 +760,9 @@ private:
     bool clickNewPage( char *out_text );
     void startRuby(const char *buf, FontInfo &info);
     void endRuby(bool flush_flag, bool lookback_flag, SDL_Surface *surface, AnimationInfo *cache_info);
+#if defined(INSANI)
     int  textCommand();
+#endif
     bool checkLineBreak(const char *buf, FontInfo *fi);
     bool checkLigatureLineBreak(const char *buf, FontInfo *fi);
     void processEOT();

@@ -189,6 +189,14 @@ const char *ScriptHandler::readToken()
     SKIP_SPACE( buf );
     markAsKidoku( buf );
 
+#if defined(INSANI)
+    if(enc.getEncoding() == Encoding::CODE_UTF8)
+    {
+        english_mode = true;
+        legacy_english_mode = true;
+    }
+#endif
+
   readTokenTop:
     string_counter = 0;
     char ch = *buf;
@@ -1038,6 +1046,9 @@ ScriptHandler::VariableData &ScriptHandler::getVariableData(int no)
 
 int ScriptHandler::readScript( char *path )
 {
+#if defined(INSANI)
+    char *file_extension = ".txt";
+#endif
     archive_path = new char[strlen(path) + 1];
     strcpy( archive_path, path );
 
@@ -1050,6 +1061,20 @@ int ScriptHandler::readScript( char *path )
     else if ((fp = fopen("00.txt", "rb")) != NULL){
         encrypt_mode = 0;
     }
+#if defined(INSANI)
+    else if ((fp = fopen("0.utf", "rb")) != NULL){
+        encrypt_mode = 0;
+        file_extension = ".utf";
+        enc.setEncoding(Encoding::CODE_UTF8);
+        printf("0.utf detected.  UTF8 Mode is not fully supported at this time.\n");
+    }
+    else if ((fp = fopen("00.utf", "rb")) != NULL){
+        encrypt_mode = 0;
+        file_extension = ".utf";
+        enc.setEncoding(Encoding::CODE_UTF8);
+        printf("00.utf detected.  UTF8 Mode is not fully supported at this time.\n");
+    }
+#endif
     else if ((fp = fopen("nscr_sec.dat", "rb")) != NULL){
         encrypt_mode = 2;
     }
@@ -1062,10 +1087,17 @@ int ScriptHandler::readScript( char *path )
     else if ((fp = fopen("pscript.dat", "rb")) != NULL){
         encrypt_mode = 1;
         enc.setEncoding(Encoding::CODE_UTF8);
+#if defined(INSANI)
+        printf("pscript.dat detected.  UTF8 Mode is not fully supported at this time.\n");
+#endif
     }
 
     if (fp == NULL){
+#if defined(INSANI)
+        fprintf( stderr, "can't open any of 0.txt, 00.txt, 0.utf, 00.utf, nscript.dat, nscr_sec.dat, nscript.___, pscript.dat\n" );
+#else
         fprintf( stderr, "can't open any of 0.txt, 00.txt, nscript.dat and nscript.___\n" );
+#endif
         return -1;
     }
     
@@ -1102,9 +1134,10 @@ int ScriptHandler::readScript( char *path )
     }
     else{
         for (i=0 ; i<100 ; i++){
-            sprintf(filename, "%d.txt", i);
+            sprintf(filename, "%d%s", i, file_extension);
+            //printf("filename: %s\n", filename);
             if ((fp = fopen(filename, "rb")) == NULL){
-                sprintf(filename, "%02d.txt", i);
+                sprintf(filename, "%02d%s", i, file_extension);
                 fp = fopen(filename, "rb");
             }
             if (fp){
