@@ -232,10 +232,10 @@ A copy of the GPLv2 can be found under COPYING in this source directory.
 
 # Français
 
-## Dernière Mise à Jour
+## Dernière mise à jour
 2023-04-11
 
-## Introduction et Histoire
+## Introduction et histoire
 onscripter-insani est une branche d'[ONScripter](https://onscripter.osdn.jp/onscripter.html), qui est un projet actif en date de 2022.  ONScripter est une implémentation libre, clone de NScripter -- un moteur de création de romans vidéoludiques qui a sans doute contribué à l'essor de ceux-ci au Japon.  De nombreuses entreprises ont utilisé NScripter pour créer certains des classiques du genre, comme par exemple 'Mizuiro' de Nekonekosoft et 'Tsukihime' de TYPE-MOON.
 
 En 2005, un programmeur nommé chendo a apporté quelques correctifs à ONScripter qui, pour la première fois, permettait d'utiliser directement des caractères d'un octet dans ONScripter.  Nous, membres d'insani.org, avons pris en charge la maintenance d'une branche séparée d'ONScripter pour les besoins de la localisation de nouveaux jeux.  Cette branche est finalement devenue une branche à part entière appelée ONScripter-EN (ons-en), qui a été maintenue par Haeleth et Uncle Mion.  Les dernières modifications de cette branche remontent à 2011, et le projet n'a pas été activement maintenu depuis.
@@ -268,7 +268,7 @@ Tous les changements effectués par onscripter-insani sont enveloppés dans des 
 
 Si vous souhaitez contribuer au code d'onscripter-insani, nous vous demandons de suivre cette convention.
 
-## Bibliothèques/Utilitaires Requis et Recommandés
+## Bibliothèques/Utilitaires requis et recommandés
 - Pour macOS, le système de compilation suppose l'utilisation de [homebrew](https://brew.sh)
 - Pour Windows, le système de compilation suppose l'utilisation de [MSYS2](https://msys.org)
 
@@ -292,7 +292,7 @@ Si vous souhaitez contribuer au code d'onscripter-insani, nous vous demandons de
 - dylibbundler
 - GNU make
 
-## Préparation de Votre Environnement de Développement et de Compilation
+## Préparation de votre environnement de développement et de compilation
 
 ### GNU/Linux
 Chaque distribution GNU/Linux dispose de son propre gestionnaire de paquets.  Assurez-vous simplement d'obtenir les bibliothèques nécessaires en utilisant ce gestionnaire de paquets.  Si vous êtes sur une dist. plus ou moins moderne, assurez-vous d'opter pour la SDL2 + SDL1.2-compat, par opposition à SDL1.2 pur.  Vous aurez des pannes dans le cas contraire.
@@ -329,7 +329,7 @@ Cette opération entraînera probablement la fermeture de MSYS2. Relancez dans l
 
 ```pacman -S mingw-w64-x86_64-SDL mingw-w64-x86_64-SDL_ttf mingw-w64-x86_64-SDL_mixer mingw-w64-x86_64-SDL_image mingw-w64-x86_64-bzip2 mingw-w64-x86_64- libogg mingw-w64-x86_64-libvorbis mingw-w64-x86_64-freetype mingw-w64-x86_64-smpeg mingw-w64-x86_64-iconv mingw-w64-x86_64-zlib mingw-w64-x86_64-toolchain```
 
-## Instructions de Compilation
+## Instructions de compilation
 
 ### GNU/Linux
 ```make -f Makefile.Linux.insani```
@@ -391,14 +391,14 @@ avec votre onscripter.exe.
 ### Toutes les autres plateformes
 Nous ne fournissons des compilations que pour macOS et Windows, et nous ne faisons des essais que sur GNU/Linux, macOS et Windows ; cependant, ONScripter a été compilé avec succès pour des plateformes pour des plateformes aussi diverses qu'Android, iOS, Symbian, MacOS Classic, PSP, *BSD, et bien d'autres encore.  Cependant, nous n'avons pas modifié les makefiles pour ces plateformes, et nous ne pouvons pas garantir une compilation réussie sur toute plateforme autres que GNU/Linux, macOS et Windows.  Si vous compilez sur l'une d'elles vous devrez au minimum vous assurer que la définition -DINSANI est présente.  Si vous réussissez à compiler sur une plateforme non prise en charge, prière de nous joindre et nous renvoyer vos Makefiles modifiés.
 
-## Pourquoi des Bibliothèques Dynamiques
+## Pourquoi des bibliothèques dynamiques
 Traditionnellement, un effort a été fait pour s'assurer que les compilations ONScripter-insani et ONScripter-EN soient compilées avec des bibliothèques statiques, pour faciliter la distribution, entre autres. Le problème est qu'une tendance du logiciel à développer des bogues au fil du temps en raison d'incompatibilités mineures avec des systèmes d'exploitation plus récents pourrait s'installer assez rapidement -- et que la présence de ces bibliothèques statiques peut parfois conduire à des plantages au fil du temps et que le système d'exploitation sous-jacent subit des modifications importantes.
 
 Notre système de compilation pour macOS dépend de Homebrew, et vous ne devriez jamais essayer de lier statiquement les bibliothèques Homebrew, car elles ont tendance à dépendre de la version du système d'exploitation, d'une façon que les bibliothèques dynamiques ('dylibs') ne sont pas. De plus, pour les besoins de macOS, vous êtes canoniquement supposé incorporer les bibliothèques dynamiques nécessaires à l'intérieur du paquet app comme le fait notre ```makedist.MacOSX.sh```.
 
 Pour Windows, les DLL MINGW64 sont largement compatibles avec toutes les versions modernes de Windows x86-64, et dans le cas où elles deviendraient incompatibles, le remplacement par des versions mises à jour sera aisé.
 
-## Joignez-Nous
+## Joignez-nous
 Le créateur original d'ONScripter est Ogapee :
 
 - https://onscripter.osdn.jp/onscripter.html
@@ -408,7 +408,7 @@ Veuillez vous abstenir de contacter Ogapee à propos de tout ce que vous trouver
 - http://nscripter.insani.org/
 - https://github.com/insani-org/onscripter-insani/
 
-## Journal des Modifications
+## Journal des modifications
 
 ### 20230410
 - Avec 100% plus d’esprit d'insanité!
