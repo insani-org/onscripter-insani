@@ -236,7 +236,7 @@ A copy of the GPLv2 can be found under COPYING in this source directory.
 2023-04-11
 
 ## Introduction et histoire
-onscripter-insani est une branche d'[ONScripter](https://onscripter.osdn.jp/onscripter.html), qui est un projet actif en date de 2022.  ONScripter est une implémentation libre, clone de NScripter -- un moteur de création de romans vidéoludiques qui a sans doute contribué à l'essor de ceux-ci au Japon.  De nombreuses entreprises ont utilisé NScripter pour créer certains des classiques du genre, comme par exemple 'Mizuiro' de Nekonekosoft et 'Tsukihime' de TYPE-MOON.
+onscripter-insani est une branche d'[ONScripter](https://onscripter.osdn.jp/onscripter.html), qui est un projet actif en date de 2022.  ONScripter est une implémentation libre, clone de NScripter -- un moteur de création de romans vidéoludiques qui a sans doute contribué à l'essor de ceux-ci au Japon.  De nombreuses entreprises ont utilisé NScripter pour créer certains des classiques du genre, comme par exemple *Mizuiro* de Nekonekosoft et *Tsukihime* de TYPE-MOON.
 
 En 2005, un programmeur nommé chendo a apporté quelques correctifs à ONScripter qui, pour la première fois, permettait d'utiliser directement des caractères d'un octet dans ONScripter.  Nous, membres d'insani.org, avons pris en charge la maintenance d'une branche séparée d'ONScripter pour les besoins de la localisation de nouveaux jeux.  Cette branche est finalement devenue une branche à part entière appelée ONScripter-EN (ons-en), qui a été maintenue par Haeleth et Uncle Mion.  Les dernières modifications de cette branche remontent à 2011, et le projet n'a pas été activement maintenu depuis.
 
@@ -244,7 +244,7 @@ En février 2023, les binaires existants pour ONScripter-EN avaient les caracté
 
 - Ils ne fonctionnent plus avec les versions modernes de macOS, probablement en raison des changements de sécurité apportés par Catalina et les versions supérieures
 - De nombreux fichiers sonores ne sont pas joués du tout
-- Ils contenaient un bogue sérieux dans lequel vous ne pouviez pas accéder au menu système NScripter (et donc vous n’étiez pas en mesure d’enregistrer) lorsque vous atteigniez un point de choix
+- Ils contenaient un bogue sérieux dans lequel vous ne pouviez pas accéder au menu système (et donc vous n'étiez pas en mesure d'enregistrer votre progression) lorsque vous atteigniez un choix
 
 De plus, les arborescences des sources d'ONScripter-EN et ONScripter sont maintenant très différents -- ce qui est normal puisqu'il y a 12 ans d'écart entre les deux projets.  Au cours de ces 12 années, ONScripter a porté en son sein de nombreuses améliorations qui se trouvaient dans ONScripter-EN, et a subi au moins une réorganisation complète de ses fichiers et de ses noms de fichiers.  Cela signifie que les comparaisons directes entre le code d'ONScripter-EN et celui d'ONScripter sont désormais très difficiles.
 
@@ -275,7 +275,7 @@ Si vous souhaitez contribuer au code d'onscripter-insani, nous vous demandons de
 ### Bibliothèques requises
 - libjpeg
 - bzip2
-- Votre choix de:
+- Au choix :
   - SDL-2.0 **et** SDL1.2-compat
   - SDL-1.2
 - SDL_image
@@ -339,7 +339,7 @@ Sous GNU/Linux et gcc, vous pouvez assez facilement faire une compilation statiq
 ### macOS
 ```gmake -f Makefile.MacOSX.insani```
 
-Si vous souhaitez créer un paquet d'app spécifique à un jeu, vous pouvez le faire en exécutant ```./makedist.MacOSX.sh``` -- cependant, si vous souhaitez publier vos compilations, vous aurez besoin d'un compte dév. Apple et vous devrez débourser 99 $ par an.  Des instructions et des notes beaucoup plus détaillées peuvent être trouvées dans la section des commentaires de ```Makefile.MacOSX.insani```.
+Si vous souhaitez créer un app bundle spécifique à un jeu, vous pouvez le faire en exécutant ```./makedist.MacOSX.sh``` -- cependant, si vous souhaitez publier vos compilations, vous aurez besoin d'un compte dév. Apple et vous devrez débourser 99 $ par an.  Des instructions et des notes beaucoup plus détaillées peuvent être trouvées dans la section des commentaires de ```Makefile.MacOSX.insani```.
 
 ### Windows
 Dans l'environnement MINGW64 de MSYS2 :
@@ -411,11 +411,11 @@ Veuillez vous abstenir de contacter Ogapee à propos de tout ce que vous trouver
 ## Journal des modifications
 
 ### 20230410
-- Avec 100% plus d’esprit d'insanité!
+- Avec 100% plus d’esprit d'insanité !
 - Corrections apportées au système de sauts de ligne
 - Corrections du comportement de ```@```, ```\``` et ```/``` en legacy_english_mode
 - ```!s```, ```!w```, et ```#``` fonctionnent maintenant en modes anglais et UTF8
-- Support expérimental initial pour UTF8 (0.utf)
+- Prise en charge expérimentale initiale pour UTF8 (0.utf)
 - Nouvelle documentation française et italienne
 
 ### 20230308
@@ -437,7 +437,7 @@ Veuillez vous abstenir de contacter Ogapee à propos de tout ce que vous trouver
 ### Toutes les versions précédentes
 - http://nscripter.insani.org/fr/changelog.html
 
-## License
+## Licence
 onscripter-insani est distribué sous les termes de la licence publique GNU
 (GPL) v2.  Cette licence ne s'éend pas aux ressources d'un jeu exécuté
 dans onscripter-insani -- ces droits restent la propriété des créateurs
