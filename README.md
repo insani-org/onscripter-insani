@@ -81,7 +81,7 @@ Should you wish to contribute code to onscripter-insani, we'd ask that you follo
 Every Linux distribution will have its own package manager.  Simply make sure you get the required libraries using that package manager.  If you are on a decently modern Linux distribution version, then make sure that you go the SDL2 + SDL1.2-compat route, as opposed to the pure SDL1.2 route.  You will get breakage otherwise.
 
 ### macOS
-After you have installed Homebrew (https://brew.sh), simply do:
+After you have installed [Homebrew](https://brew.sh), simply do:
 
 ```brew install jpeg jpeg-turbo bzip2 sdl2 sdl12-compat sdl_image sdl_mixer sdl_ttf smpeg libogg libvorbis make dylibbundler```
 
@@ -102,7 +102,7 @@ prior versions of macOS often don't work in these versions, whereas binaries tha
 
 ### Windows
 
-Install MSYS2 (https://www.msys2.org) and accept the default install location:
+Install [MSYS2](https://www.msys2.org) and accept the default install location:
 
 ```C:\msys64```
 
