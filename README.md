@@ -452,7 +452,7 @@ Une copie de la GPLv2 ('COPYING') est présente dans ce répertoire source.
 ## Sulla traduzione
 
 Questa traduzione non è stata effettuata da una persona di lingua natale
-italiana ma da un amatore francofono.  Tuttavia, è stata corretta da <zero>
+italiana ma da un amatore francofono.  Tuttavia, è stata corretta da >zero<
 persone italofone con maggiore esperienza. Questa traduzione si rivolge a più
 persone e usa il pronome personale «voi».  Vedere la sezione RAGGIUNGERCI per
 l'indirizzo della persona responsabile del progetto in caso di errore.
