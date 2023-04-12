@@ -761,8 +761,9 @@ private:
     void startRuby(const char *buf, FontInfo &info);
     void endRuby(bool flush_flag, bool lookback_flag, SDL_Surface *surface, AnimationInfo *cache_info);
 #if defined(INSANI)
-    int  textCommand();
+    int  u8strlen(const char *s);
 #endif
+    int  textCommand();
     bool checkLineBreak(const char *buf, FontInfo *fi);
     bool checkLigatureLineBreak(const char *buf, FontInfo *fi);
     void processEOT();
