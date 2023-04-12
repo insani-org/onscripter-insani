@@ -9,7 +9,7 @@
 # English
 
 ## Last Updated
-2023-04-11
+2023-04-12
 
 ## Introduction and History
 onscripter-insani is a branch of [ONScripter](https://onscripter.osdn.jp/onscripter.html), which is an active project as of 2022.  ONScripter is a clean-room open-source implementation of NScripter -- a novel game creation engine that arguably helped to bootstrap the novel game boom in Japan.  Many companies used NScripter in order to create some of the classics of the genre, notable examples being みずいろ (*Mizuiro*) by Nekonekosoft and 月姫 (*Tsukihime*) by TYPE-MOON.
@@ -183,6 +183,19 @@ Our macOS build system depends on Homebrew, and you should never attempt to stat
 dependent in a way that the dylibs are not.  Furthermore, for the purposes of macOS, you're canonically supposed to distribute the required dylibs inside the app bundle as our makedist.MacOSX.sh does.
 
 For Windows, the MINGW64 DLLs are widely compatible with any modern version of x86-64 Windows, and in the case that they become incompatible, replacement with updated versions will be easy.
+
+## Errata and Curiosities
+
+### UTF8 vs. SHIFT_JIS Encoded Files
+Most of the files in this project are encoded as UTF8.  However, there are three files in particular that are encoded as SHIFT_JIS, those being:
+
+- ```ONScripter_text.cpp```
+- ```ScriptParser.h```
+- ```ScriptParser.cpp```
+
+That is because these three files have several strings that *must be in their original SHIFT_JIS format* unless you want to cause random memory corruption-related crashes whenever you are in UTF8 mode.  The reason behind this issue is a fascinating artifact of a time when ONScripter was in its infancy, and cared about no other character encoding other than SHIFT_JIS (or, more accurately, Windows CP932, a very close relative of SHIFT_JIS).  ONScripter initializes several subsystems, including what is known as the kinsoku process, *during initialization of the engine itself*, before any script file is read.  Despite the fact that UTF8 support has been introduced over the years, ONScripter is fundamentally not a Unicode-aware program by design, and it shows in cases like this.  There is no way, with this design, for the engine to know whether it's in CP932 or UTF8 mode -- and so it assumes CP932, and assumes all strings are CP932-encoded for the purposes of initialization.
+
+All this to say: if you want to contribute to onscripter-insani, **make extra sure that these files are encoded as SHIFT_JIS and not UTF8**.  You will cause random crashes all over the place, usually upon startup in UTF8 mode, if you do not.
 
 ## Contacts
 The original creator of ONScripter is Ogapee:
