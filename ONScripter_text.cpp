@@ -860,9 +860,6 @@ int ONScripter::textCommand()
         char *original_text = script_h.getStringBuffer();
         int current_line_length = 0;
 
-        bool utf8_check = false;
-        if(script_h.enc.getEncoding() == Encoding::CODE_UTF8) utf8_check = true;
-
         prev_skip_newline_mode = skip_newline_mode;
         skip_newline_mode = script_h.getSkipNewlineMode();
         if(prev_skip_newline_mode && original_text[strlen(original_text) - 1] == '\\') skip_newline_mode = true;
@@ -886,7 +883,6 @@ int ONScripter::textCommand()
         char *next_word = strtok(NULL, " ");
 
         // check for padding spaces in the first word
-
         if(&current_word[0] != &temp_text[0])
         {
             int space_counter = 0;
@@ -977,9 +973,7 @@ int ONScripter::textCommand()
 
                 if(next_word != NULL &&
                 (strcmp(next_word, "-") == 0 ||
-                 strcmp(next_word, "-") == 0 || 
-                 strcmp(next_word, "?") == 0 ||
-                 strcmp(next_word, "?") == 0 ||
+                 strcmp(next_word, "--") == 0 || 
                  (next_word[0] == '.' &&
                   next_word[1] == '.' &&
                   next_word[2] == '.')))
