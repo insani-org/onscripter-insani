@@ -119,7 +119,7 @@ CC = c++
 LD = c++ -o
 
 #CFLAGS = -g -Wall -Wpointer-arith -pipe -c $(INCS) $(DEFS)
-CFLAGS = -ObjC++ -O3 -Wall -Wpointer-arith -pipe -c $(INCS) $(DEFS)
+CFLAGS = -ObjC++ -fsanitize=address -O3 -Wall -Wpointer-arith -pipe -c $(INCS) $(DEFS)
 RM = rm -f
 
 TARGET = onscripter$(EXESUFFIX) sardec$(EXESUFFIX) nsadec$(EXESUFFIX) sarconv$(EXESUFFIX) nsaconv$(EXESUFFIX)

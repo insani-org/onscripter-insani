@@ -976,11 +976,13 @@ int ONScripter::textCommand()
                 null_index = null_index + 2;
 
                 if(next_word != NULL &&
-                (strcmp(next_word, "-") == 0 || 
-                    strcmp(next_word, "--") == 0 ||
-                    (next_word[0] == '.' &&
-                    next_word[1] == '.' &&
-                    next_word[2] == '.')))
+                (strcmp(next_word, "-") == 0 ||
+                 strcmp(next_word, "-") == 0 || 
+                 strcmp(next_word, "«") == 0 ||
+                 strcmp(next_word, "»") == 0 ||
+                 (next_word[0] == '.' &&
+                  next_word[1] == '.' &&
+                  next_word[2] == '.')))
                 {
                     // attempt to replace the null character that terminates current_word with a space; should have the effect of concatenating the two strings together
                     null_index = strlen(current_word);
