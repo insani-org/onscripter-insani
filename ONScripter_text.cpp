@@ -780,7 +780,7 @@ int ONScripter::textCommand()
     char *buf = script_h.getStringBuffer();
 
     bool tag_flag = true;
-    unsigned short unicode = script_h.enc.getUTF16("【", Encoding::CODE_CP932);
+    unsigned short unicode = script_h.enc.getUTF16("�y", Encoding::CODE_CP932);
     int n = script_h.enc.getBytes(buf[string_buffer_offset]);
     if (buf[string_buffer_offset] == '[')
         string_buffer_offset++;
@@ -793,7 +793,7 @@ int ONScripter::textCommand()
     int start_offset = string_buffer_offset;
     int end_offset = start_offset;
     while (tag_flag && buf[string_buffer_offset]){
-        unsigned short unicode = script_h.enc.getUTF16("】", Encoding::CODE_CP932);
+        unsigned short unicode = script_h.enc.getUTF16("�z", Encoding::CODE_CP932);
         int n = script_h.enc.getBytes(buf[string_buffer_offset]);
         if (zenkakko_flag &&
             script_h.enc.getUTF16(buf + string_buffer_offset) == unicode){
@@ -978,8 +978,8 @@ int ONScripter::textCommand()
                 if(next_word != NULL &&
                 (strcmp(next_word, "-") == 0 ||
                  strcmp(next_word, "-") == 0 || 
-                 strcmp(next_word, "«") == 0 ||
-                 strcmp(next_word, "»") == 0 ||
+                 strcmp(next_word, "?") == 0 ||
+                 strcmp(next_word, "?") == 0 ||
                  (next_word[0] == '.' &&
                   next_word[1] == '.' &&
                   next_word[2] == '.')))

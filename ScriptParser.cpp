@@ -33,9 +33,9 @@ extern "C"
 #define VERSION_STR1 "ONScripter"
 #define VERSION_STR2 "Copyright (C) 2001-2020 Studio O.G.A. All Rights Reserved."
 
-#define DEFAULT_SAVE_MENU_NAME "Ôºú„Çª„Éº„ÉñÔºû"
-#define DEFAULT_LOAD_MENU_NAME "Ôºú„É≠„Éº„ÉâÔºû"
-#define DEFAULT_SAVE_ITEM_NAME "„Åó„Åä„Çä"
+#define DEFAULT_SAVE_MENU_NAME "ÅÉÉZÅ[ÉuÅÑ"
+#define DEFAULT_LOAD_MENU_NAME "ÅÉÉçÅ[ÉhÅÑ"
+#define DEFAULT_SAVE_ITEM_NAME "ÇµÇ®ÇË"
 
 #define DEFAULT_TEXT_SPEED_LOW    40
 #define DEFAULT_TEXT_SPEED_MIDDLE 20
@@ -91,7 +91,13 @@ ScriptParser::ScriptParser()
     
     start_kinsoku = end_kinsoku = NULL;
     num_start_kinsoku = num_end_kinsoku = 0;
+
+#if not defined(INSANI)    
     setKinsoku(DEFAULT_START_KINSOKU, DEFAULT_END_KINSOKU, false, Encoding::CODE_CP932);
+#else
+    if(script_h.enc.getEncoding() == Encoding::CODE_UTF8) setKinsoku(DEFAULT_START_KINSOKU, DEFAULT_END_KINSOKU, false, Encoding::CODE_UTF8);
+    else setKinsoku(DEFAULT_START_KINSOKU, DEFAULT_END_KINSOKU, false, Encoding::CODE_CP932);
+#endif
 }
 
 ScriptParser::~ScriptParser()

@@ -105,6 +105,9 @@
 #
 INCS = `sdl-config --cflags` `smpeg-config --cflags` -I/opt/homebrew/include
 
+# Turn this on to debug
+#LIBS = `sdl-config --libs` `smpeg-config --libs` `freetype-config --libs` -lSDL_ttf -lSDL_image -lSDL_mixer -lbz2 -lm -ljpeg -lmpg123 -F/Library/Frameworks -framework AVFoundation -framework CoreFoundation -framework Foundation -framework SDL2 -framework Cocoa
+# Turn this on for redist build
 LIBS = `sdl-config --libs` `smpeg-config --libs` `freetype-config --libs` -lSDL_ttf -lSDL_image -lSDL_mixer -lbz2 -lm -ljpeg -lmpg123 -framework AVFoundation -framework CoreFoundation -framework Foundation
 DEFS = -DMACOSX -DUSE_CDROM -DUTF8_CAPTION -DUSE_OGG_VORBIS -DUTF8_FILESYSTEM -DINSANI -DENABLE_1BYTE_CHAR -DFORCE_1BYTE_CHAR
 #DEFS += -DAPPBUNDLE
@@ -116,10 +119,15 @@ OBJSUFFIX = .o
 .SUFFIXES: $(OBJSUFFIX) .cpp .h
 
 CC = c++ 
+# Turn this on to debug
+#LD = c++ -fsanitize=address -fno-omit-frame-pointer -o
+# Turn this on for redist build
 LD = c++ -o
 
-#CFLAGS = -g -Wall -Wpointer-arith -pipe -c $(INCS) $(DEFS)
-CFLAGS = -ObjC++ -fsanitize=address -O3 -Wall -Wpointer-arith -pipe -c $(INCS) $(DEFS)
+# Turn this on to debug
+#CFLAGS = -g -ObjC++ -Wall -fsanitize=address -fno-omit-frame-pointer -Wpointer-arith -pipe -c $(INCS) $(DEFS)
+# Turn this on for redist build
+CFLAGS = -g -ObjC++ -O3 -Wall -Wpointer-arith -pipe -c $(INCS) $(DEFS)
 RM = rm -f
 
 TARGET = onscripter$(EXESUFFIX) sardec$(EXESUFFIX) nsadec$(EXESUFFIX) sarconv$(EXESUFFIX) nsaconv$(EXESUFFIX)
