@@ -70,6 +70,7 @@ Should you wish to contribute code to onscripter-insani, we'd ask that you follo
 - libogg
 - libvorbis
 - libmad
+- libmpg123
 
 ### Required Utilities (macOS)
 - dylibbundler
@@ -83,7 +84,7 @@ Every Linux distribution will have its own package manager.  Simply make sure yo
 ### macOS
 After you have installed [Homebrew](https://brew.sh), simply do:
 
-```brew install jpeg jpeg-turbo bzip2 sdl2 sdl12-compat sdl_image sdl_mixer sdl_ttf smpeg libogg libvorbis make dylibbundler```
+```brew install jpeg jpeg-turbo bzip2 sdl2 sdl12-compat sdl_image sdl_mixer sdl_ttf smpeg libogg libvorbis mpg123 make dylibbundler```
 
 You will want to make sure that Homebrew's libraries directory:
 
