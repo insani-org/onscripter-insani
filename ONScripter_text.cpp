@@ -591,7 +591,10 @@ bool ONScripter::clickWait( char *out_text )
         num_chars_in_sentence = 0;
 
         event_mode = IDLE_EVENT_MODE;
-        if ( waitEvent(0) ) return false;
+        if ( waitEvent(0) )
+        {
+            return false;
+        }
     }
     else{
         if ( out_text ){
@@ -622,7 +625,10 @@ bool ONScripter::clickWait( char *out_text )
             line_enter_status = 0;
 
         clickstr_state = CLICK_WAIT;
-        if (doClickEnd()) return false;
+        if (doClickEnd())
+        {
+            return false;
+        }
 
         clickstr_state = CLICK_NONE;
 
@@ -1182,12 +1188,7 @@ bool ONScripter::processText()
     char ch = script_h.getStringBuffer()[string_buffer_offset];
 
     int n = script_h.enc.getBytes(ch);
-#if defined(INSANI)
-//    if (n >= 2 && script_h.enc.getEncoding() != Encoding::CODE_UTF8){
     if (n >= 2){
-#else
-    if (n >= 2){
-#endif
         /* ---------------------------------------- */
         /* Kinsoku process */
         if (checkLineBreak(script_h.getStringBuffer() + string_buffer_offset, &sentence_font)){
@@ -1304,6 +1305,14 @@ bool ONScripter::processText()
                     waitEvent(t);
                 }
             }
+            return true;
+        }
+        else
+        {
+            out_text[0] = script_h.getStringBuffer()[string_buffer_offset];
+            drawChar( out_text, &sentence_font, true, true, accumulation_surface, &text_info );
+            string_buffer_offset++;
+            num_chars_in_sentence++;
             return true;
         }
     }
