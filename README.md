@@ -200,16 +200,16 @@ All this to say: if you want to contribute to onscripter-insani, **make extra su
 ### The Behavior of ```@```
 In NScripter, the presence of an ```@``` in a text block triggers what is known as the clickwait state.  In this state, the program waits for you to click before advancing the text any further.  It's often used to create a deliberate pause for dramatic or comedic effect.  The way @ is supposed to work, if you had a line that goes
 
-````I@ am@ waiting@ after@ every@ word.\```
+```\`I@ am@ waiting@ after@ every@ word.\```
 
 you would expect it to wait after every word.  Unfortunately, there is currently a bug that causes this to not work.  In the meantime, you can work around this by using the ```/``` ignore newline text block command:
 
-````I @/```
-```` am@/```
-```` waiting@/```
-```` after@/```
-```` every@/```
-```` word.\```
+```\`I @/```
+```\` am@/```
+```\` waiting@/```
+```\` after@/```
+```\` every@/```
+```\` word.\```
 
 ## Contacts
 The original creator of ONScripter is Ogapee:
