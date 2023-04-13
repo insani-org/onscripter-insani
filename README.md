@@ -228,12 +228,12 @@ ONScripter.  Contact us through Github instead:
 
 ## Changelog
 
-### 20230410
+### 20230413
 - Now with 100% more insanity spirit
 - Corrections to line-break system
 - Corrections to behavior of ```@```, ```\```, and ```/``` in legacy english mode
 - ```!s```, ```!w```, and ```#``` now work in english mode
-- Initial experimental support for UTF8 (0.utf)
+- Initial support for UTF8 (0.utf) script files
 - French and Italian documentation
 
 ### 20230308
