@@ -43,16 +43,16 @@ goals of ONScripter-EN and our goals are slightly different.  We consider ONScri
   ONScripter-EN functionality
 - Support the insani-localized novel game library for posterity
 
-All changes made by onscripter-insani are wrapped in #if defined(INSANI) ... #endif blocks and this is done for the following reasons:
+All changes made by onscripter-insani are wrapped in ```#if defined(INSANI) ... #endif``` blocks and this is done for the following reasons:
 
-- If you compile without the INSANI flag, you'll get baseline ONScripter
+- If you compile without the ```-DINSANI``` flag, you'll get baseline ONScripter
 - Since this is a branch, this allows us to rapidly adapt to any changes 
   Ogapee might make in the future
 
 Should you wish to contribute code to onscripter-insani, we'd ask that you follow that convention.
   
 ## Required and Recommended Libraries/Utilities
-- For macOS, our build system assumes that you are using [homebrew](https://brew.sh)
+- For macOS, our build system assumes that you are using [Homebrew](https://brew.sh)
 - For Windows, our build system assumes that you are using [MSYS2](https://msys2.org)
 
 ### Required Libraries
@@ -63,6 +63,7 @@ Should you wish to contribute code to onscripter-insani, we'd ask that you follo
   - SDL-1.2
 - SDL_image
 - SDL_mixer
+  - For MP3 support on Homebrew and MSYS2, you will need to recompile this library, as detailed [here](#sdl_mixer-and-mp3-playback)
 - SDL_ttf
 
 ### Recommended Libraries
@@ -126,7 +127,7 @@ On Linux and gcc, you can fairly easily make a static build of your binary by pa
 ```gmake -f Makefile.MacOSX.insani```
 
 If you wish to make a game-specific app bundle, you can do so by running ```./makedist.MacOSX.sh``` -- however, if you wish to actually distribute your 
-builds, you are going to need an Apple developer account and you will have to fork over $99 a year.  Much more detailed instructions and notes can be found in the comments section of Makefile.MacOSX.insani.
+builds, you are going to need an Apple developer account and you will have to fork over $99 a year.  Much more detailed instructions and notes can be found in the comments section of ```Makefile.MacOSX.insani```.
 
 ### Windows
 Within the MINGW64 environment of MSYS2:
@@ -135,38 +136,41 @@ Within the MINGW64 environment of MSYS2:
 
 The DLL dependencies for the resultant onscripter.exe are:
 
-- libbrotlicommon.dll
-- libbrotlidec.dll
-- libbz2-1.dll
-- libdeflate.dll
-- libfreetype-6.dll
-- libgcc_s_seh1.dll
-- libglib-2.0.0.dll
-- libgraphite2.dll
-- libharfbuzz-0.dll
-- libiconv-2.dll
-- libintl-8.dll
-- libjbig-0.dll
-- libjpeg-8.dll
-- libLerc.dll
-- liblzma-5.dll
-- libmad-0.dll
-- libogg-0.dll
-- libpcre2-8-0.dll
-- libpng16-16.dll
-- libSDL_image-1-2-0.dll
-- libSDL_mixer-1-2-0.dll
-- libsharpyuv0.dll
-- libstdc++-6.dll
-- libtiff-6.dll
-- libvorbis-0.dll
-- libvorbisfile-3.dll
-- libwebp-7.dll
-- libwinpthread-1.dll
-- libzstd.dll
-- SDL_ttf.dll
-- SDL.dll
-- zlib1.dll
+```
+libbrotlicommon.dll
+libbrotlidec.dll
+libbz2-1.dll
+libdeflate.dll
+libfreetype-6.dll
+libgcc_s_seh1.dll
+libglib-2.0.0.dll
+libgraphite2.dll
+libharfbuzz-0.dll
+libiconv-2.dll
+libintl-8.dll
+libjbig-0.dll
+libjpeg-8.dll
+libLerc.dll
+liblzma-5.dll
+libmad-0.dll
+libogg-0.dll
+libpcre2-8-0.dll
+libpng16-16.dll
+libSDL_image-1-2-0.dll
+libSDL_mixer-1-2-0.dll
+libsharpyuv0.dll
+libstdc++-6.dll
+libtiff-6.dll
+libvorbis-0.dll
+libvorbisfile-3.dll
+libwebp-7.dll
+libwinpthread-1.dll
+libzstd.dll
+SDL_ttf.dll
+SDL_mixer.dll
+SDL.dll
+zlib1.dll
+```
 
 This list is exhaustive and likely many of the DLLs are not needed for normal running.  All DLLs can be found at:
 
@@ -175,13 +179,13 @@ This list is exhaustive and likely many of the DLLs are not needed for normal ru
 If you are distributing your build, you'll want to package up all of these DLLs alongside your onscripter.exe.
 
 ### All Other Platforms
-We only provide builds for macOS and Windows, and we only do testing on Linux, macOS, and Windows; however, ONScripter itself has been successfully compiled for platforms as diverse as Android, iOS, Symbian, MacOS Classic, PSP, *BSD, and the list goes on.  However we have not modified the makefiles for these platforms, and we can't guarantee a successful compilation on any platform other than Linux, macOS, and Windows.  If you are compiling on any of those platforms, you will minimally want to make sure the -DINSANI define is present.  If you succeed on one of our non-supported platforms, please get in touch with us and contribute your modified Makefiles back.
+We only provide builds for macOS and Windows, and we only do testing on Linux, macOS, and Windows; however, ONScripter itself has been successfully compiled for platforms as diverse as Android, iOS, Symbian, MacOS Classic, PSP, *BSD, and the list goes on.  However we have not modified the makefiles for these platforms, and we can't guarantee a successful compilation on any platform other than Linux, macOS, and Windows.  If you are compiling on any of those platforms, you will minimally want to make sure the ```-DINSANI``` define is present.  If you succeed on one of our non-supported platforms, please get in touch with us and contribute your modified Makefiles back.
 
 ## Why Dynamic Libraries?
 Traditionally, there was a push to make sure that onscripter-insani and ONScripter-EN builds were built with static libraries, for ease of distribution among other things.  The problem is, bitrot sets in quite quickly -- and the presence of those static libraries can sometimes lead to crashes as time goes on and there are major changes in the underlying OS.
 
 Our macOS build system depends on Homebrew, and you should never attempt to statically link Homebrew libraries as they tend to be truly OS version
-dependent in a way that the dylibs are not.  Furthermore, for the purposes of macOS, you're canonically supposed to distribute the required dylibs inside the app bundle as our makedist.MacOSX.sh does.
+dependent in a way that the dylibs are not.  Furthermore, for the purposes of macOS, you're canonically supposed to distribute the required dylibs inside the app bundle as our ```makedist.MacOSX.sh``` does.
 
 For Windows, the MINGW64 DLLs are widely compatible with any modern version of x86-64 Windows, and in the case that they become incompatible, replacement with updated versions will be easy.
 
@@ -199,7 +203,7 @@ That is because these three files have several strings that *must be in their or
 All this to say: if you want to contribute to onscripter-insani, **make extra sure that these files are encoded as SHIFT_JIS and not UTF8**.  You will cause random crashes all over the place, usually upon startup in UTF8 mode, if you do not.
 
 ### SDL_mixer and MP3 Playback
-The default precompiled libraries for SDL_mixer on both MSYS2 and Homebrew do not enable support for MP3 playback.  If you want MP3 playback, you are going to have to compile your own SDL_mixer as and end result.  Instructions below:
+The default precompiled libraries for SDL_mixer on both MSYS2 and Homebrew do not enable support for MP3 playback.  If you want MP3 playback, you are going to have to compile your own SDL_mixer as an end result.  Instructions below:
 
 #### macOS
 The easiest way to achieve a redistributable SDL_mixer 1.2.12 with MP3 playback enabled on Homebrew is to edit the Formula for SDL_mixer.  Do as follows:
@@ -251,7 +255,7 @@ add
       --disable-music-fluidsynth-midi
 ```
 
-under ```--disable-music-mod-shared```.
+under ```--disable-music-mod-shared``` but before ```]```.
 
 Now that you have made those edits, hit ```CTRL-O``` to save, then hit ```Enter```.  Finally, hit ```CTRL-X``` to finish.  All this done, run the command
 
@@ -264,7 +268,7 @@ This should rebuild SDL_mixer with MP3 support, and put it in the right place.
 As a final note, it's been known for the source code download to fail.  You may have to use [this URL](https://downloads.sourceforge.net/project/libsdl/SDL_mixer/1.2.12/SDL_mixer-1.2.12.tar.gz?ts=gAAAAABkOLOQCC9jEAqgEZajvI2a4ok_TF2WDqrk-rDCCOnmq8w2pI0vwLB3egonw2e-xodO02o2vCytb1anEdOZOVBY1Z7DKg%3D%3D) instead of the default listed URL in the Formula.
 
 #### Windows
-Download the [SDL_mixer 1.2.12 source zip](https://sourceforge.net/projects/libsdl/files/SDL_mixer/1.2.12/SDL_mixer-1.2.12.zip/download), and unzip it into your MSYS2 home folder (```C:\msys64\home\username```).  Open up the MINGW64 environment of MSYS2, go to the SDL_mixer-1.2.12 directory, then run:
+Download the [SDL_mixer 1.2.12 source zip](https://sourceforge.net/projects/libsdl/files/SDL_mixer/1.2.12/SDL_mixer-1.2.12.zip/download), and unzip it into your MSYS2 home folder (```C:\msys64\home\username```).  Open up the MINGW64 environment of MSYS2, go to the ```SDL_mixer-1.2.12``` directory, then run:
 
 ```
 ./configure
@@ -303,36 +307,41 @@ ONScripter.  Contact us through Github instead:
 - https://github.com/insani-org/onscripter-insani/
 
 ## Changelog
+*For more detailed release notes, please go [here](https://github.com/insani-org/onscripter-insani/releases).*
 
 ### 20230413-1 "BaseSon"
+#### All
 - Now with 100% more MP3 playback capability
-  - README.md now has information about compiling your own SDL_mixer with MP3 support
-- macOS;
-  - ```makedist.MacOSX.sh``` updated to 20230413-1
+  - ```README.md``` now has information about compiling your own SDL_mixer with MP3 support
+#### macOS
+- ```makedist.MacOSX.sh``` updated to 20230413-1
 
 ### 20230413 "Baldr"
+#### All
 - Now with 100% more insanity spirit
 - Corrections to line-break system
-- Corrections to behavior of ```@```, ```\```, and ```/``` in legacy english mode
-- ```!s```, ```!w```, and ```#``` now work in english mode
-- Initial support for UTF8 (0.utf) script files
+- Corrections to behavior of ```@```, ```\```, and ```/``` in ```legacy_english_mode```
+- ```!s```, ```!w```, and ```#``` now work in ```english_mode``` and ```legacy_english_mode```
+- Initial support for UTF8 (```0.utf```) script files
 - French and Italian documentation
 
 ### 20230308 "August"
-- ONScripter upstream version: 20220816
-- Added legacy_english_mode flag
-- Set english_mode and legacy_english_mode to TRUE when a line that begins with ` is detected
-- Created line-break system for legacy english mode
+#### ONScripter Upstream Version
+20220816
+#### All
+- Added ```legacy_english_mode``` flag
+- Set ```english_mode``` and ```legacy_english_mode``` to ```TRUE``` when a line that begins with ` is detected
+- Created line-break system for ```legacy_english_mode```
 - Fixed a bug in which lines that begin with ` cannot be advanced from in any circumstance
 - Minor tweaks to allow for usage of SDL2 + SDL12-compat
-- macOS:
-  - APPBUNDLE build flag which by default allows for saving of .sav and envdata files in ```~/Documents/ONScripter/gamename``` instead of in the same  directory, and to allow for game asset detection within the app bundle itself
-  - Modified makefile for macOS
-  - Created macOS app bundle creation script
-- Windows:
-  - All-new makefile for Windows, based on MSYS2 rather than VC++
-  - Edits to several files to allow proper MSYS2-based compilation
-  - Backported in window icon feature (from 2005!)
+#### macOS
+- ```-DAPPBUNDLE``` build flag which by default allows for saving of ```.sav``` and ```envdata``` files in ```~/Documents/ONScripter/gamename``` instead of in the same  directory, and to allow for game asset detection within the app bundle itself
+- Modified makefile for macOS
+- Created macOS app bundle creation script
+#### Windows
+- All-new makefile for Windows, based on MSYS2 rather than VC++
+- Edits to several files to allow proper MSYS2-based compilation
+- Backported in window icon feature (from 2005!)
 
 ### All Previous Versions
 - http://nscripter.insani.org/changelog.html
@@ -382,7 +391,7 @@ Tous les changements effectués par onscripter-insani sont enveloppés dans des 
 Si vous souhaitez contribuer au code d'onscripter-insani, nous vous demandons de suivre cette convention.
 
 ## Bibliothèques/Utilitaires requis et recommandés
-- Pour macOS, le système de compilation suppose l'utilisation de [homebrew](https://brew.sh)
+- Pour macOS, le système de compilation suppose l'utilisation de [Homebrew](https://brew.sh)
 - Pour Windows, le système de compilation suppose l'utilisation de [MSYS2](https://msys.org)
 
 ### Bibliothèques requises
