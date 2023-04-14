@@ -198,6 +198,81 @@ That is because these three files have several strings that *must be in their or
 
 All this to say: if you want to contribute to onscripter-insani, **make extra sure that these files are encoded as SHIFT_JIS and not UTF8**.  You will cause random crashes all over the place, usually upon startup in UTF8 mode, if you do not.
 
+### SDL_mixer and MP3 Playback
+The default precompiled libraries for SDL_mixer on both MSYS2 and Homebrew do not enable support for MP3 playback.  If you want MP3 playback, you are going to have to compile your own SDL_mixer as and end result.  Instructions below:
+
+#### macOS
+The easiest way to achieve a redistributable SDL_mixer 1.2.12 with MP3 playback enabled on Homebrew is to edit the Formula for SDL_mixer.  Do as follows:
+
+```
+brew tap homebrew/core
+EDITOR=nano brew edit sdl_mixer
+```
+
+This will open up a text editor with the sdl_mixer Homebrew Formula opened up.  A few important things to note:
+
+In the section that reads
+
+```
+  depends_on "pkg-config" => :build
+  depends_on "flac"
+  depends_on "libmikmod"
+  depends_on "libogg"
+  depends_on "libvorbis"
+  depends_on "sdl12-compat"
+```
+
+add
+
+```
+  depends_on "smpeg"
+  depends_on "libmad"
+```
+
+under ```depends_on "sdl12-compat"```.
+
+In the section that reads
+
+```
+    args = %W[
+      --prefix=#{prefix}
+      --disable-dependency-tracking
+      --enable-music-ogg
+      --enable-music-flac
+      --disable-music-ogg-shared
+      --disable-music-mod-shared
+    ]
+```
+
+add
+
+```
+      --enable-music-mp3
+      --disable-music-fluidsynth-midi
+```
+
+under ```--disable-music-mod-shared```.
+
+Now that you have made those edits, hit ```CTRL-O``` to save, then hit ```Enter```.  Finally, hit ```CTRL-X``` to finish.  All this done, run the command
+
+```
+HOMEBREW_NO_INSTALL_FROM_API=1 brew reinstall --build-from-source sdl_mixer
+```
+
+This should rebuild SDL_mixer with MP3 support, and put it in the right place.
+
+As a final note, it's been known for the source code download to fail.  You may have to use [this URL](https://downloads.sourceforge.net/project/libsdl/SDL_mixer/1.2.12/SDL_mixer-1.2.12.tar.gz?ts=gAAAAABkOLOQCC9jEAqgEZajvI2a4ok_TF2WDqrk-rDCCOnmq8w2pI0vwLB3egonw2e-xodO02o2vCytb1anEdOZOVBY1Z7DKg%3D%3D) instead of the default listed URL in the Formula.
+
+#### Windows
+Download the [SDL_mixer 1.2.12 source zip](https://sourceforge.net/projects/libsdl/files/SDL_mixer/1.2.12/SDL_mixer-1.2.12.zip/download), and unzip it into your MSYS2 home folder (```C:\msys64\home\username```).  Open up the MINGW64 environment of MSYS2, go to the SDL_mixer-1.2.12 directory, then run:
+
+```
+./configure
+make
+```
+
+Once this is done, you can navigate into the ```build``` subdirectory and find ```SDL_mixer.dll```.  This is the DLL you should be packaging alongside your onscripter-insani redistributable.  There is no need to recompile onscripter-insani; simply use this DLL and MP3 playback will automagically work.
+
 ### The Behavior of ```@```
 In NScripter, the presence of an ```@``` in a text block triggers what is known as the clickwait state.  In this state, the program waits for you to click before advancing the text any further.  It's often used to create a deliberate pause for dramatic or comedic effect.  The way ```@``` is supposed to work, if you had a line that goes
 
@@ -229,7 +304,13 @@ ONScripter.  Contact us through Github instead:
 
 ## Changelog
 
-### 20230413
+### 20230413-1 "BaseSon"
+- Now with 100% more MP3 playback capability
+  - README.md now has information about compiling your own SDL_mixer with MP3 support
+- macOS;
+  - ```makedist.MacOSX.sh``` updated to 20230413-1
+
+### 20230413 "Baldr"
 - Now with 100% more insanity spirit
 - Corrections to line-break system
 - Corrections to behavior of ```@```, ```\```, and ```/``` in legacy english mode
@@ -237,7 +318,7 @@ ONScripter.  Contact us through Github instead:
 - Initial support for UTF8 (0.utf) script files
 - French and Italian documentation
 
-### 20230308
+### 20230308 "August"
 - ONScripter upstream version: 20220816
 - Added legacy_english_mode flag
 - Set english_mode and legacy_english_mode to TRUE when a line that begins with ` is detected
