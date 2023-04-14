@@ -265,7 +265,7 @@ This should rebuild SDL_mixer with MP3 support, and put it in the right place.
 As a final note, it's been known for the source code download to fail.  You may have to use [this URL](https://downloads.sourceforge.net/project/libsdl/SDL_mixer/1.2.12/SDL_mixer-1.2.12.tar.gz?ts=gAAAAABkOLOQCC9jEAqgEZajvI2a4ok_TF2WDqrk-rDCCOnmq8w2pI0vwLB3egonw2e-xodO02o2vCytb1anEdOZOVBY1Z7DKg%3D%3D) instead of the default listed URL in the Formula.
 
 #### Windows
-Download the [SDL_mixer 1.2.12 source zip](https://sourceforge.net/projects/libsdl/files/SDL_mixer/1.2.12/SDL_mixer-1.2.12.zip/download), and unzip it into your MSYS2 home folder (```C:\msys64\home\username```).  Open up the MINGW64 environment of MSYS2, go to the SDL_mixer-1.2.12 directory, then run:
+Download the [SDL_mixer 1.2.12 source zip](https://sourceforge.net/projects/libsdl/files/SDL_mixer/1.2.12/SDL_mixer-1.2.12.zip/download), and unzip it into your MSYS2 home folder (```C:\msys64\home\username```).  Open up the MINGW64 environment of MSYS2, go to the ```SDL_mixer-1.2.12``` directory, then run:
 
 ```
 ./configure
