@@ -165,6 +165,7 @@ The DLL dependencies for the resultant onscripter.exe are:
 - libwinpthread-1.dll
 - libzstd.dll
 - SDL_ttf.dll
+- SDL_mixer.dll
 - SDL.dll
 - zlib1.dll
 
@@ -307,7 +308,7 @@ ONScripter.  Contact us through Github instead:
 ### 20230413-1 "BaseSon"
 - Now with 100% more MP3 playback capability
   - README.md now has information about compiling your own SDL_mixer with MP3 support
-- macOS;
+- macOS:
   - ```makedist.MacOSX.sh``` updated to 20230413-1
 
 ### 20230413 "Baldr"
