@@ -308,7 +308,7 @@ ONScripter.  Contact us through Github instead:
 ### 20230413-1 "BaseSon"
 - Now with 100% more MP3 playback capability
   - README.md now has information about compiling your own SDL_mixer with MP3 support
-- macOS:
+- *macOS:*
   - ```makedist.MacOSX.sh``` updated to 20230413-1
 
 ### 20230413 "Baldr"
@@ -316,21 +316,21 @@ ONScripter.  Contact us through Github instead:
 - Corrections to line-break system
 - Corrections to behavior of ```@```, ```\```, and ```/``` in legacy english mode
 - ```!s```, ```!w```, and ```#``` now work in english mode
-- Initial support for UTF8 (0.utf) script files
+- Initial support for UTF8 (```0.utf```) script files
 - French and Italian documentation
 
 ### 20230308 "August"
-- ONScripter upstream version: 20220816
+- *ONScripter Upstream Version:* 20220816
 - Added legacy_english_mode flag
 - Set english_mode and legacy_english_mode to TRUE when a line that begins with ` is detected
 - Created line-break system for legacy english mode
 - Fixed a bug in which lines that begin with ` cannot be advanced from in any circumstance
 - Minor tweaks to allow for usage of SDL2 + SDL12-compat
-- macOS:
+- *macOS:*
   - APPBUNDLE build flag which by default allows for saving of .sav and envdata files in ```~/Documents/ONScripter/gamename``` instead of in the same  directory, and to allow for game asset detection within the app bundle itself
   - Modified makefile for macOS
   - Created macOS app bundle creation script
-- Windows:
+- *Windows:*
   - All-new makefile for Windows, based on MSYS2 rather than VC++
   - Edits to several files to allow proper MSYS2-based compilation
   - Backported in window icon feature (from 2005!)
