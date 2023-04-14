@@ -4,6 +4,7 @@
 *.obj
 *.exe
 *.app
+*.dmg
 onscripter
 nsadec
 nsaconv

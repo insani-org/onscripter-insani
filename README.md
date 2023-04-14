@@ -441,7 +441,7 @@ Veuillez vous abstenir de contacter Ogapee à propos de tout ce que vous trouver
 
 ## Journal des modifications
 
-### 20230410
+### 20230413
 - Avec 100 % plus d’esprit d'insanité !
 - Corrections apportées au système de sauts de ligne
 - Corrections du comportement de ```@```, ```\``` et ```/``` en legacy_english_mode
@@ -659,7 +659,7 @@ Vi preghiamo di non contattare Ogapee per qualsiasi cosa troviate in onscripter-
 
 ## Registro delle modifiche
 
-### 20230410
+### 20230413
 - Con il 100 % di spirito di insanità in più!
 - Correzioni al sistema di interruzione di riga
 - Corretto il comportamento di ```@```, ```\``` e ```/``` in legacy_english_mode
