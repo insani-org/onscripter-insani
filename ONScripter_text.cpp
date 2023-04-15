@@ -1017,11 +1017,12 @@ int ONScripter::textCommand()
                     skip_newline_offset = 0;
 
                     // first fill the line with spaces all the way up to the line length limit
-                    while(current_line_length < line_length)
-                    {
-                        strcat(original_text, " ");
-                        current_line_length++;
-                    }
+                    //while(current_line_length < line_length)
+                    //{
+                    //    strcat(original_text, " ");
+                    //    current_line_length++;
+                    //}
+                    strcat(original_text, "\n");
 
                     // now we've begun the new line, and we set the current line length to the current word
                     strcat(original_text, current_word);
@@ -1184,7 +1185,7 @@ bool ONScripter::processText()
     if (pagetag_flag) page_enter_status = 1;
 
     new_line_skip_flag = false;
-    
+
     char ch = script_h.getStringBuffer()[string_buffer_offset];
 
     int n = script_h.enc.getBytes(ch);
@@ -1263,6 +1264,12 @@ bool ONScripter::processText()
         return true;
     }
 #if defined(INSANI)
+    else if ( ch == '\n' && english_mode ){
+        if(sentence_font.is_newline_accepted == false) sentence_font.is_newline_accepted = true;
+        sentence_font.newLine();
+        string_buffer_offset++;
+        return true;
+    }
     else if ( ch == '!' && english_mode ){
         if( script_h.getStringBuffer()[ string_buffer_offset + 1 ] == 's' ||
             script_h.getStringBuffer()[ string_buffer_offset + 1 ] == 'w')
@@ -1462,7 +1469,6 @@ bool ONScripter::processText()
     }
     else{
         out_text[0] = ch;
-        
         int matched_len = script_h.checkClickstr(script_h.getStringBuffer() + string_buffer_offset);
 
         if (matched_len > 0){
