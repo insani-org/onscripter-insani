@@ -3900,6 +3900,28 @@ int ONScripter::bltCommand()
     return RET_CONTINUE;
 }
 
+#if defined(INSANI)
+int ONScripter::bgmdownmodeCommand()
+{
+    int toggle = script_h.readInt();
+
+    switch(toggle)
+    {
+        case 1:
+            bgmdownmode_flag = true;
+            if ( wave_sample[0] ) Mix_VolumeMusic( (music_volume / 2) * MIX_MAX_VOLUME / 100 );
+            break;
+        case 0:
+        default:
+            bgmdownmode_flag = false;
+            if ( wave_sample[0] ) Mix_VolumeMusic( music_volume * MIX_MAX_VOLUME / 100 );
+            break;
+    }
+
+    return RET_CONTINUE;
+}
+#endif
+
 int ONScripter::bgcopyCommand()
 {
     ofscopyCommand();

@@ -370,6 +370,9 @@ static ONScripter::FuncLUT func_lut[] = {
     {"bgmonce",			&ONScripter::mp3Command}, 
     {"bgmfadeout",		&ONScripter::mp3fadeoutCommand},
     {"bgmfadein",		&ONScripter::mp3fadeinCommand},
+#if defined(INSANI)
+    {"bgmdownmode",		&ONScripter::bgmdownmodeCommand},
+#endif
     {"bgm",				&ONScripter::mp3Command}, 
     {"bgcpy",			&ONScripter::bgcopyCommand},
     {"bgcopy",			&ONScripter::bgcopyCommand},

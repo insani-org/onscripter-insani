@@ -475,6 +475,9 @@ int ONScripter::init()
     fadeout_music_file_name = NULL;
     music_buffer = NULL;
     music_info = NULL;
+#if defined(INSANI)
+    bgmdownmode_flag = false;
+#endif
 
     layer_smpeg_buffer = NULL;
     layer_smpeg_loop_flag = false;
@@ -568,6 +571,9 @@ void ONScripter::reset()
     mp3fadeout_duration_internal = 0;
     mp3fadein_duration_internal = 0;
     current_cd_track = -1;
+#if defined(INSANI)
+    bgmdownmode_flag = false;
+#endif
     
     resetSub();
 }
@@ -889,6 +895,21 @@ void ONScripter::runScript()
 int ONScripter::parseLine( )
 {
     if (debug_level > 0) printf("ONScripter::Parseline %s\n", script_h.getStringBuffer() );
+
+#if defined(INSANI)
+    // this simply happens to be a function called on a per-line basis -- making it the perfect place to implement a bgmdownmode check
+    switch(bgmdownmode_flag)
+    {
+        case true:
+            if ( wave_sample[0] ) Mix_VolumeMusic( (music_volume / 2) * MIX_MAX_VOLUME / 100 );
+            else Mix_VolumeMusic( music_volume * MIX_MAX_VOLUME / 100 );
+            break;
+        case false:
+        default:
+            Mix_VolumeMusic( music_volume * MIX_MAX_VOLUME / 100 );
+            break;
+    }
+#endif
 
     const char *cmd = script_h.getStringBuffer();
     if      (cmd[0] == ';') return RET_CONTINUE;

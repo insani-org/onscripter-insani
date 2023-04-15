@@ -287,6 +287,9 @@ public:
     int bspCommand();
     int brCommand();
     int bltCommand();
+#if defined(INSANI)
+    int bgmdownmodeCommand();
+#endif
     int bgcopyCommand();
     int bgCommand();
     int bdownCommand();
@@ -685,6 +688,10 @@ private:
 #if defined(USE_SMPEG)
     SMPEG* layer_smpeg_sample;
     SMPEG_Filter layer_smpeg_filter;
+#endif
+
+#if defined(INSANI)
+    bool bgmdownmode_flag;
 #endif
     
     int playSound(const char *filename, int format, bool loop_flag, int channel=0);
