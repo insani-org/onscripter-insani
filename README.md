@@ -128,7 +128,7 @@ pacman -S mingw-w64-x86_64-SDL mingw-w64-x86_64-SDL_ttf mingw-w64-x86_64-SDL_mix
 make -f Makefile.Linux.insani
 ```
 
-On Linux and gcc, you can fairly easily make a static build of your binary by passing in the -static option to gcc in the right place in the Makefile.
+On Linux and gcc, you can fairly easily make a static build of your binary by passing in the ```-static``` option to gcc in the right place(s) in the Makefile.  You might be interested in [this](https://github.com/insani-org/onscripter-en-msys2-configure-makefile) for a working example of a Makefile that results in a statically-compiled portable binary (albeit for Windows).
 
 ### macOS
 ```
