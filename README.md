@@ -36,7 +36,7 @@ goals of ONScripter-EN and our goals are slightly different.  We consider ONScri
 
 - Stay as close to upstream ONScripter as possible
 - Write in functionality that truly allows legacy English mode (one-byte, 
-  monospaced, using `) to work
+  monospaced, using ``` ` ```) to work
 - Provide builds for modern architectures, most notably for Apple Silicon
   macOS
 - Focus on portability and portable compilation, rather than on replicating
@@ -303,7 +303,7 @@ The original creator of ONScripter is Ogapee:
 Please refrain from contacting Ogapee about anything you find in onscripter-insani, though, as this branch does have differences from mainline 
 ONScripter.  Contact us through Github instead:
 
-- http://nscripter.insani.org/
+- [http://nscripter.insani.org/](http://nscripter.insani.org/)
 - https://github.com/insani-org/onscripter-insani/
 
 ## Changelog
@@ -327,12 +327,12 @@ ONScripter.  Contact us through Github instead:
 
 ### 20230308 "August"
 #### ONScripter Upstream Version
-20220816
+- [20220816](https://onscripter.osdn.jp/onscripter-20220816.tar.gz)
 #### All
 - Added ```legacy_english_mode``` flag
-- Set ```english_mode``` and ```legacy_english_mode``` to ```TRUE``` when a line that begins with ` is detected
+- Set ```english_mode``` and ```legacy_english_mode``` to ```TRUE``` when a line that begins with ``` ` ``` is detected
 - Created line-break system for ```legacy_english_mode```
-- Fixed a bug in which lines that begin with ` cannot be advanced from in any circumstance
+- Fixed a bug in which lines that begin with ``` ` ``` cannot be advanced from in any circumstance
 - Minor tweaks to allow for usage of SDL2 + SDL12-compat
 #### macOS
 - ```-DAPPBUNDLE``` build flag which by default allows for saving of ```.sav``` and ```envdata``` files in ```~/Documents/ONScripter/gamename``` instead of in the same  directory, and to allow for game asset detection within the app bundle itself
@@ -344,13 +344,13 @@ ONScripter.  Contact us through Github instead:
 - Backported in window icon feature (from 2005!)
 
 ### All Previous Versions
-- http://nscripter.insani.org/changelog.html
+- [http://nscripter.insani.org/changelog.html](http://nscripter.insani.org/changelog.html)
 
 ## License
 onscripter-insani is distributed under the terms of the GNU Public  License (GPL) v2.  This license does not extend to the assets for any game run
 in onscripter-insani -- those rights remain with the original creators.
 
-A copy of the GPLv2 can be found under COPYING in this source directory.
+A copy of the GPLv2 can be found under ```COPYING``` in this source directory.
 
 # Français
 
