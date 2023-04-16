@@ -71,7 +71,6 @@ Should you wish to contribute code to onscripter-insani, we'd ask that you follo
 - libogg
 - libvorbis
 - libmad
-- libmpg123
 
 ### Required Utilities (macOS)
 - dylibbundler
@@ -85,7 +84,9 @@ Every Linux distribution will have its own package manager.  Simply make sure yo
 ### macOS
 After you have installed [Homebrew](https://brew.sh), simply do:
 
-```brew install jpeg jpeg-turbo bzip2 sdl2 sdl12-compat sdl_image sdl_mixer sdl_ttf smpeg libogg libvorbis mpg123 make dylibbundler```
+```
+brew install jpeg jpeg-turbo bzip2 sdl2 sdl12-compat sdl_image sdl_mixer sdl_ttf smpeg libogg libvorbis mad make dylibbundler
+```
 
 You will want to make sure that Homebrew's libraries directory:
 
@@ -110,21 +111,29 @@ Install [MSYS2](https://www.msys2.org) and accept the default install location:
 
 After you have installed MSYS2, make sure that you are logging into the MINGW64 environment.  By default MSYS2 launches into the UCRT64 environment, so be careful.  Once you are in, update MSYS2:
 
-```pacman -Syuu```
+```
+pacman -Syuu
+```
 
 This will likely cause MSYS2 to close.  Relaunch into the MINGW64 environment and run that command again until nothing further happens.  Then run:
 
-```pacman -S mingw-w64-x86_64-SDL mingw-w64-x86_64-SDL_ttf mingw-w64-x86_64-SDL_mixer mingw-w64-x86_64-SDL_image mingw-w64-x86_64-bzip2 mingw-w64-x86_64-libogg mingw-w64-x86_64-libvorbis mingw-w64-x86_64-freetype mingw-w64-x86_64-smpeg mingw-w64-x86_64-iconv mingw-w64-x86_64-zlib mingw-w64-x86_64-toolchain```
+```
+pacman -S mingw-w64-x86_64-SDL mingw-w64-x86_64-SDL_ttf mingw-w64-x86_64-SDL_mixer mingw-w64-x86_64-SDL_image mingw-w64-x86_64-bzip2 mingw-w64-x86_64-libogg mingw-w64-x86_64-libvorbis mingw-w64-x86_64-freetype mingw-w64-x86_64-smpeg mingw-w64-x86_64-iconv mingw-w64-x86_64-zlib mingw-w64-x86_64-toolchain
+```
 
 ## Compilation Instructions
 
 ### GNU/Linux
-```make -f Makefile.Linux.insani```
+```
+make -f Makefile.Linux.insani
+```
 
 On Linux and gcc, you can fairly easily make a static build of your binary by passing in the -static option to gcc in the right place in the Makefile.
 
 ### macOS
-```gmake -f Makefile.MacOSX.insani```
+```
+gmake -f Makefile.MacOSX.insani
+```
 
 If you wish to make a game-specific app bundle, you can do so by running ```./makedist.MacOSX.sh``` -- however, if you wish to actually distribute your 
 builds, you are going to need an Apple developer account and you will have to fork over $99 a year.  Much more detailed instructions and notes can be found in the comments section of ```Makefile.MacOSX.insani```.
@@ -132,7 +141,9 @@ builds, you are going to need an Apple developer account and you will have to fo
 ### Windows
 Within the MINGW64 environment of MSYS2:
 
-```make -f Makefile.Win.insani```
+```
+make -f Makefile.Win.insani
+```
 
 The DLL dependencies for the resultant onscripter.exe are:
 
