@@ -461,15 +461,15 @@ int ONScripter::init()
         fp = NULL;
         delete font_file;
 #if defined(WIN32)
-        font_file = new char[ strlen("C:\Windows\Fonts\msgothic.ttc") + 1 ];
-        strcpy(font_file, "C:\Windows\Fonts\msgothic.ttc");
+        font_file = new char[ strlen("C:\\Windows\\Fonts\\msgothic.ttc") + 1 ];
+        strcpy(font_file, "C:\\Windows\\Fonts\\msgothic.ttc");
         if ((fp = ::fopen(font_file, "rb")) == NULL)
         {
             fclose(fp);
             fp = NULL;
             delete font_file;
-            font_file = new char[ strlen("C:\Windows\Fonts\msgothic.ttf") + 1 ];
-            strcpy(font_file, "C:\Windows\Fonts\msgothic.ttf");
+            font_file = new char[ strlen("C:\\Windows\\Fonts\\msgothic.ttf") + 1 ];
+            strcpy(font_file, "C:\\Windows\\Fonts\\msgothic.ttf");
             if ((fp = ::fopen(font_file, "rb")) == NULL)
             {
                 fclose(fp);
