@@ -1104,10 +1104,11 @@ int ONScripter::textCommand()
 
         prev_skip_newline_mode = skip_newline_mode;
         skip_newline_mode = script_h.getSkipNewlineMode();
-        if(prev_skip_newline_mode && original_text[strlen(original_text) - 1] == '\\') skip_newline_mode = true;
+        if(skip_newline_mode) { printf("in skip newline mode\n"); printf("offset: %d\n", skip_newline_offset); }
+        if(prev_skip_newline_mode && original_text[strlen(original_text) - 1] == '/') skip_newline_mode = true;
 
-        if(!skip_newline_mode) skip_newline_offset = 0;
-        else if(skip_newline_mode) current_line_length += skip_newline_offset;
+        if(!prev_skip_newline_mode) skip_newline_offset = 0;
+        else if(prev_skip_newline_mode) current_line_length += skip_newline_offset;
 
         // in ScriptHandler.cpp: #define STRING_BUFFER_LENGTH 4096 -- this is the max string buffer length ONScripter supports.
         char *temp_text = (char *) malloc(4096 * sizeof(char));
@@ -1178,6 +1179,8 @@ int ONScripter::textCommand()
 
                 // we capture this in a variable because we need to reset this to 0 whenever we line break
                 current_line_length += strpxlen(original_text, &sentence_font);
+                if(skip_newline_mode) skip_newline_offset = current_line_length;
+                else skip_newline_offset = 0;
             }
             else
             {
@@ -1189,11 +1192,12 @@ int ONScripter::textCommand()
                     strcat(original_text, " ");
                     current_line_length += strpxlen(" ", &sentence_font);
                 }
-                skip_newline_offset = 0;
 
                 // now we've begun the new line, and we set the current line length to the current word
                 strcat(original_text, current_word);
                 current_line_length = strpxlen(current_word, &sentence_font);
+                if(skip_newline_mode) skip_newline_offset = current_line_length;
+                else skip_newline_offset = 0;
 
                 // and finally, iterate current_word and next_word
                 current_word = next_word;
@@ -1219,6 +1223,10 @@ int ONScripter::textCommand()
                 if(next_word != NULL &&
                    ((strlen(current_word) == 4 && (unsigned char) current_word[0] == 0xe2 && (unsigned char) current_word[1] == 0x80 && (unsigned char) current_word[2] == 0x94) ||
                     (strlen(current_word) == 4 && (unsigned char) current_word[0] == 0xe2 && (unsigned char) current_word[1] == 0x80 && (unsigned char) current_word[2] == 0x95) ||
+                    (strlen(current_word) == 3 && (unsigned char) current_word[0] == 0xc2 && (unsigned char) current_word[1] == 0xab) ||
+                    (strlen(current_word) == 4 && (unsigned char) current_word[0] == 0xe2 && (unsigned char) current_word[1] == 0x80 && (unsigned char) current_word[2] == 0xb9) ||
+                    (strlen(next_word) == 3 && (unsigned char) next_word[0] == 0xc2 && (unsigned char) next_word[1] == 0xbb) ||
+                    (strlen(next_word) == 4 && (unsigned char) next_word[0] == 0xe2 && (unsigned char) next_word[1] == 0x80 && (unsigned char) next_word[2] == 0xba) ||
                     strcmp(next_word, "-") == 0 ||
                     strcmp(next_word, "--") == 0 || 
                     (next_word[0] == '.' &&
