@@ -1209,16 +1209,21 @@ int ONScripter::textCommand()
                 * "--" or "...", so always stick these with the last word.  Also,
                 * if you detect a double space, preserve that double space.
                 * 
+                * Finally, if you detect an emdash or a horizontal bar, also make
+                * it nonbreaking.
+                * 
                 */
                 int null_index = strlen(current_word);
                 null_index = null_index + 2;
 
                 if(next_word != NULL &&
-                (strcmp(next_word, "-") == 0 ||
-                 strcmp(next_word, "--") == 0 || 
-                 (next_word[0] == '.' &&
-                  next_word[1] == '.' &&
-                  next_word[2] == '.')))
+                   ((strlen(current_word) == 4 && (unsigned char) current_word[0] == 0xe2 && (unsigned char) current_word[1] == 0x80 && (unsigned char) current_word[2] == 0x94) ||
+                    (strlen(current_word) == 4 && (unsigned char) current_word[0] == 0xe2 && (unsigned char) current_word[1] == 0x80 && (unsigned char) current_word[2] == 0x95) ||
+                    strcmp(next_word, "-") == 0 ||
+                    strcmp(next_word, "--") == 0 || 
+                    (next_word[0] == '.' &&
+                     next_word[1] == '.' &&
+                     next_word[2] == '.')))
                 {
                     // attempt to replace the null character that terminates current_word with a space; should have the effect of concatenating the two strings together
                     null_index = strlen(current_word);
