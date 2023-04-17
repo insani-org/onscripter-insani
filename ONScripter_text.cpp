@@ -762,8 +762,8 @@ void ONScripter::endRuby(bool flush_flag, bool lookback_flag, SDL_Surface *surfa
  * int u8strlen(const char *s)
  * --
  * A simple function to grab the number of glyphs in a given UTF8-encoded string.
- * Works just like standard strlen.  Necessary for the insani legacy linewrap algorithm
- * with UTF8-encoded 0.utf.
+ * Works just like standard strlen.  Necessary for the initial version of the 
+ * insani legacy linewrap algorithm with UTF8-encoded 0.utf.
  */
 int ONScripter::u8strlen(const char *s)
 {
@@ -773,6 +773,34 @@ int ONScripter::u8strlen(const char *s)
         s++;
     }
     return len;
+}
+
+/*
+ * int strpxlen(const char *buf, FontInfo *fi)
+ * --
+ * A function to return the pixels taken up by a given string.  A critical part
+ * of the insani linewrap algorithm for all non-CJK modes.
+ */
+int ONScripter::strpxlen(const char *buf, FontInfo *fi)
+{
+    openFont(fi);
+    
+    int w = 0;
+    while (buf[0] != '\0')
+    {
+        int n = script_h.enc.getBytes(buf[0]);
+        unsigned short unicode = script_h.enc.getUTF16(buf);
+        
+        int minx, maxx, miny, maxy, advanced;
+        TTF_GlyphMetrics((TTF_Font*)fi->ttf_font[0], unicode,
+                         &minx, &maxx, &miny, &maxy, &advanced);
+        
+        w += advanced + fi->pitch_xy[0] - fi->font_size_xy[0];
+        buf += n;
+    }
+    w -= fi->pitch_xy[0] - fi->font_size_xy[0];
+
+    return w;
 }
 #endif
 
@@ -859,6 +887,8 @@ int ONScripter::textCommand()
         english_mode = false;
     }
 
+/*
+    // below is the first iteration of the insani linewrap algorithm; now here just in case
     if(legacy_english_mode)
     {
         // English monospaced line wrapping algorithm begins here
@@ -967,13 +997,9 @@ int ONScripter::textCommand()
             // ...our setup is complete and now we can loop and line break
             while(current_word != NULL)
             {
-                /*
-                *
-                * Word wrap special cases.  Not appropriate to start lines with
-                * "--" or "...", so always stick these with the last word.  Also,
-                * if you detect a double space, preserve that double space.
-                * 
-                */
+                // Word wrap special cases.  Not appropriate to start lines with
+                // "--" or "...", so always stick these with the last word.  Also,
+                // if you detect a double space, preserve that double space.
                 int null_index = strlen(current_word);
                 null_index = null_index + 2;
 
@@ -1043,6 +1069,205 @@ int ONScripter::textCommand()
                        original_text[char_is_token_counter] == '/')
                     {
                         current_line_length--;
+                        char_is_token_counter--;
+                    }
+                    else char_is_token = false;
+                }
+
+                // then set the skip_newline_offset to the corrected character count
+                skip_newline_offset = current_line_length;
+
+                //printf("%s %d %d\n", current_word, u8strlen(current_word), current_line_length);
+
+                // and finally iterate through the next set of words
+                current_word = next_word;
+                next_word = strtok(NULL, " ");
+            }
+        }
+        free(temp_text);
+    }
+*/
+
+    if(english_mode)
+    {
+        // English pixel-based line wrapping algorithm begins here
+        int line_length = sentence_font.num_xy[0] * sentence_font.pitch_xy[0];
+        char *original_text = script_h.getStringBuffer();
+        int current_line_length = 0;
+
+        prev_skip_newline_mode = skip_newline_mode;
+        skip_newline_mode = script_h.getSkipNewlineMode();
+        if(prev_skip_newline_mode && original_text[strlen(original_text) - 1] == '\\') skip_newline_mode = true;
+
+        if(!skip_newline_mode) skip_newline_offset = 0;
+        else if(skip_newline_mode) current_line_length += skip_newline_offset;
+
+        // in ScriptHandler.cpp: #define STRING_BUFFER_LENGTH 4096 -- this is the max string buffer length ONScripter supports.
+        char *temp_text = (char *) malloc(4096 * sizeof(char));
+
+        int original_text_length = strpxlen(original_text, &sentence_font);
+        int original_text_bytes = strlen(original_text);
+        bool char_is_token = true;
+        int char_is_token_counter;
+        strcpy(temp_text, original_text);
+
+        // now get the first two words in the script
+        char *current_word = strtok(temp_text, " ");
+        char *next_word = strtok(NULL, " ");
+
+        // check for padding spaces in the first word
+        if(&current_word[0] != &temp_text[0])
+        {
+            int space_counter = 0;
+            for(int i = 0; original_text[i] == ' '; i++)
+            {
+                temp_text[i] = ' ';
+                space_counter += strpxlen(" ", &sentence_font);
+            }
+            if(current_line_length + strpxlen(current_word, &sentence_font) + space_counter <= line_length) current_word = temp_text;
+        }
+
+        // now parse special cases
+        if(strpxlen(current_word, &sentence_font) >= line_length)
+        {
+            // ... then there's no point in word-wrapping at all, as the word that the writer/translator put in is longer than the limit anyway, so do nothing
+        }
+        else if(original_text_length + current_line_length <= line_length)
+        {
+            // ... the entire text fits on one display line anyway, so just calculate the new skip_newline_offset
+            if(skip_newline_mode)
+            {
+                // remove all special ending tokens (\, @, /) from the character count
+                char_is_token = true;
+                char_is_token_counter = original_text_bytes - 1;
+                while(char_is_token)
+                {
+                    if(original_text[char_is_token_counter] == '\\' ||
+                       original_text[char_is_token_counter] == '@' ||
+                       original_text[char_is_token_counter] == '/')
+                    {
+                        if(original_text[char_is_token_counter] == '\\') original_text_length -= strpxlen("\\", &sentence_font);
+                        else if(original_text[char_is_token_counter] == '@') original_text_length -= strpxlen("@", &sentence_font);
+                        else if(original_text[char_is_token_counter] == '/') original_text_length -= strpxlen("/", &sentence_font);
+                        char_is_token_counter--;
+                    }
+                    else char_is_token = false;
+                }
+
+                // then set the skip_newline_offset to the corrected text length
+                skip_newline_offset += original_text_length;
+
+            }
+            else skip_newline_offset = 0;
+        }
+        else
+        {
+            // first attempt to iterate manually on current_word or next_word
+            if(current_line_length + strpxlen(current_word, &sentence_font) + strpxlen(" ", &sentence_font) <= line_length)
+            {
+                strcpy(original_text, current_word);
+                current_word = next_word;
+                next_word = strtok(NULL, " ");
+
+                // we capture this in a variable because we need to reset this to 0 whenever we line break
+                current_line_length += strpxlen(original_text, &sentence_font);
+            }
+            else
+            {
+                // the only time the above won't work is if we had a / before and need to word wrap on the first word
+                strcpy(original_text, "");
+                //current_line_length++;
+                while(current_line_length < line_length)
+                {
+                    strcat(original_text, " ");
+                    current_line_length += strpxlen(" ", &sentence_font);
+                }
+                skip_newline_offset = 0;
+
+                // now we've begun the new line, and we set the current line length to the current word
+                strcat(original_text, current_word);
+                current_line_length = strpxlen(current_word, &sentence_font);
+
+                // and finally, iterate current_word and next_word
+                current_word = next_word;
+                next_word = strtok(NULL, " ");
+            }
+
+            // ...our setup is complete and now we can loop and line break
+            while(current_word != NULL)
+            {
+                /*
+                *
+                * Word wrap special cases.  Not appropriate to start lines with
+                * "--" or "...", so always stick these with the last word.  Also,
+                * if you detect a double space, preserve that double space.
+                * 
+                */
+                int null_index = strlen(current_word);
+                null_index = null_index + 2;
+
+                if(next_word != NULL &&
+                (strcmp(next_word, "-") == 0 ||
+                 strcmp(next_word, "--") == 0 || 
+                 (next_word[0] == '.' &&
+                  next_word[1] == '.' &&
+                  next_word[2] == '.')))
+                {
+                    // attempt to replace the null character that terminates current_word with a space; should have the effect of concatenating the two strings together
+                    null_index = strlen(current_word);
+                    current_word[null_index] = ' ';
+
+                    next_word = strtok(NULL, " ");
+                }
+                else if(next_word != NULL && 
+                        (&current_word[null_index] == &next_word[0]))
+                {
+                    // replace the null character that terminates current_word with a space; this will not, unlike above, concatenate current_word and next_word together because there is another space
+                    null_index = null_index - 2;
+                    current_word[null_index] = ' ';
+                    current_word[null_index + 1] = '\0';
+                }
+
+                if(current_line_length + strpxlen(current_word, &sentence_font) + strpxlen(" ", &sentence_font) <= line_length)
+                {
+                    // ... the length of the wrapped text and the current word are still less than the max line length, so ...
+                    // ... add a space, then the current word.
+                    strcat(original_text, " ");
+                    strcat(original_text, current_word);
+
+                    current_line_length = current_line_length + strpxlen(current_word, &sentence_font) + strpxlen(" ", &sentence_font);
+                }
+                else
+                {
+                    // we are in line break mode
+
+                    // skip_newline_offset reset to 0
+                    skip_newline_offset = 0;
+
+                    // add a newline marker for later linebreaking in processText()
+                    strcat(original_text, "\n");
+
+                    // now we've begun the new line, and we set the current line length to the current word
+                    strcat(original_text, current_word);
+                    current_line_length = strpxlen(current_word, &sentence_font);
+
+                }
+
+                //printf("%s\n", original_text);
+
+                // these are the last things that should happen before we loop
+                // remove all special ending tokens (\, @, /) from the character count
+                char_is_token = true;
+                char_is_token_counter = u8strlen(original_text) - 1;
+                while(char_is_token)
+                {
+                    if(original_text[char_is_token_counter] == '\\' ||
+                       original_text[char_is_token_counter] == '@' ||
+                       original_text[char_is_token_counter] == '/')
+                    {
+                        if(original_text[char_is_token_counter] == '\\') original_text_length -= strpxlen("\\", &sentence_font);
+                        else if(original_text[char_is_token_counter] == '@') original_text_length -= strpxlen("@", &sentence_font);
+                        else if(original_text[char_is_token_counter] == '/') original_text_length -= strpxlen("/", &sentence_font);
                         char_is_token_counter--;
                     }
                     else char_is_token = false;
