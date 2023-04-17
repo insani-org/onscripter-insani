@@ -383,7 +383,7 @@ int main( int argc, char **argv )
     printf("ONScripter version %s(%d.%02d)\n", ONS_VERSION, NSC_VERSION/100, NSC_VERSION%100 );
 
 #if defined(INSANI)
-    printf("OYABB insanity spirit detected anew, in 20230410 flavor!\n");
+    printf("Autodetect: OYABB neo-insanity spirit (2023041x 'Capcom')!\n");
 #endif
 
 #if defined(PSP)
