@@ -476,7 +476,7 @@ pacman -S mingw-w64-x86_64-SDL mingw-w64-x86_64-SDL_ttf mingw-w64-x86_64-SDL_mix
 make -f Makefile.Linux.insani
 ```
 
-Sous GNU/Linux et gcc, vous pouvez assez facilement faire une compilation statique de votre binaire en passant l'option -static à gcc au bon endroit dans le Makefile.
+Sous GNU/Linux et gcc, vous pouvez assez facilement faire une compilation statique de votre binaire en passant l'option -static à gcc au bon endroit dans le Makefile.  Vous pourriez être intéressé par [ceci](https://github.com/insani-org/onscripter-en-msys2-configure-makefile) pour un exemple de Makefile (pour notre projet jumeau) qui résulte en un binaire portable compilé statiquement - bien que pour Windows ; et non, onscripter-insani ne se compilera pas avec ce Makefile donc n'essayez pas.
 
 ### macOS
 ```
