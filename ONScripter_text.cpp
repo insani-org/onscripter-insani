@@ -224,7 +224,10 @@ void ONScripter::drawChar( char* text, FontInfo *info, bool flush_flag, bool loo
         SDL_Color color = {info->color[0], info->color[1], info->color[2]};
         SDL_Rect dst_rect;
         float adv = drawGlyph(surface, info, color, text2, xy, cache_info, clip, dst_rect); 
+#if not defined(INSANI)
+        // this arguably doesn't even work well in monospaced English mode
         if (n == 1) adv -= 0.5; // 0.5 is for adjusting the increse by FT_CEIL
+#endif
 
         if ( surface == accumulation_surface &&
              !flush_flag &&
@@ -1104,11 +1107,10 @@ int ONScripter::textCommand()
 
         prev_skip_newline_mode = skip_newline_mode;
         skip_newline_mode = script_h.getSkipNewlineMode();
-        if(skip_newline_mode) { printf("in skip newline mode\n"); printf("offset: %d\n", skip_newline_offset); }
         if(prev_skip_newline_mode && original_text[strlen(original_text) - 1] == '/') skip_newline_mode = true;
 
         if(!prev_skip_newline_mode) skip_newline_offset = 0;
-        else if(prev_skip_newline_mode) current_line_length += skip_newline_offset;
+        else if(prev_skip_newline_mode) current_line_length = skip_newline_offset;
 
         // in ScriptHandler.cpp: #define STRING_BUFFER_LENGTH 4096 -- this is the max string buffer length ONScripter supports.
         char *temp_text = (char *) malloc(4096 * sizeof(char));
@@ -1186,12 +1188,7 @@ int ONScripter::textCommand()
             {
                 // the only time the above won't work is if we had a / before and need to word wrap on the first word
                 strcpy(original_text, "");
-                //current_line_length++;
-                while(current_line_length < line_length)
-                {
-                    strcat(original_text, " ");
-                    current_line_length += strpxlen(" ", &sentence_font);
-                }
+                strcat(original_text, "\n");
 
                 // now we've begun the new line, and we set the current line length to the current word
                 strcat(original_text, current_word);
@@ -1211,18 +1208,24 @@ int ONScripter::textCommand()
                 *
                 * Word wrap special cases.  Not appropriate to start lines with
                 * "--" or "...", so always stick these with the last word.  Also,
-                * if you detect a double space, preserve that double space.
+                * if you detect a double space, preserve that double space because
+                * that conforms to the insani.org style guide.
                 * 
-                * Finally, if you detect an emdash or a horizontal bar, also make
-                * it nonbreaking.
+                * In order, those if substatements are for:
+                * - emdash as next word (nonbreaking space before)
+                * - horizontal rule as next word (nonbreaking space before)
+                * - opening double guillemet as current word (nonbreaking space after)
+                * - opening single guillemet as current word (nonbreaking space after)
+                * - closing double guillemet as next word (nonbreaking space before)
+                * - closing single guillemet as next word (nonbreaking space before)
                 * 
                 */
                 int null_index = strlen(current_word);
                 null_index = null_index + 2;
 
                 if(next_word != NULL &&
-                   ((strlen(current_word) == 4 && (unsigned char) current_word[0] == 0xe2 && (unsigned char) current_word[1] == 0x80 && (unsigned char) current_word[2] == 0x94) ||
-                    (strlen(current_word) == 4 && (unsigned char) current_word[0] == 0xe2 && (unsigned char) current_word[1] == 0x80 && (unsigned char) current_word[2] == 0x95) ||
+                   ((strlen(next_word) == 4 && (unsigned char) next_word[0] == 0xe2 && (unsigned char) next_word[1] == 0x80 && (unsigned char) next_word[2] == 0x94) ||
+                    (strlen(next_word) == 4 && (unsigned char) next_word[0] == 0xe2 && (unsigned char) next_word[1] == 0x80 && (unsigned char) next_word[2] == 0x95) ||
                     (strlen(current_word) == 3 && (unsigned char) current_word[0] == 0xc2 && (unsigned char) current_word[1] == 0xab) ||
                     (strlen(current_word) == 4 && (unsigned char) current_word[0] == 0xe2 && (unsigned char) current_word[1] == 0x80 && (unsigned char) current_word[2] == 0xb9) ||
                     (strlen(next_word) == 3 && (unsigned char) next_word[0] == 0xc2 && (unsigned char) next_word[1] == 0xbb) ||
@@ -1256,6 +1259,8 @@ int ONScripter::textCommand()
                     strcat(original_text, current_word);
 
                     current_line_length = current_line_length + strpxlen(current_word, &sentence_font) + strpxlen(" ", &sentence_font);
+                    if(skip_newline_mode) skip_newline_offset = current_line_length;
+                    else skip_newline_offset = 0;
                 }
                 else
                 {
@@ -1270,6 +1275,8 @@ int ONScripter::textCommand()
                     // now we've begun the new line, and we set the current line length to the current word
                     strcat(original_text, current_word);
                     current_line_length = strpxlen(current_word, &sentence_font);
+                    if(skip_newline_mode) skip_newline_offset = current_line_length;
+                    else skip_newline_offset = 0;
 
                 }
 
@@ -1278,7 +1285,7 @@ int ONScripter::textCommand()
                 // these are the last things that should happen before we loop
                 // remove all special ending tokens (\, @, /) from the character count
                 char_is_token = true;
-                char_is_token_counter = u8strlen(original_text) - 1;
+                char_is_token_counter = strlen(original_text) - 1;
                 while(char_is_token)
                 {
                     if(original_text[char_is_token_counter] == '\\' ||
@@ -1293,10 +1300,7 @@ int ONScripter::textCommand()
                     else char_is_token = false;
                 }
 
-                // then set the skip_newline_offset to the corrected character count
-                skip_newline_offset = current_line_length;
-
-                //printf("%s %d %d\n", current_word, u8strlen(current_word), current_line_length);
+                //printf("%s %d %d\n", current_word, strpxlen(current_word, &sentence_font), current_line_length);
 
                 // and finally iterate through the next set of words
                 current_word = next_word;
