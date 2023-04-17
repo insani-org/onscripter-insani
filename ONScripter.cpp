@@ -26,6 +26,13 @@
 #include <fontconfig/fontconfig.h>
 #endif
 
+#if defined(MACOSX) && defined(INSANI)
+#import <CoreFoundation/CoreFoundation.h>
+#import <Foundation/NSString.h>
+#import <Foundation/NSObject.h>
+#import <Foundation/NSFileManager.h>
+#endif
+
 extern "C" void waveCallback( int channel );
 
 #define DEFAULT_AUDIOBUF  4096
@@ -74,7 +81,6 @@ void ONScripter::initSDL()
 #if defined(INSANI)
 #if defined(WIN32)
 	 SDL_WM_SetIcon(IMG_Load("icon.png"), NULL);
-	 fprintf(stderr, "Autodetect: insanity spirit detected!\n");
 #endif
 #endif
 
@@ -446,6 +452,41 @@ int ONScripter::init()
         else{
             fclose(fp);
         }
+#endif
+#if defined(INSANI)
+    FILE *fp = NULL;
+    if ((fp = ::fopen(font_file, "rb")) == NULL)
+    {
+        fclose(fp);
+        fp = NULL;
+        delete font_file;
+#if defined(WIN32)
+        font_file = new char[ strlen("C:\Windows\Fonts\msgothic.ttc") + 1 ];
+        strcpy(font_file, "C:\Windows\Fonts\msgothic.ttc");
+        if ((fp = ::fopen(font_file, "rb")) == NULL)
+        {
+            fclose(fp);
+            fp = NULL;
+            delete font_file;
+            font_file = new char[ strlen("C:\Windows\Fonts\msgothic.ttf") + 1 ];
+            strcpy(font_file, "C:\Windows\Fonts\msgothic.ttf");
+            if ((fp = ::fopen(font_file, "rb")) == NULL)
+            {
+                fclose(fp);
+                fp = NULL;
+            }
+        }
+#endif
+#if defined(MACOSX)
+        NSFileManager *fm = [NSFileManager defaultManager];
+        NSString *hiraginoPath = @"/System/Library/Fonts/ヒラギノ角ゴシック W4.ttc";
+        if ([fm fileExistsAtPath:hiraginoPath])
+        {
+            font_file = new char[ strlen([hiraginoPath UTF8String]) + 1 ];
+            strcpy(font_file, [hiraginoPath UTF8String]);
+        }
+#endif
+    }
 #endif
     }
     
