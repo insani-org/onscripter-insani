@@ -425,6 +425,13 @@ void ONScripter::restoreTextBuffer(SDL_Surface *surface)
         }
         else{
             out_text[0] = current_page->text[i];
+#if defined(INSANI)
+            if ( out_text[0] == '\n' ){
+                if(f_info.is_newline_accepted == false) f_info.is_newline_accepted = true;
+                f_info.newLine();
+                continue;
+            }
+#endif
 #ifndef FORCE_1BYTE_CHAR            
             if (out_text[0] == '('){
                 startRuby(current_page->text + i + 1, f_info);
@@ -1493,6 +1500,7 @@ bool ONScripter::processText()
         if(sentence_font.is_newline_accepted == false) sentence_font.is_newline_accepted = true;
         sentence_font.newLine();
         string_buffer_offset++;
+        current_page->add('\n');
         return true;
     }
     else if ( ch == '!' && english_mode ){
