@@ -475,7 +475,9 @@ int ONScripter::init()
                 fclose(fp);
                 fp = NULL;
             }
+            fclose(fp);
         }
+        fclose(fp);
 #endif
 #if defined(MACOSX)
         NSFileManager *fm = [NSFileManager defaultManager];
