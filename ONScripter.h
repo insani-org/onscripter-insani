@@ -419,6 +419,7 @@ private:
 
 #if defined(INSANI)
     bool file_exists(const char *fileName);
+    char* create_filepath(const char* path_prefix, const char* filename);
 #endif
     void initSDL();
     void openAudio(int freq=-1);

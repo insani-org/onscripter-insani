@@ -389,6 +389,14 @@ bool ONScripter::file_exists(const char *fileName)
     std::ifstream infile(fileName);
     return infile.good();
 }
+
+char* ONScripter::create_filepath(const char* path_prefix, const char* filename)
+{
+  size_t n = strlen(path_prefix) + strlen(filename) + 1;
+  char* filepath = new char[n];
+  snprintf(filepath, n, "%s%s", path_prefix, filename);
+  return filepath;
+}
 #endif
 
 int ONScripter::init()
@@ -438,14 +446,10 @@ int ONScripter::init()
     // - on macOS: system Hiragino Gothic (fallback)
     int font_picker = -1;
 
-    char* archive_default_font_ttf = new char[ strlen(archive_path) + strlen(FONT_FILE) + 1 ];
-    sprintf( archive_default_font_ttf, "%s%s", archive_path, FONT_FILE );
-    char* archive_default_font_ttc = new char[ strlen(archive_path) + strlen("default.ttc") + 1 ];
-    sprintf( archive_default_font_ttc, "%s%s", archive_path, "default.ttc" );
-    char* archive_default_font_otf = new char[ strlen(archive_path) + strlen("default.otf") + 1 ];
-    sprintf( archive_default_font_otf, "%s%s", archive_path, "default.otf" );
-    char* archive_default_font_otc = new char[ strlen(archive_path) + strlen("default.otc") + 1 ];
-    sprintf( archive_default_font_otc, "%s%s", archive_path, "default.otc" );
+    char* archive_default_font_ttf = create_filepath(archive_path, "default.ttf");
+    char* archive_default_font_ttc = create_filepath(archive_path, "default.ttc");
+    char* archive_default_font_otf = create_filepath(archive_path, "default.otf");
+    char* archive_default_font_otc = create_filepath(archive_path, "default.otc");
 
 #if defined(MACOSX)
     char* macos_font_file;
@@ -477,20 +481,16 @@ int ONScripter::init()
     switch(font_picker)
     {
         case FONT_DEFAULT_TTF:
-            font_file = new char[ strlen("default.ttf") + 1 ];
-            sprintf( font_file, "%s", "default.ttf" );
+            font_file = create_filepath("", "default.ttf");
             break;
         case FONT_DEFAULT_TTC:
-            font_file = new char[ strlen("default.ttc") + 1 ];
-            sprintf( font_file, "%s", "default.ttc" );
+            font_file = create_filepath("", "default.ttc");
             break;
         case FONT_DEFAULT_OTF:
-            font_file = new char[ strlen("default.otf") + 1 ];
-            sprintf( font_file, "%s", "default.otf" );
+            font_file = create_filepath("", "default.otf");
             break;
         case FONT_DEFAULT_OTC:
-            font_file = new char[ strlen("default.otc") + 1 ];
-            sprintf( font_file, "%s", "default.otc" );
+            font_file = create_filepath("", "default.otc");
             break;
         case FONT_ARCHIVE_TTF:
             font_file = archive_default_font_ttf;
@@ -517,13 +517,11 @@ int ONScripter::init()
             delete archive_default_font_otf;
             break;
         case FONT_WIN32_MSGOTHIC_TTC:
-            font_file = new char[ strlen("C:\\Windows\\Fonts\\msgothic.ttc") + 1 ];
-            sprintf( font_file, "%s", "C:\\Windows\\Fonts\\msgothic.ttc" );
+            font_file = create_filepath("", "C:\\Windows\\Fonts\\msgothic.ttc");
             fprintf( stderr, "no font file detected; using system fallback (MS Gothic)\n" );
             break;
         case FONT_WIN32_MSGOTHIC_TTF:
-            font_file = new char[ strlen("C:\\Windows\\Fonts\\msgothic.ttf") + 1 ];
-            sprintf( font_file, "%s", "C:\\Windows\\Fonts\\msgothic.ttf" );
+            font_file = create_filepath("", "C:\\Windows\\Fonts\\msgothic.ttf");
             fprintf( stderr, "no font file detected; using system fallback (MS Gothic)\n" );
             break;
         case FONT_MACOS_HIRAGINO:
