@@ -490,7 +490,7 @@ int ONScripter::init()
 #endif
 #if defined(MACOSX)
             NSFileManager *fm = [NSFileManager defaultManager];
-            NSString *hiraginoPath = @"/System/Library/Fonts/ヒラギノ角ゴシック W4.ttc";
+            NSString *hiraginoPath = @"/System/Library/Fonts/ヒラギノ丸ゴ ProN W4.ttc";
             if ([fm fileExistsAtPath:hiraginoPath])
             {
                 font_file = new char[ strlen([hiraginoPath UTF8String]) + 1 ];
