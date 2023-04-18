@@ -88,6 +88,12 @@ void ONScripter::enterSystemCall()
     event_mode = IDLE_EVENT_MODE;
     shelter_display_mode = display_mode;
     display_mode = DISPLAY_MODE_TEXT;
+
+#if defined(INSANI)
+    cached_ttf_style = sentence_font.getStyle();
+    cached_style_bold = sentence_font.style_bold;
+    cached_style_italics = sentence_font.style_italics;
+#endif
     
     shelter_refresh_shadow_text_mode = refresh_shadow_text_mode;
     refresh_shadow_text_mode &= ~REFRESH_CURSOR_MODE;
@@ -98,6 +104,10 @@ void ONScripter::leaveSystemCall( bool restore_flag )
 {
     current_font = &sentence_font;
     display_mode = shelter_display_mode;
+
+#if defined(INSANI)
+    sentence_font.setStyle(cached_ttf_style, cached_style_italics, cached_style_bold);
+#endif
 
     if ( restore_flag ){
         

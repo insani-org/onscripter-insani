@@ -476,19 +476,44 @@ void ONScripter::restoreTextBuffer(SDL_Surface *surface)
                 i += n-1;
             }
             else if (script_h.enc.getEncoding() == Encoding::CODE_UTF8 &&
+#if defined(INSANI)
+                     (current_page->text[i + 1] == 'i' || current_page->text[i + 1] == 'b') &&
+                     (current_page->text[i + 2] == 'i' || current_page->text[i + 2] == 'b' || current_page->text[i + 2] == '~') &&
+#endif
                      out_text[0] == '~'){
                 while(1){
                     char ch = current_page->text[++i];
                     if (ch == 0x0a || ch == 0) break;
                     if (ch == '~'){
+#if not defined(INSANI)
+                        // This is actually a bug, and advances the buffer one character too far, deleting the next true letter after the ~
                         i++;
+#endif
                         break;
                     }
                     if (ch == 'i'){
+#if defined(INSANI)
+                        // reset font style for log mode
+                        f_info.toggleStyle(TTF_STYLE_RESET_LOOKBACK);
+                        // then do font style anew
+                        if(f_info.style_italics && !f_info.style_bold) f_info.openFont(font_file, screen_ratio1, screen_ratio2);
+                        else if(f_info.style_italics && f_info.style_bold) f_info.openFont(font_bold_file, screen_ratio1, screen_ratio2);
+                        else if(!f_info.style_italics && !f_info.style_bold) f_info.openFont(font_italics_file, screen_ratio1, screen_ratio2);
+                        else if(!f_info.style_italics && f_info.style_bold) f_info.openFont(font_bolditalics_file, screen_ratio1, screen_ratio2);
+#endif
                         openFont(&f_info);
                         f_info.toggleStyle(TTF_STYLE_ITALIC);
                     }
                     else if (ch == 'b'){
+#if defined(INSANI)
+                        // reset font style for log mode
+                        f_info.toggleStyle(TTF_STYLE_RESET_LOOKBACK);
+                        // then do font style anew
+                        if(f_info.style_bold && !f_info.style_italics) f_info.openFont(font_file, screen_ratio1, screen_ratio2);
+                        else if(f_info.style_bold && f_info.style_italics) f_info.openFont(font_italics_file, screen_ratio1, screen_ratio2);
+                        else if(!f_info.style_bold && !f_info.style_italics) f_info.openFont(font_bold_file, screen_ratio1, screen_ratio2);
+                        else if(!f_info.style_bold && f_info.style_italics) f_info.openFont(font_bolditalics_file, screen_ratio1, screen_ratio2);
+#endif
                         openFont(&f_info);
                         f_info.toggleStyle(TTF_STYLE_BOLD);
                     }
@@ -511,6 +536,10 @@ void ONScripter::restoreTextBuffer(SDL_Surface *surface)
             drawChar(out_text, &f_info, false, false, surface, &text_info);
         }
     }
+#if defined(INSANI)
+    // reset the font style at the end of the log mode page
+    sentence_font.setStyle(0, 0, 0);
+#endif
 }
 
 void ONScripter::enterTextDisplayMode(bool text_flag)
@@ -655,6 +684,10 @@ bool ONScripter::clickNewPage( char *out_text )
         drawChar( out_text, &sentence_font, true, true, accumulation_surface, &text_info );
         num_chars_in_sentence++;
     }
+
+#if defined(INSANI)
+    sentence_font.setStyle(0, 0, 0);
+#endif
 
     flush( REFRESH_NONE_MODE );
     skip_mode &= ~SKIP_TO_EOL;
@@ -812,6 +845,93 @@ int ONScripter::strpxlen(const char *buf, FontInfo *fi)
 
     return w;
 }
+
+/*
+ * int getPixelLength(const char *buf, FontInfo *fi)
+ * --
+ * A function to return the pixels taken up by a given string, minus all inline 
+ * commands.  A critical part of the insani linewrap algorithm for all non-CJK modes.
+ */
+int ONScripter::getPixelLength(const char *buf, FontInfo *fi)
+{
+    int orig_length = strpxlen(buf, fi);
+    char tmp[256];
+    int x = 0;
+
+    while(buf[0] != '\0')
+    {
+        // !d, !sd, !s, !w
+        if(buf[0] == '!')
+        {
+            // !d
+            if(buf[1] == 'd')
+            {
+                tmp[0] = '!';
+                tmp[1] = 'd';
+                x = 2;
+                for(x = 2; isdigit(buf[x]) == true; x++)
+                {
+                    tmp[x] = buf[x];
+                }
+                tmp[x+1] = '\0';
+                orig_length -= strpxlen(tmp, fi);
+            }
+            // !sd
+            else if(buf[1] == 's' && buf[2] == 'd') orig_length -= strpxlen("!sd", fi);
+            // !s
+            else if(buf[1] == 's')
+            {
+                tmp[0] = '!';
+                tmp[1] = 's';
+                x = 2;
+                for(x = 2; isdigit(buf[x]) == true; x++)
+                {
+                    tmp[x] = buf[x];
+                }
+                tmp[x+1] = '\0';
+                orig_length -= strpxlen(tmp, fi);
+            }
+            // !w
+            else if(buf[1] == 'w')
+            {
+                tmp[0] = '!';
+                tmp[1] = 'w';
+                x = 2;
+                for(int x = 2; isdigit(buf[x]) == true; x++)
+                {
+                    tmp[x] = buf[x];
+                }
+                tmp[x+1] = '\0';
+                orig_length -= strpxlen(tmp, fi);
+            }
+        }
+        // #nnnnnn
+        else if(buf[0] == '#')
+        {
+            tmp[0] = '#';
+            x = 1;
+            for(int x = 1; isdigit(buf[x]) == true; x++)
+            {
+                tmp[x] = buf[x];
+            }
+            tmp[x+1] = '\0';
+            orig_length -= strpxlen(tmp, fi);
+        }
+        // ~i~, ~b~, ~ib~, ~bi~
+        else if(buf[0] == '~')
+        {
+            if(buf[1] == 'i' && buf[2] == '~') orig_length -= strpxlen("~i~", fi);
+            else if(buf[1] == 'b' && buf[2] == '~') orig_length -= strpxlen("~b~", fi);
+            else if(buf[1] == 'i' && buf[2] == 'b' && buf[3] == '~') orig_length -= strpxlen("~ib~", fi);
+            else if(buf[1] == 'b' && buf[2] == 'i' && buf[3] == '~') orig_length -= strpxlen("~bi~", fi);
+        }
+        buf++;
+        x = 0;
+    }
+
+    return orig_length;
+}
+
 #endif
 
 int ONScripter::textCommand()
@@ -897,207 +1017,6 @@ int ONScripter::textCommand()
         english_mode = false;
     }
 
-/*
-    // below is the first iteration of the insani linewrap algorithm; now here just in case
-    if(legacy_english_mode)
-    {
-        // English monospaced line wrapping algorithm begins here
-        int line_length = sentence_font.num_xy[0] * 2;
-        char *original_text = script_h.getStringBuffer();
-        int current_line_length = 0;
-
-        prev_skip_newline_mode = skip_newline_mode;
-        skip_newline_mode = script_h.getSkipNewlineMode();
-        if(prev_skip_newline_mode && original_text[strlen(original_text) - 1] == '\\') skip_newline_mode = true;
-
-        //printf("skip_newline_mode: %d\n", skip_newline_mode);
-        if(!skip_newline_mode) skip_newline_offset = 0;
-        else if(skip_newline_mode) current_line_length += skip_newline_offset;
-        //printf("skip_newline_offset: %d\n", skip_newline_offset);
-
-        // in ScriptHandler.cpp: #define STRING_BUFFER_LENGTH 4096 -- this is the max string buffer length ONScripter supports.
-        char *temp_text = (char *) malloc(4096 * sizeof(char));
-
-        int original_text_length = u8strlen(original_text);
-        int original_text_bytes = strlen(original_text);
-        bool char_is_token = true;
-        int char_is_token_counter;
-        strcpy(temp_text, original_text);
-
-        // now get the first two words in the script
-        char *current_word = strtok(temp_text, " ");
-        char *next_word = strtok(NULL, " ");
-
-        // check for padding spaces in the first word
-        if(&current_word[0] != &temp_text[0])
-        {
-            int space_counter = 0;
-            for(int i = 0; original_text[i] == ' '; i++)
-            {
-                temp_text[i] = ' ';
-                space_counter++;
-            }
-            if(current_line_length + u8strlen(current_word) + space_counter <= line_length) current_word = temp_text;
-        }
-
-        // now parse special cases
-        if(u8strlen(current_word) >= line_length)
-        {
-            // ... then there's no point in word-wrapping at all, as the word that the writer/translator put in is longer than the limit anyway, so do nothing
-        }
-        else if(original_text_length + current_line_length <= line_length)
-        {
-            // ... the entire text fits on one display line anyway, so just calculate the new skip_newline_offset
-            if(skip_newline_mode)
-            {
-                // remove all special ending tokens (\, @, /) from the character count
-                char_is_token = true;
-                char_is_token_counter = original_text_bytes - 1;
-                while(char_is_token)
-                {
-                    if(original_text[char_is_token_counter] == '\\' ||
-                       original_text[char_is_token_counter] == '@' ||
-                       original_text[char_is_token_counter] == '/')
-                    {
-                        original_text_length--;
-                        char_is_token_counter--;
-                    }
-                    else char_is_token = false;
-                }
-
-                // then set the skip_newline_offset to the corrected text length
-                skip_newline_offset += original_text_length;
-
-            }
-            else skip_newline_offset = 0;
-        }
-        else
-        {
-            // first attempt to iterate manually on current_word or next_word
-            if(current_line_length + u8strlen(current_word) + 1 <= line_length)
-            {
-                strcpy(original_text, current_word);
-                current_word = next_word;
-                next_word = strtok(NULL, " ");
-
-                // we capture this in a variable because we need to reset this to 0 whenever we line break
-                current_line_length += u8strlen(original_text);
-            }
-            else
-            {
-                // the only time the above won't work is if we had a / before and need to word wrap on the first word
-                strcpy(original_text, "");
-                //current_line_length++;
-                while(current_line_length < line_length)
-                {
-                    strcat(original_text, " ");
-                    current_line_length++;
-                }
-                skip_newline_offset = 0;
-
-                // now we've begun the new line, and we set the current line length to the current word
-                strcat(original_text, current_word);
-                current_line_length = u8strlen(current_word);
-
-                // and finally, iterate current_word and next_word
-                current_word = next_word;
-                next_word = strtok(NULL, " ");
-            }
-
-            // ...our setup is complete and now we can loop and line break
-            while(current_word != NULL)
-            {
-                // Word wrap special cases.  Not appropriate to start lines with
-                // "--" or "...", so always stick these with the last word.  Also,
-                // if you detect a double space, preserve that double space.
-                int null_index = strlen(current_word);
-                null_index = null_index + 2;
-
-                if(next_word != NULL &&
-                (strcmp(next_word, "-") == 0 ||
-                 strcmp(next_word, "--") == 0 || 
-                 (next_word[0] == '.' &&
-                  next_word[1] == '.' &&
-                  next_word[2] == '.')))
-                {
-                    // attempt to replace the null character that terminates current_word with a space; should have the effect of concatenating the two strings together
-                    null_index = strlen(current_word);
-                    current_word[null_index] = ' ';
-
-                    next_word = strtok(NULL, " ");
-                }
-                else if(next_word != NULL && 
-                        (&current_word[null_index] == &next_word[0]))
-                {
-                    // replace the null character that terminates current_word with a space; this will not, unlike above, concatenate current_word and next_word together because there is another space
-                    null_index = null_index - 2;
-                    current_word[null_index] = ' ';
-                    current_word[null_index + 1] = '\0';
-                }
-
-                if(current_line_length + u8strlen(current_word) + 1 <= line_length)
-                {
-                    // ... the length of the wrapped text and the current word are still less than the max line length, so ...
-                    // ... add a space, then the current word.
-                    strcat(original_text, " ");
-                    strcat(original_text, current_word);
-
-                    current_line_length = current_line_length + u8strlen(current_word) + 1;
-                }
-                else
-                {
-                    //printf("current_line_length: %d\n", current_line_length);
-                    // we are in line break mode
-
-                    // skip_newline_offset reset to 0
-                    skip_newline_offset = 0;
-
-                    // first fill the line with spaces all the way up to the line length limit
-                    //while(current_line_length < line_length)
-                    //{
-                    //    strcat(original_text, " ");
-                    //    current_line_length++;
-                    //}
-                    strcat(original_text, "\n");
-
-                    // now we've begun the new line, and we set the current line length to the current word
-                    strcat(original_text, current_word);
-                    current_line_length = u8strlen(current_word);
-
-                }
-
-                //printf("%s\n", original_text);
-
-                // these are the last things that should happen before we loop
-                // remove all special ending tokens (\, @, /) from the character count
-                char_is_token = true;
-                char_is_token_counter = u8strlen(original_text) - 1;
-                while(char_is_token)
-                {
-                    if(original_text[char_is_token_counter] == '\\' ||
-                       original_text[char_is_token_counter] == '@' ||
-                       original_text[char_is_token_counter] == '/')
-                    {
-                        current_line_length--;
-                        char_is_token_counter--;
-                    }
-                    else char_is_token = false;
-                }
-
-                // then set the skip_newline_offset to the corrected character count
-                skip_newline_offset = current_line_length;
-
-                //printf("%s %d %d\n", current_word, u8strlen(current_word), current_line_length);
-
-                // and finally iterate through the next set of words
-                current_word = next_word;
-                next_word = strtok(NULL, " ");
-            }
-        }
-        free(temp_text);
-    }
-*/
-
     if(english_mode)
     {
         // English pixel-based line wrapping algorithm begins here
@@ -1115,7 +1034,7 @@ int ONScripter::textCommand()
         // in ScriptHandler.cpp: #define STRING_BUFFER_LENGTH 4096 -- this is the max string buffer length ONScripter supports.
         char *temp_text = (char *) malloc(4096 * sizeof(char));
 
-        int original_text_length = strpxlen(original_text, &sentence_font);
+        int original_text_length = getPixelLength(original_text, &sentence_font);
         int original_text_bytes = strlen(original_text);
         bool char_is_token = true;
         int char_is_token_counter;
@@ -1134,11 +1053,11 @@ int ONScripter::textCommand()
                 temp_text[i] = ' ';
                 space_counter += strpxlen(" ", &sentence_font);
             }
-            if(current_line_length + strpxlen(current_word, &sentence_font) + space_counter <= line_length) current_word = temp_text;
+            if(current_line_length + getPixelLength(current_word, &sentence_font) + space_counter <= line_length) current_word = temp_text;
         }
 
         // now parse special cases
-        if(strpxlen(current_word, &sentence_font) >= line_length)
+        if(getPixelLength(current_word, &sentence_font) >= line_length)
         {
             // ... then there's no point in word-wrapping at all, as the word that the writer/translator put in is longer than the limit anyway, so do nothing
         }
@@ -1173,14 +1092,14 @@ int ONScripter::textCommand()
         else
         {
             // first attempt to iterate manually on current_word or next_word
-            if(current_line_length + strpxlen(current_word, &sentence_font) + strpxlen(" ", &sentence_font) <= line_length)
+            if(current_line_length + getPixelLength(current_word, &sentence_font) + strpxlen(" ", &sentence_font) <= line_length)
             {
                 strcpy(original_text, current_word);
                 current_word = next_word;
                 next_word = strtok(NULL, " ");
 
                 // we capture this in a variable because we need to reset this to 0 whenever we line break
-                current_line_length += strpxlen(original_text, &sentence_font);
+                current_line_length += getPixelLength(original_text, &sentence_font);
                 if(skip_newline_mode) skip_newline_offset = current_line_length;
                 else skip_newline_offset = 0;
             }
@@ -1192,7 +1111,7 @@ int ONScripter::textCommand()
 
                 // now we've begun the new line, and we set the current line length to the current word
                 strcat(original_text, current_word);
-                current_line_length = strpxlen(current_word, &sentence_font);
+                current_line_length = getPixelLength(current_word, &sentence_font);
                 if(skip_newline_mode) skip_newline_offset = current_line_length;
                 else skip_newline_offset = 0;
 
@@ -1251,14 +1170,14 @@ int ONScripter::textCommand()
                     current_word[null_index + 1] = '\0';
                 }
 
-                if(current_line_length + strpxlen(current_word, &sentence_font) + strpxlen(" ", &sentence_font) <= line_length)
+                if(current_line_length + getPixelLength(current_word, &sentence_font) + strpxlen(" ", &sentence_font) <= line_length)
                 {
                     // ... the length of the wrapped text and the current word are still less than the max line length, so ...
                     // ... add a space, then the current word.
                     strcat(original_text, " ");
                     strcat(original_text, current_word);
 
-                    current_line_length = current_line_length + strpxlen(current_word, &sentence_font) + strpxlen(" ", &sentence_font);
+                    current_line_length = current_line_length + getPixelLength(current_word, &sentence_font) + strpxlen(" ", &sentence_font);
                     if(skip_newline_mode) skip_newline_offset = current_line_length;
                     else skip_newline_offset = 0;
                 }
@@ -1274,7 +1193,7 @@ int ONScripter::textCommand()
 
                     // now we've begun the new line, and we set the current line length to the current word
                     strcat(original_text, current_word);
-                    current_line_length = strpxlen(current_word, &sentence_font);
+                    current_line_length = getPixelLength(current_word, &sentence_font);
                     if(skip_newline_mode) skip_newline_offset = current_line_length;
                     else skip_newline_offset = 0;
 
@@ -1300,7 +1219,7 @@ int ONScripter::textCommand()
                     else char_is_token = false;
                 }
 
-                //printf("%s %d %d\n", current_word, strpxlen(current_word, &sentence_font), current_line_length);
+                // printf("%s %d %d\n", current_word, getPixelLength(current_word, &sentence_font), current_line_length);
 
                 // and finally iterate through the next set of words
                 current_word = next_word;
@@ -1436,6 +1355,15 @@ bool ONScripter::processText()
     new_line_skip_flag = false;
 
     char ch = script_h.getStringBuffer()[string_buffer_offset];
+
+#if defined(INSANI)
+    // deal with the case of the line that starts with ~ (as we insert the ` back when this occurs)
+    if(ch == '`')
+    {
+        string_buffer_offset++;
+        ch = script_h.getStringBuffer()[string_buffer_offset];
+    }
+#endif
 
     int n = script_h.enc.getBytes(ch);
     if (n >= 2){
@@ -1695,6 +1623,10 @@ bool ONScripter::processText()
         return true;
     }
     else if (script_h.enc.getEncoding() == Encoding::CODE_UTF8 &&
+#if defined(INSANI)
+             (script_h.getStringBuffer()[string_buffer_offset + 1] == 'i' || script_h.getStringBuffer()[string_buffer_offset + 1] == 'b') &&
+             (script_h.getStringBuffer()[string_buffer_offset + 2] == 'i' || script_h.getStringBuffer()[string_buffer_offset + 2] == 'b' || script_h.getStringBuffer()[string_buffer_offset + 2] == '~') &&            
+#endif
              ch == '~'){
         current_page->add('~');
         while(1){
@@ -1706,10 +1638,22 @@ bool ONScripter::processText()
                 break;
             }
             if (ch == 'i'){
+#if defined(INSANI)
+                if(sentence_font.style_italics && !sentence_font.style_bold) sentence_font.openFont(font_file, screen_ratio1, screen_ratio2);
+                else if(sentence_font.style_italics && sentence_font.style_bold) sentence_font.openFont(font_bold_file, screen_ratio1, screen_ratio2);
+                else if(!sentence_font.style_italics && !sentence_font.style_bold) sentence_font.openFont(font_italics_file, screen_ratio1, screen_ratio2);
+                else if(!sentence_font.style_italics && sentence_font.style_bold) sentence_font.openFont(font_bolditalics_file, screen_ratio1, screen_ratio2);
+#endif
                 openFont(&sentence_font);
                 sentence_font.toggleStyle(TTF_STYLE_ITALIC);
             }
             else if (ch == 'b'){
+#if defined(INSANI)
+                if(sentence_font.style_bold && !sentence_font.style_italics) sentence_font.openFont(font_file, screen_ratio1, screen_ratio2);
+                else if(sentence_font.style_bold && sentence_font.style_italics) sentence_font.openFont(font_italics_file, screen_ratio1, screen_ratio2);
+                else if(!sentence_font.style_bold && !sentence_font.style_italics) sentence_font.openFont(font_bold_file, screen_ratio1, screen_ratio2);
+                else if(!sentence_font.style_bold && sentence_font.style_italics) sentence_font.openFont(font_bolditalics_file, screen_ratio1, screen_ratio2);
+#endif
                 openFont(&sentence_font);
                 sentence_font.toggleStyle(TTF_STYLE_BOLD);
             }

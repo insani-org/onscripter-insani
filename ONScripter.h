@@ -67,6 +67,9 @@
 #define FONT_WIN32_MSGOTHIC_TTC 8
 #define FONT_WIN32_MSGOTHIC_TTF 9
 #define FONT_MACOS_HIRAGINO 10
+
+// define for font reset
+#define TTF_STYLE_RESET_LOOKBACK -1
 #endif
 
 #define DEFAULT_WM_TITLE "ONScripter"
@@ -630,6 +633,11 @@ private:
     int  shelter_display_mode;
     int  shelter_refresh_shadow_text_mode;
     Page *cached_page;
+#if defined(INSANI)
+    int cached_ttf_style;
+    bool cached_style_bold;
+    bool cached_style_italics;
+#endif
     ButtonLink *shelter_button_link;
     SelectLink *shelter_select_link;
     ButtonState shelter_mouse_state;
@@ -766,6 +774,11 @@ private:
     AnimationInfo text_info;
     AnimationInfo sentence_font_info;
     char *font_file;
+#if defined(INSANI)
+    char *font_italics_file;
+    char *font_bold_file;
+    char *font_bolditalics_file;
+#endif
     int erase_text_window_mode;
     bool text_on_flag; // suppress the effect of erase_text_window_mode
     int  indent_offset;
@@ -789,6 +802,7 @@ private:
 #if defined(INSANI)
     int  u8strlen(const char *s);
     int  strpxlen(const char *buf, FontInfo *fi);
+    int  getPixelLength(const char *buf, FontInfo *fi);
 #endif
     int  textCommand();
     bool checkLineBreak(const char *buf, FontInfo *fi);

@@ -276,6 +276,10 @@ const char *ScriptHandler::readToken()
 #ifdef ENABLE_1BYTE_CHAR
     else if (ch == '`'){
         ch = *++buf;
+#if defined(INSANI)
+        // deal with the case of the line that begins with ~; currently, it treats such lines as commands; so we insert the ` right back and deal with that ` in ONScripter::processText
+        if(ch == '~') addStringBuffer('`');
+#endif
         while (ch != '`' && ch != 0x0a && ch !='\0'){
             int n = enc.getBytes(ch);
             for (int i=0; i<n; i++){
@@ -284,7 +288,7 @@ const char *ScriptHandler::readToken()
             }
         }
 #if defined(INSANI)
-        // printf("string_buffer = %s\n", string_buffer);
+        //printf("string_buffer = %s\n", string_buffer);
         int buf_last_char = strlen(string_buffer) - 1;
         if(string_buffer[buf_last_char] == '/') skip_newline_mode = true;
         else skip_newline_mode = false;
