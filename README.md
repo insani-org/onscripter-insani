@@ -203,7 +203,7 @@ For Windows, the MINGW64 DLLs are widely compatible with any modern version of x
 ## Errata and Curiosities
 
 ### Fonts
-onscripter-insani relies upon having a default font file available to it.  As of 20230420 'Capcom', this can be one of:
+onscripter-insani relies upon having a default font file available to it.  Historically, this had to be named ```default.ttf``` and placed in the same directory as the onscripter-insani executable or, in the case of macOS App Bundles, the Contents/Resources subdirectory of the App Bundle in question.  As of 20230420 "Capcom", though, there is support for OpenType and for OpenType/TrueType font collections, so onscripter-insani now looks for, in order:
 
 - ```default.ttf```
 - ```default.ttc```
@@ -223,7 +223,7 @@ For *maximum compatibility with Japanese language games*, you will want a defaul
 - [Migu 2M/2M Bold](http://mix-mplus-ipa.osdn.jp/)
 - [Sazanami Gothic](https://osdn.net/projects/efont/releases/)
 
-However, since 20230420 'Capcom' onscripter-insani has production UTF8 and proportional font support -- meaning that you can use just about any font with your translation project so long as it has the necessary glyphs.  For instance, an English-language translation project will generally only need a font that covers the Latin-1 spectrum (which is most fonts in existence).  A sampling of proportional fonts known to work well with 20230420 'Capcom' and above in English includes:
+However, since 20230420 "Capcom" onscripter-insani has production UTF8 and proportional font support -- meaning that you can use just about any font with your translation project so long as it has the necessary glyphs.  For instance, an English-language translation project will generally only need a font that covers the Latin-1 spectrum (which is most fonts in existence).  A sampling of proportional fonts known to work well with 20230420 "Capcom" and above in English includes:
 
 - [The DejaVu Family](https://dejavu-fonts.github.io/)
 - [The Noto Family](https://fonts.google.com/noto)
