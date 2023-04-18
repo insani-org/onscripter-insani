@@ -223,7 +223,7 @@ For *maximum compatibility with Japanese language games*, you will want a defaul
 - [Migu 2M/2M Bold](http://mix-mplus-ipa.osdn.jp/)
 - [Sazanami Gothic](https://osdn.net/projects/efont/releases/)
 
-However, since 20230420 'Capcom' onscripter-insani has production UTF8 and proportional font support -- meaning that you can use just about any font with your translation project so long as it has the necessary glyphs.  For instance, an English-language translation project will generally only need a font that covers the Latin-1 spectrum (which is most fonts in existence).  A sampling of proportional fonts known to work well with 20230420 'Capcom' and above in English include:
+However, since 20230420 'Capcom' onscripter-insani has production UTF8 and proportional font support -- meaning that you can use just about any font with your translation project so long as it has the necessary glyphs.  For instance, an English-language translation project will generally only need a font that covers the Latin-1 spectrum (which is most fonts in existence).  A sampling of proportional fonts known to work well with 20230420 'Capcom' and above in English includes:
 
 - [The DejaVu Family](https://dejavu-fonts.github.io/)
 - [The Noto Family](https://fonts.google.com/noto)
