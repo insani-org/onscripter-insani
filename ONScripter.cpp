@@ -516,6 +516,7 @@ int ONScripter::init()
             delete archive_default_font_ttc;
             delete archive_default_font_otf;
             break;
+#if defined(WIN32)
         case FONT_WIN32_MSGOTHIC_TTC:
             font_file = create_filepath("", "C:\\Windows\\Fonts\\msgothic.ttc");
             fprintf( stderr, "no font file detected; using system fallback (MS Gothic)\n" );
@@ -524,10 +525,13 @@ int ONScripter::init()
             font_file = create_filepath("", "C:\\Windows\\Fonts\\msgothic.ttf");
             fprintf( stderr, "no font file detected; using system fallback (MS Gothic)\n" );
             break;
+#endif
+#if defined(MACOSX)
         case FONT_MACOS_HIRAGINO:
             font_file = macos_font_file;
             fprintf( stderr, "no font file detected; using system fallback (Hiragino Gothic)\n" );
             break;
+#endif
         default:
             font_picker = -1;
             break;
