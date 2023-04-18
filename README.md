@@ -9,7 +9,7 @@
 # English
 
 ## Last Updated
-2023-04-13
+2023-04-18
 
 ## Introduction and History
 onscripter-insani is a branch of [ONScripter](https://onscripter.osdn.jp/onscripter.html), which is an active project as of 2022.  ONScripter is a clean-room open-source implementation of NScripter -- a novel game creation engine that arguably helped to bootstrap the novel game boom in Japan.  Many companies used NScripter in order to create some of the classics of the genre, notable examples being みずいろ (*Mizuiro*) by Nekonekosoft and 月姫 (*Tsukihime*) by TYPE-MOON.
@@ -201,6 +201,33 @@ dependent in a way that the dylibs are not.  Furthermore, for the purposes of ma
 For Windows, the MINGW64 DLLs are widely compatible with any modern version of x86-64 Windows, and in the case that they become incompatible, replacement with updated versions will be easy.
 
 ## Errata and Curiosities
+
+### Fonts
+onscripter-insani relies upon having a default font file available to it.  As of 20230420 'Capcom', this can be one of:
+
+- ```default.ttf```
+- ```default.ttc```
+- ```default.otf```
+- ```default.otc```
+
+If none of these are found, onscripter-insani will attempt the following fallback fonts:
+
+- *macOS:* [Hiragino Maru Gothic](https://en.wikipedia.org/wiki/Hiragino)
+- *Windows:* [MS Gothic](https://learn.microsoft.com/en-us/typography/font-list/ms-gothic)
+
+These two fonts are pre-installed on their respective operating systems.  MS Gothic has come pre-installed on Windows since Vista, and Hiragino Maru Gothic has come pre-installed on macOS since macOS was a wee little thing named MacOS X, and also code-named after big cats at that.
+
+For *maximum compatibility with Japanese language games*, you will want a default font file that is (a) monospaced and (b) capable of CJK glyphs.  Our traditional recommendations are:
+
+- [Genjyuu Gothic X Monospace/Monospace Bold](http://jikasei.me/font/genjyuu/)
+- [Migu 2M/2M Bold](http://mix-mplus-ipa.osdn.jp/)
+- [Sazanami Gothic](https://osdn.net/projects/efont/releases/)
+
+However, since 20230420 'Capcom' onscripter-insani has production UTF8 and proportional font support -- meaning that you can use just about any font with your translation project so long as it has the necessary glyphs.  For instance, an English-language translation project will generally only need a font that covers the Latin-1 spectrum (which is most fonts in existence).  A sampling of proportional fonts known to work well with 20230420 'Capcom' and above in English include:
+
+- [The DejaVu Family](https://dejavu-fonts.github.io/)
+- [The Noto Family](https://fonts.google.com/noto)
+- [Comic Sans](https://en.wikipedia.org/wiki/Comic_Sans)
 
 ### UTF8 vs. SHIFT_JIS Encoded Files
 Most of the files in this project are encoded as UTF8.  However, there are three files in particular that are encoded as SHIFT_JIS, those being:
