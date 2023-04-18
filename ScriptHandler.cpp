@@ -1066,13 +1066,13 @@ int ScriptHandler::readScript( char *path )
         encrypt_mode = 0;
         file_extension = ".utf";
         enc.setEncoding(Encoding::CODE_UTF8);
-        printf("0.utf detected.  UTF8 Mode is not fully supported at this time.\n");
+        printf("0.utf detected.  Entering UTF8 Mode.\n");
     }
     else if ((fp = fopen("00.utf", "rb")) != NULL){
         encrypt_mode = 0;
         file_extension = ".utf";
         enc.setEncoding(Encoding::CODE_UTF8);
-        printf("00.utf detected.  UTF8 Mode is not fully supported at this time.\n");
+        printf("00.utf detected.  Entering UTF8 Mode.\n");
     }
 #endif
     else if ((fp = fopen("nscr_sec.dat", "rb")) != NULL){
@@ -1088,7 +1088,7 @@ int ScriptHandler::readScript( char *path )
         encrypt_mode = 1;
         enc.setEncoding(Encoding::CODE_UTF8);
 #if defined(INSANI)
-        printf("pscript.dat detected.  UTF8 Mode is not fully supported at this time.\n");
+        printf("pscript.dat detected.  Entering UTF8 Mode.\n");
 #endif
     }
 
