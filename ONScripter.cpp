@@ -22,6 +22,9 @@
  */
 
 #include "ONScripter.h"
+#if defined(INSANI)
+#include <fstream>
+#endif
 #ifdef USE_FONTCONFIG
 #include <fontconfig/fontconfig.h>
 #endif
@@ -380,6 +383,14 @@ int ONScripter::openScript()
     return ScriptParser::openScript();
 }
 
+#if defined(INSANI)
+bool ONScripter::file_exists(const char *fileName)
+{
+    std::ifstream infile(fileName);
+    return infile.good();
+}
+#endif
+
 int ONScripter::init()
 {
     initSDL();
@@ -416,6 +427,154 @@ int ONScripter::init()
 
     // ----------------------------------------
     // Initialize font
+#if defined(INSANI)
+    // insani-modified font picker.  Picks in the following order:
+    // - default.ttf
+    // - default.ttc
+    // - default.otf
+    // - default.otc
+    // - any of the above in archive_path
+    // - on Windows: system MS Gothic (fallback)
+    // - on macOS: system Hiragino Gothic (fallback)
+    int font_picker = -1;
+
+    char* archive_default_font_ttf = new char[ strlen(archive_path) + strlen(FONT_FILE) + 1 ];
+    sprintf( archive_default_font_ttf, "%s%s", archive_path, FONT_FILE );
+    char* archive_default_font_ttc = new char[ strlen(archive_path) + strlen("default.ttc") + 1 ];
+    sprintf( archive_default_font_ttc, "%s%s", archive_path, "default.ttc" );
+    char* archive_default_font_otf = new char[ strlen(archive_path) + strlen("default.otf") + 1 ];
+    sprintf( archive_default_font_otf, "%s%s", archive_path, "default.otf" );
+    char* archive_default_font_otc = new char[ strlen(archive_path) + strlen("default.otc") + 1 ];
+    sprintf( archive_default_font_otc, "%s%s", archive_path, "default.otc" );
+
+#if defined(MACOSX)
+    char* macos_font_file;
+    NSFileManager *fm = [NSFileManager defaultManager];
+    NSString *hiraginoPath = @"/System/Library/Fonts/ヒラギノ丸ゴ ProN W4.ttc";
+    if ([fm fileExistsAtPath:hiraginoPath])
+    {
+        macos_font_file = new char[ strlen([hiraginoPath UTF8String]) + 1 ];
+        strcpy(macos_font_file, [hiraginoPath UTF8String]);
+    }
+#endif
+
+    if(file_exists("default.ttf")) font_picker = FONT_DEFAULT_TTF;
+    else if(file_exists("default.ttc")) font_picker = FONT_DEFAULT_TTC;
+    else if(file_exists("default.otf")) font_picker = FONT_DEFAULT_OTF;
+    else if(file_exists("default.otc")) font_picker = FONT_DEFAULT_OTC;
+    else if(file_exists(archive_default_font_ttf)) font_picker = FONT_ARCHIVE_TTF;
+    else if(file_exists(archive_default_font_ttc)) font_picker = FONT_ARCHIVE_TTC;
+    else if(file_exists(archive_default_font_otf)) font_picker = FONT_ARCHIVE_OTF;
+    else if(file_exists(archive_default_font_otc)) font_picker = FONT_ARCHIVE_OTC;
+#if defined(WIN32)
+    else if(file_exists("C:\\Windows\\Fonts\\msgothic.ttc")) font_picker = FONT_WIN32_MSGOTHIC_TTC;
+    else if(file_exists("C:\\Windows\\Fonts\\msgothic.ttf")) font_picker = FONT_WIN32_MSGOTHIC_TTF;
+#endif
+#if defined(MACOSX)
+    else if([fm fileExistsAtPath:hiraginoPath]) font_picker = FONT_MACOS_HIRAGINO;
+#endif
+
+    switch(font_picker)
+    {
+        case FONT_DEFAULT_TTF:
+            font_file = new char[ strlen("default.ttf") + 1 ];
+            sprintf( font_file, "%s", "default.ttf" );
+            break;
+        case FONT_DEFAULT_TTC:
+            font_file = new char[ strlen("default.ttc") + 1 ];
+            sprintf( font_file, "%s", "default.ttc" );
+            break;
+        case FONT_DEFAULT_OTF:
+            font_file = new char[ strlen("default.otf") + 1 ];
+            sprintf( font_file, "%s", "default.otf" );
+            break;
+        case FONT_DEFAULT_OTC:
+            font_file = new char[ strlen("default.otc") + 1 ];
+            sprintf( font_file, "%s", "default.otc" );
+            break;
+        case FONT_ARCHIVE_TTF:
+            font_file = archive_default_font_ttf;
+            delete archive_default_font_ttc;
+            delete archive_default_font_otf;
+            delete archive_default_font_otc;
+            break;
+        case FONT_ARCHIVE_TTC:
+            font_file = archive_default_font_ttc;
+            delete archive_default_font_ttf;
+            delete archive_default_font_otf;
+            delete archive_default_font_otc;
+            break;
+        case FONT_ARCHIVE_OTF:
+            font_file = archive_default_font_otf;
+            delete archive_default_font_ttf;
+            delete archive_default_font_ttc;
+            delete archive_default_font_otc;
+            break;
+        case FONT_ARCHIVE_OTC:
+            font_file = archive_default_font_otc;
+            delete archive_default_font_ttf;
+            delete archive_default_font_ttc;
+            delete archive_default_font_otf;
+            break;
+        case FONT_WIN32_MSGOTHIC_TTC:
+            font_file = new char[ strlen("C:\\Windows\\Fonts\\msgothic.ttc") + 1 ];
+            sprintf( font_file, "%s", "C:\\Windows\\Fonts\\msgothic.ttc" );
+            fprintf( stderr, "no font file detected; using system fallback (MS Gothic)\n" );
+            break;
+        case FONT_WIN32_MSGOTHIC_TTF:
+            font_file = new char[ strlen("C:\\Windows\\Fonts\\msgothic.ttf") + 1 ];
+            sprintf( font_file, "%s", "C:\\Windows\\Fonts\\msgothic.ttf" );
+            fprintf( stderr, "no font file detected; using system fallback (MS Gothic)\n" );
+            break;
+        case FONT_MACOS_HIRAGINO:
+            font_file = macos_font_file;
+            fprintf( stderr, "no font file detected; using system fallback (Hiragino Gothic)\n" );
+            break;
+        default:
+            font_picker = -1;
+            break;
+    }
+
+    if(font_picker == FONT_ARCHIVE_TTF || font_picker == FONT_ARCHIVE_TTC || font_picker == FONT_ARCHIVE_OTF || font_picker == FONT_ARCHIVE_OTC)
+    {
+#ifdef USE_FONTCONFIG
+        FILE *fp = NULL;
+        if ((fp = ::fopen(font_file, "rb")) == NULL){
+            FcPattern *pat = FcPatternCreate();
+
+            FcPatternAddString( pat, FC_LANG, (const FcChar8*)"ja" );
+            FcPatternAddBool( pat, FC_OUTLINE, FcTrue );
+            FcPatternAddInteger( pat, FC_SLANT, FC_SLANT_ROMAN );
+            FcPatternAddInteger( pat, FC_WEIGHT, FC_WEIGHT_NORMAL );
+
+            FcConfigSubstitute( NULL, pat, FcMatchPattern );
+            FcDefaultSubstitute( pat );
+            
+            FcResult result;
+            FcPattern *p_pat = FcFontMatch( NULL, pat, &result );
+            FcPatternDestroy( pat );
+            
+            FcChar8* val_s;
+            if (FcResultMatch == FcPatternGetString( p_pat, FC_FILE, 0, &val_s )){
+                delete[] font_file;
+                font_file = new char[ strlen((const char*)val_s) + 1 ];
+                strcpy( font_file, (const char*)val_s );
+                printf("Font: %s\n", font_file);
+            }
+            FcPatternDestroy( p_pat );
+        }
+        else{
+            fclose(fp);
+        }
+#endif        
+    }
+
+    if(font_picker == -1)
+    {
+        fprintf( stderr, "no font file detected; exiting\n" );
+        return -1;
+    }
+#else
     if ( default_font ){
         font_file = new char[ strlen(default_font) + 1 ];
         sprintf( font_file, "%s", default_font );
@@ -453,53 +612,8 @@ int ONScripter::init()
             fclose(fp);
         }
 #endif
-#if defined(INSANI)
-        FILE *fp = NULL;
-        if ((fp = ::fopen(font_file, "rb")) == NULL)
-        {
-            fclose(fp);
-            fp = NULL;
-            delete font_file;
-#if defined(WIN32)
-            font_file = new char[ strlen("default.ttf") + 1 ];
-            strcpy(font_file, "default.ttf");
-            if ((fp = ::fopen(font_file, "rb")) == NULL)
-            {
-                fclose(fp);
-                fp = NULL;
-                delete font_file;
-                font_file = new char[ strlen("C:\\Windows\\Fonts\\msgothic.ttc") + 1 ];
-                strcpy(font_file, "C:\\Windows\\Fonts\\msgothic.ttc");
-                if ((fp = ::fopen(font_file, "rb")) == NULL)
-                {
-                    fclose(fp);
-                    fp = NULL;
-                    delete font_file;
-                    font_file = new char[ strlen("C:\\Windows\\Fonts\\msgothic.ttf") + 1 ];
-                    strcpy(font_file, "C:\\Windows\\Fonts\\msgothic.ttf");
-                    if ((fp = ::fopen(font_file, "rb")) == NULL)
-                    {
-                        fclose(fp);
-                        fp = NULL;
-                    }
-                    fclose(fp);
-                }
-                fclose(fp);
-            }
-            fclose(fp);
-#endif
-#if defined(MACOSX)
-            NSFileManager *fm = [NSFileManager defaultManager];
-            NSString *hiraginoPath = @"/System/Library/Fonts/ヒラギノ丸ゴ ProN W4.ttc";
-            if ([fm fileExistsAtPath:hiraginoPath])
-            {
-                font_file = new char[ strlen([hiraginoPath UTF8String]) + 1 ];
-                strcpy(font_file, [hiraginoPath UTF8String]);
-            }
-#endif
-        }
-#endif
     }
+#endif
     
     // ----------------------------------------
     // variables relevant to sound

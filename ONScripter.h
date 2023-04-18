@@ -54,6 +54,21 @@
 #define MIX_LOOPBGM_CHANNEL0 (ONS_MIX_CHANNELS+2)
 #define MIX_LOOPBGM_CHANNEL1 (ONS_MIX_CHANNELS+3)
 
+#if defined(INSANI)
+// defines for fonts
+#define FONT_DEFAULT_TTF 0
+#define FONT_DEFAULT_TTC 1
+#define FONT_DEFAULT_OTF 2
+#define FONT_DEFAULT_OTC 3
+#define FONT_ARCHIVE_TTF 4
+#define FONT_ARCHIVE_TTC 5
+#define FONT_ARCHIVE_OTF 6
+#define FONT_ARCHIVE_OTC 7
+#define FONT_WIN32_MSGOTHIC_TTC 8
+#define FONT_WIN32_MSGOTHIC_TTF 9
+#define FONT_MACOS_HIRAGINO 10
+#endif
+
 #define DEFAULT_WM_TITLE "ONScripter"
 #define DEFAULT_WM_ICON  "ONScripter"
 
@@ -402,6 +417,9 @@ private:
     NestInfo select_label_info;
     int  shortcut_mouse_line;
 
+#if defined(INSANI)
+    bool file_exists(const char *fileName);
+#endif
     void initSDL();
     void openAudio(int freq=-1);
     void reset(); // called on definereset
