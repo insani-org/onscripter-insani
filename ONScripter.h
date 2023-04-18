@@ -766,6 +766,11 @@ private:
     AnimationInfo text_info;
     AnimationInfo sentence_font_info;
     char *font_file;
+#if defined(INSANI)
+    char *font_italics_file;
+    char *font_bold_file;
+    char *font_bolditalics_file;
+#endif
     int erase_text_window_mode;
     bool text_on_flag; // suppress the effect of erase_text_window_mode
     int  indent_offset;

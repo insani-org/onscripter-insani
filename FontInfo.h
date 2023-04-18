@@ -51,6 +51,11 @@ public:
     bool is_newline_accepted;
     uchar3  window_color;
 
+#if defined(INSANI)
+    bool style_bold;
+    bool style_italics;
+#endif
+
     int line_offset_xy[2]; // ruby offset for each line
     bool rubyon_flag;
     int tateyoko_mode;

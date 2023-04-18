@@ -77,6 +77,11 @@ void FontInfo::reset(Encoding *enc)
     is_shadow = true;
     is_transparent = true;
     is_newline_accepted = false;
+
+#if defined(INSANI)
+    style_italics = false;
+    style_bold = false;
+#endif
     
     is_line_space_fixed = false;
 }
@@ -166,6 +171,12 @@ void FontInfo::toggleStyle(int style)
         int new_style = old_style ^ style;
         TTF_SetFontStyle((TTF_Font*)ttf_font[i], new_style);
     }
+#if defined(INSANI)
+    if(style == TTF_STYLE_ITALIC && !style_italics) style_italics = true;
+    else if(style == TTF_STYLE_ITALIC && style_italics) style_italics = false;
+    if(style == TTF_STYLE_BOLD && !style_bold) style_bold = true;
+    else if(style == TTF_STYLE_BOLD && !style_bold) style_bold = false;
+#endif
 }
 
 int FontInfo::x(bool use_ruby_offset)
