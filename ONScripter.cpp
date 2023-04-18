@@ -454,51 +454,50 @@ int ONScripter::init()
         }
 #endif
 #if defined(INSANI)
-    FILE *fp = NULL;
-    if ((fp = ::fopen(font_file, "rb")) == NULL)
-    {
-        fclose(fp);
-        fp = NULL;
-        delete font_file;
-#if defined(WIN32)
-        font_file = new char[ strlen("default.ttf") + 1 ];
-        strcpy(font_file, "default.ttf");
+        FILE *fp = NULL;
         if ((fp = ::fopen(font_file, "rb")) == NULL)
         {
             fclose(fp);
             fp = NULL;
             delete font_file;
-            font_file = new char[ strlen("C:\\Windows\\Fonts\\msgothic.ttc") + 1 ];
-            strcpy(font_file, "C:\\Windows\\Fonts\\msgothic.ttc");
+#if defined(WIN32)
+            font_file = new char[ strlen("default.ttf") + 1 ];
+            strcpy(font_file, "default.ttf");
             if ((fp = ::fopen(font_file, "rb")) == NULL)
             {
                 fclose(fp);
                 fp = NULL;
                 delete font_file;
-                font_file = new char[ strlen("C:\\Windows\\Fonts\\msgothic.ttf") + 1 ];
-                strcpy(font_file, "C:\\Windows\\Fonts\\msgothic.ttf");
+                font_file = new char[ strlen("C:\\Windows\\Fonts\\msgothic.ttc") + 1 ];
+                strcpy(font_file, "C:\\Windows\\Fonts\\msgothic.ttc");
                 if ((fp = ::fopen(font_file, "rb")) == NULL)
                 {
                     fclose(fp);
                     fp = NULL;
+                    delete font_file;
+                    font_file = new char[ strlen("C:\\Windows\\Fonts\\msgothic.ttf") + 1 ];
+                    strcpy(font_file, "C:\\Windows\\Fonts\\msgothic.ttf");
+                    if ((fp = ::fopen(font_file, "rb")) == NULL)
+                    {
+                        fclose(fp);
+                        fp = NULL;
+                    }
+                    fclose(fp);
                 }
                 fclose(fp);
             }
             fclose(fp);
-        }
-        fclose(fp);
 #endif
-    }
 #if defined(MACOSX)
-        NSFileManager *fm = [NSFileManager defaultManager];
-        NSString *hiraginoPath = @"/System/Library/Fonts/ヒラギノ角ゴシック W4.ttc";
-        if ([fm fileExistsAtPath:hiraginoPath])
-        {
-            font_file = new char[ strlen([hiraginoPath UTF8String]) + 1 ];
-            strcpy(font_file, [hiraginoPath UTF8String]);
-        }
+            NSFileManager *fm = [NSFileManager defaultManager];
+            NSString *hiraginoPath = @"/System/Library/Fonts/ヒラギノ角ゴシック W4.ttc";
+            if ([fm fileExistsAtPath:hiraginoPath])
+            {
+                font_file = new char[ strlen([hiraginoPath UTF8String]) + 1 ];
+                strcpy(font_file, [hiraginoPath UTF8String]);
+            }
 #endif
-    }
+        }
 #endif
     }
     
