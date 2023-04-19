@@ -177,7 +177,7 @@ void FontInfo::toggleStyle(int style)
     if(style == TTF_STYLE_BOLD && !style_bold) style_bold = true;
     else if(style == TTF_STYLE_BOLD && !style_bold) style_bold = false;
 
-    printf("italics: %d; bold: %d\n", style_italics, style_bold);
+    //printf("italics: %d; bold: %d\n", style_italics, style_bold);
 #endif
 }
 
