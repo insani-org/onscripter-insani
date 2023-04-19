@@ -1341,6 +1341,15 @@ bool ONScripter::processText()
 
     char ch = script_h.getStringBuffer()[string_buffer_offset];
 
+#if defined(INSANI)
+    // deal with the case of the line that starts with ~ (as we insert the ` back when this occurs)
+    if(ch == '`')
+    {
+        string_buffer_offset++;
+        ch = script_h.getStringBuffer()[string_buffer_offset];
+    }
+#endif
+
     int n = script_h.enc.getBytes(ch);
     if (n >= 2){
         /* ---------------------------------------- */
