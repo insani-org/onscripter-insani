@@ -812,6 +812,93 @@ int ONScripter::strpxlen(const char *buf, FontInfo *fi)
 
     return w;
 }
+
+/*
+ * int getPixelLength(const char *buf, FontInfo *fi)
+ * --
+ * A function to return the pixels taken up by a given string, minus all inline 
+ * commands.  A critical part of the insani linewrap algorithm for all non-CJK modes.
+ */
+int ONScripter::getPixelLength(const char *buf, FontInfo *fi)
+{
+    int orig_length = strpxlen(buf, fi);
+    char tmp[256];
+    int x = 0;
+
+    while(buf[0] != '\0')
+    {
+        // !d, !sd, !s, !w
+        if(buf[0] == '!')
+        {
+            // !d
+            if(buf[1] == 'd')
+            {
+                tmp[0] = '!';
+                tmp[1] = 'd';
+                x = 2;
+                for(x = 2; isdigit(buf[x]) == true; x++)
+                {
+                    tmp[x] = buf[x];
+                }
+                tmp[x+1] = '\0';
+                orig_length -= strpxlen(tmp, fi);
+            }
+            // !sd
+            else if(buf[1] == 's' && buf[2] == 'd') orig_length -= strpxlen("!sd", fi);
+            // !s
+            else if(buf[1] == 's')
+            {
+                tmp[0] = '!';
+                tmp[1] = 's';
+                x = 2;
+                for(x = 2; isdigit(buf[x]) == true; x++)
+                {
+                    tmp[x] = buf[x];
+                }
+                tmp[x+1] = '\0';
+                orig_length -= strpxlen(tmp, fi);
+            }
+            // !w
+            else if(buf[1] == 'w')
+            {
+                tmp[0] = '!';
+                tmp[1] = 'w';
+                x = 2;
+                for(int x = 2; isdigit(buf[x]) == true; x++)
+                {
+                    tmp[x] = buf[x];
+                }
+                tmp[x+1] = '\0';
+                orig_length -= strpxlen(tmp, fi);
+            }
+        }
+        // #nnnnnn
+        else if(buf[0] == '#')
+        {
+            tmp[0] = '#';
+            x = 1;
+            for(int x = 1; isdigit(buf[x]) == true; x++)
+            {
+                tmp[x] = buf[x];
+            }
+            tmp[x+1] = '\0';
+            orig_length -= strpxlen(tmp, fi);
+        }
+        // ~i~, ~b~, ~ib~, ~bi~
+        else if(buf[0] == '~')
+        {
+            if(buf[1] == 'i' && buf[2] == '~') orig_length -= strpxlen("~i~", fi);
+            else if(buf[1] == 'b' && buf[2] == '~') orig_length -= strpxlen("~b~", fi);
+            else if(buf[1] == 'i' && buf[2] == 'b' && buf[3] == '~') orig_length -= strpxlen("~ib~", fi);
+            else if(buf[1] == 'b' && buf[2] == 'i' && buf[3] == '~') orig_length -= strpxlen("~bi~", fi);
+        }
+        buf++;
+        x = 0;
+    }
+
+    return orig_length;
+}
+
 #endif
 
 int ONScripter::textCommand()
@@ -914,7 +1001,7 @@ int ONScripter::textCommand()
         // in ScriptHandler.cpp: #define STRING_BUFFER_LENGTH 4096 -- this is the max string buffer length ONScripter supports.
         char *temp_text = (char *) malloc(4096 * sizeof(char));
 
-        int original_text_length = strpxlen(original_text, &sentence_font);
+        int original_text_length = getPixelLength(original_text, &sentence_font);
         int original_text_bytes = strlen(original_text);
         bool char_is_token = true;
         int char_is_token_counter;
@@ -933,11 +1020,11 @@ int ONScripter::textCommand()
                 temp_text[i] = ' ';
                 space_counter += strpxlen(" ", &sentence_font);
             }
-            if(current_line_length + strpxlen(current_word, &sentence_font) + space_counter <= line_length) current_word = temp_text;
+            if(current_line_length + getPixelLength(current_word, &sentence_font) + space_counter <= line_length) current_word = temp_text;
         }
 
         // now parse special cases
-        if(strpxlen(current_word, &sentence_font) >= line_length)
+        if(getPixelLength(current_word, &sentence_font) >= line_length)
         {
             // ... then there's no point in word-wrapping at all, as the word that the writer/translator put in is longer than the limit anyway, so do nothing
         }
@@ -972,14 +1059,14 @@ int ONScripter::textCommand()
         else
         {
             // first attempt to iterate manually on current_word or next_word
-            if(current_line_length + strpxlen(current_word, &sentence_font) + strpxlen(" ", &sentence_font) <= line_length)
+            if(current_line_length + getPixelLength(current_word, &sentence_font) + strpxlen(" ", &sentence_font) <= line_length)
             {
                 strcpy(original_text, current_word);
                 current_word = next_word;
                 next_word = strtok(NULL, " ");
 
                 // we capture this in a variable because we need to reset this to 0 whenever we line break
-                current_line_length += strpxlen(original_text, &sentence_font);
+                current_line_length += getPixelLength(original_text, &sentence_font);
                 if(skip_newline_mode) skip_newline_offset = current_line_length;
                 else skip_newline_offset = 0;
             }
@@ -991,7 +1078,7 @@ int ONScripter::textCommand()
 
                 // now we've begun the new line, and we set the current line length to the current word
                 strcat(original_text, current_word);
-                current_line_length = strpxlen(current_word, &sentence_font);
+                current_line_length = getPixelLength(current_word, &sentence_font);
                 if(skip_newline_mode) skip_newline_offset = current_line_length;
                 else skip_newline_offset = 0;
 
@@ -1050,14 +1137,14 @@ int ONScripter::textCommand()
                     current_word[null_index + 1] = '\0';
                 }
 
-                if(current_line_length + strpxlen(current_word, &sentence_font) + strpxlen(" ", &sentence_font) <= line_length)
+                if(current_line_length + getPixelLength(current_word, &sentence_font) + strpxlen(" ", &sentence_font) <= line_length)
                 {
                     // ... the length of the wrapped text and the current word are still less than the max line length, so ...
                     // ... add a space, then the current word.
                     strcat(original_text, " ");
                     strcat(original_text, current_word);
 
-                    current_line_length = current_line_length + strpxlen(current_word, &sentence_font) + strpxlen(" ", &sentence_font);
+                    current_line_length = current_line_length + getPixelLength(current_word, &sentence_font) + strpxlen(" ", &sentence_font);
                     if(skip_newline_mode) skip_newline_offset = current_line_length;
                     else skip_newline_offset = 0;
                 }
@@ -1073,7 +1160,7 @@ int ONScripter::textCommand()
 
                     // now we've begun the new line, and we set the current line length to the current word
                     strcat(original_text, current_word);
-                    current_line_length = strpxlen(current_word, &sentence_font);
+                    current_line_length = getPixelLength(current_word, &sentence_font);
                     if(skip_newline_mode) skip_newline_offset = current_line_length;
                     else skip_newline_offset = 0;
 
@@ -1099,7 +1186,7 @@ int ONScripter::textCommand()
                     else char_is_token = false;
                 }
 
-                //printf("%s %d %d\n", current_word, strpxlen(current_word, &sentence_font), current_line_length);
+                printf("%s %d %d\n", current_word, getPixelLength(current_word, &sentence_font), current_line_length);
 
                 // and finally iterate through the next set of words
                 current_word = next_word;

@@ -794,6 +794,7 @@ private:
 #if defined(INSANI)
     int  u8strlen(const char *s);
     int  strpxlen(const char *buf, FontInfo *fi);
+    int  getPixelLength(const char *buf, FontInfo *fi);
 #endif
     int  textCommand();
     bool checkLineBreak(const char *buf, FontInfo *fi);
