@@ -481,14 +481,29 @@ void ONScripter::restoreTextBuffer(SDL_Surface *surface)
                     char ch = current_page->text[++i];
                     if (ch == 0x0a || ch == 0) break;
                     if (ch == '~'){
+#if not defined(INSANI)
+                        // This is actually a bug, and advances the buffer one character too far, deleting the next true letter after the ~
                         i++;
+#endif
                         break;
                     }
                     if (ch == 'i'){
+#if defined(INSANI)
+                        if(f_info.style_italics && !f_info.style_bold) f_info.openFont(font_file, screen_ratio1, screen_ratio2);
+                        else if(f_info.style_italics && f_info.style_bold) f_info.openFont(font_bold_file, screen_ratio1, screen_ratio2);
+                        else if(!f_info.style_italics && !f_info.style_bold) f_info.openFont(font_italics_file, screen_ratio1, screen_ratio2);
+                        else if(!f_info.style_italics && f_info.style_bold) f_info.openFont(font_bolditalics_file, screen_ratio1, screen_ratio2);
+#endif
                         openFont(&f_info);
                         f_info.toggleStyle(TTF_STYLE_ITALIC);
                     }
                     else if (ch == 'b'){
+#if defined(INSANI)
+                        if(f_info.style_bold && !f_info.style_italics) f_info.openFont(font_file, screen_ratio1, screen_ratio2);
+                        else if(f_info.style_bold && f_info.style_italics) f_info.openFont(font_italics_file, screen_ratio1, screen_ratio2);
+                        else if(!f_info.style_bold && !f_info.style_italics) f_info.openFont(font_bold_file, screen_ratio1, screen_ratio2);
+                        else if(!f_info.style_bold && f_info.style_italics) f_info.openFont(font_bolditalics_file, screen_ratio1, screen_ratio2);
+#endif
                         openFont(&f_info);
                         f_info.toggleStyle(TTF_STYLE_BOLD);
                     }
@@ -1186,7 +1201,7 @@ int ONScripter::textCommand()
                     else char_is_token = false;
                 }
 
-                printf("%s %d %d\n", current_word, getPixelLength(current_word, &sentence_font), current_line_length);
+                // printf("%s %d %d\n", current_word, getPixelLength(current_word, &sentence_font), current_line_length);
 
                 // and finally iterate through the next set of words
                 current_word = next_word;
