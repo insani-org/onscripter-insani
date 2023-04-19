@@ -236,7 +236,9 @@ If you wish to enable these text styles, as of 20230420 "Capcom" you may use the
 This is ~b~bold~b~; this is ~i~italics~i~; this is ~bi~bold italics~bi~.
 ```
 
-All other instances of ~ are treated like normal printing characters.  This is explicitly only enabled for UTF8 mode at this time.  Although there are some fonts that have the bold and italics styles packaged together (some OTC and TTC files do this for instance), most do not.  As such, we allow you to load those styles as different fonts at startup as follows:
+Font style resets at the end of every "page".  If you want to have multiple full pages that are styled bold, for instance, you will have to put in the ```~b~``` style tag at the beginning of every page.
+
+All other instances of ```~``` are treated like normal printing characters.  This is explicitly only enabled for UTF8 mode at this time.  Although there are some fonts that have the bold and italics styles packaged together (some OTC and TTC files do this for instance), most do not.  As such, we allow you to load those styles as different fonts at startup as follows:
 
 - ```default.ttf/.otf/.ttc/.otc```: normal style
 - ```default-b.ttf/.otf/.ttc/.otc```: bold style
