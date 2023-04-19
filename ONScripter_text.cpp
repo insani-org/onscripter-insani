@@ -476,6 +476,9 @@ void ONScripter::restoreTextBuffer(SDL_Surface *surface)
                 i += n-1;
             }
             else if (script_h.enc.getEncoding() == Encoding::CODE_UTF8 &&
+#if defined(INSANI)
+                     (current_page->text[i + 1] == 'i' || current_page->text[i + 1] == 'b') &&
+#endif
                      out_text[0] == '~'){
                 while(1){
                     char ch = current_page->text[++i];
@@ -1596,6 +1599,9 @@ bool ONScripter::processText()
         return true;
     }
     else if (script_h.enc.getEncoding() == Encoding::CODE_UTF8 &&
+#if defined(INSANI)
+             (script_h.getStringBuffer()[string_buffer_offset + 1] == 'i' || script_h.getStringBuffer()[string_buffer_offset + 1] == 'b') &&
+#endif
              ch == '~'){
         current_page->add('~');
         while(1){
