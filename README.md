@@ -229,6 +229,22 @@ However, since 20230420 "Capcom" onscripter-insani has production UTF8 and propo
 - [The Noto Family](https://fonts.google.com/noto)
 - [Comic Sans](https://en.wikipedia.org/wiki/Comic_Sans)
 
+#### Bold and Italics
+If you wish to enable these text styles, as of 20230420 "Capcom" you may use the following syntax within text:
+
+```
+This is ~b~bold~b~; this is ~i~italics~i~; this is ~bi~bold italics~bi~.
+```
+
+All other instances of ~ are treated like normal printing characters.  This is explicitly only enabled for UTF8 mode at this time.  Although there are some fonts that have the bold and italics styles packaged together (some OTC and TTC files do this for instance), most do not.  As such, we allow you to load those styles as different fonts at startup as follows:
+
+- ```default.ttf/.otf/.ttc/.otc```: normal style
+- ```default-b.ttf/.otf/.ttc/.otc```: bold style
+- ```default-i.ttf/.otf/.ttc/.otc```: italics style
+- ```default-bi.ttf/.otf/.ttc/.otc```: bold italics style
+
+All of the above have to have the same file extension (all ```.ttf``` for instance).
+
 ### UTF8 vs. SHIFT_JIS Encoded Files
 Most of the files in this project are encoded as UTF8.  However, there are three files in particular that are encoded as SHIFT_JIS, those being:
 
