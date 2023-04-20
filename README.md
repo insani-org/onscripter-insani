@@ -395,7 +395,7 @@ ONScripter.  Contact us through Github instead:
   - ```default.ttf```
   - ```default.ttc```
   - ```default.otf```
-  - ```default.ttc```
+  - ```default.otc```
 #### macOS
 - If no ```default.ttf/.ttc/.otf/.otc``` is found, fallback to system Hiragino Maru Gothic
 - Recompiled SDL_mixer with ```--disable-music-mp3-shared```, making MP3 playback work in macOS app bundles *for real this time around*
