@@ -388,6 +388,7 @@ ONScripter.  Contact us through Github instead:
   - Appropriately ignores the length of inline text commands, unlike the previous system (```!s```, ```!sd```, ```!w```, ```!d```, ```#nnnnnn```, ```~i~```, ```~b~```, ```~bi~```)
   - Truly universal; works with both monospaced and proportional fonts, in both UTF8 and SHIFT_JIS modes
   - Has special rules for emdashes, horizontal rules, and French spacing for guillemets in UTF8 mode
+  - Nonbreaking spaces (U+00A0) honored in UTF8 mode
 - Faux styles (bold and italics) for fonts
   - Use ```~i~```, ```~b~```, and ```~bi~``` as inline text commands; the first instance enables that style, and the next disables it
     - ```This is ~i~italics~i~ and this is ~b~bold~b~ and this is ~bi~bold italics~bi~```
