@@ -321,6 +321,7 @@ add
 
 ```
       --enable-music-mp3
+      --disable-music-mp3-shared
       --disable-music-fluidsynth-midi
 ```
 
