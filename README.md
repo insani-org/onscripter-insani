@@ -233,10 +233,22 @@ However, since 20230420 "Capcom" onscripter-insani has production UTF8 and propo
 If you wish to enable these text styles, as of 20230420 "Capcom" you may use the following syntax within text:
 
 ```
-This is ~b~bold~b~; this is ~i~italics~i~; this is ~bi~bold italics~bi~.
+`This is ~b~bold~b~; this is ~i~italics~i~; this is ~bi~bold italics~bi~.
 ```
 
-Font style resets at the end of every "page".  If you want to have multiple full pages that are styled bold, for instance, you will have to put in the ```~b~``` style tag at the beginning of every page.
+Font style resets at the end of every script line; that is to say, whether a line terminates with an ```@```, a ```\```, a ```/```, or even nothing at all, the font style will reset.  If you want to have multiple full pages that are styled bold, for instance, you will have to put in the ```~b~``` style tag at the beginning of every line.  That being said, we encourage that you treat these style tags the same way you would treat HTML tags -- if you opened one, make sure you close it at the end of the line.  While a line that goes:
+
+```
+`~i~This line is entirely in italics!\
+```
+
+will work just fine, it is better to write:
+
+```
+`~i~This line is entirely in italics!~i~\
+```
+
+as this will help give your script maximum compatibility across NScripter-derived engines that utilize this font styling syntax.
 
 All other instances of ```~``` are treated like normal printing characters.  This is explicitly only enabled for UTF8 mode at this time.  Although there are some fonts that have the bold and italics styles packaged together (some OTC and TTC files do this for instance), most do not.  As such, we allow you to load those styles as different fonts at startup as follows:
 
@@ -248,13 +260,14 @@ All other instances of ```~``` are treated like normal printing characters.  Thi
 All of the above have to have the same file extension (all ```.ttf``` for instance).
 
 ### UTF8 vs. SHIFT_JIS Encoded Files
-Most of the files in this project are encoded as UTF8.  However, there are three files in particular that are encoded as SHIFT_JIS, those being:
+Most of the files in this project are encoded as UTF8.  However, there are several files in particular that are encoded as SHIFT_JIS, those being:
 
+- ```ONScripter_rmenu.cpp```
 - ```ONScripter_text.cpp```
 - ```ScriptParser.h```
 - ```ScriptParser.cpp```
 
-That is because these three files have several strings that *must be in their original SHIFT_JIS format* unless you want to cause random memory corruption-related crashes whenever you are in UTF8 mode.  The reason behind this issue is a fascinating artifact of a time when ONScripter was in its infancy, and cared about no other character encoding other than SHIFT_JIS (or, more accurately, Windows CP932, a very close relative of SHIFT_JIS).  ONScripter initializes several subsystems, including what is known as the kinsoku process, *during initialization of the engine itself*, before any script file is read.  Despite the fact that UTF8 support has been introduced over the years, ONScripter is fundamentally not a Unicode-aware program by design, and it shows in cases like this.  There is no way, with this design, for the engine to know whether it's in CP932 or UTF8 mode -- and so it assumes CP932, and assumes all strings are CP932-encoded for the purposes of initialization.
+That is because these files have several strings that *must be in their original SHIFT_JIS format* unless you want to cause random memory corruption-related crashes whenever you are in UTF8 mode.  The reason behind this issue is a fascinating artifact of a time when ONScripter was in its infancy, and cared about no other character encoding other than SHIFT_JIS (or, more accurately, Windows CP932, a very close relative of SHIFT_JIS).  ONScripter initializes several subsystems, including what is known as the kinsoku process, *during initialization of the engine itself*, before any script file is read.  Despite the fact that UTF8 support has been introduced over the years, ONScripter is fundamentally not a Unicode-aware program by design, and it shows in cases like this.  There is no way, with this design, for the engine to know whether it's in CP932 or UTF8 mode -- and so it assumes CP932, and assumes all strings are CP932-encoded for the purposes of initialization.
 
 All this to say: if you want to contribute to onscripter-insani, **make extra sure that these files are encoded as SHIFT_JIS and not UTF8**.  You will cause random crashes all over the place, usually upon startup in UTF8 mode, if you do not.
 
