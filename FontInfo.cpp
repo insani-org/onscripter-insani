@@ -163,12 +163,40 @@ int FontInfo::getRemainingLine()
         return num_xy[1] - num_xy[0] + xy[0]/2 + 1;
 }
 
+#if defined(INSANI)
+int FontInfo::getStyle()
+{
+    return TTF_GetFontStyle((TTF_Font*)ttf_font[0]);
+}
+
+void FontInfo::setStyle(int style, bool italics, bool bold)
+{
+    TTF_SetFontStyle((TTF_Font*)ttf_font[0], style);
+    TTF_SetFontStyle((TTF_Font*)ttf_font[1], style);
+    style_italics = italics;
+    style_bold = bold;
+}
+#endif
+
 void FontInfo::toggleStyle(int style)
 {
+#if defined(INSANI)
+    // used only to reset font styles for log mode
+    if(style == TTF_STYLE_RESET_LOOKBACK)
+    {
+        TTF_SetFontStyle((TTF_Font*)ttf_font[0], TTF_STYLE_NORMAL);
+        TTF_SetFontStyle((TTF_Font*)ttf_font[1], TTF_STYLE_NORMAL);
+        style = 0;
+        return;
+    }
+#endif
     for (int i=0; i<2; i++){
         if (ttf_font[i] == NULL) continue;
         int old_style = TTF_GetFontStyle((TTF_Font*)ttf_font[i]);
+        //printf("style: %d\n", style);
+        //printf("old_style: %d\n", old_style);
         int new_style = old_style ^ style;
+        //printf("new_style: %d\n", new_style);
         TTF_SetFontStyle((TTF_Font*)ttf_font[i], new_style);
     }
 #if defined(INSANI)

@@ -67,6 +67,9 @@
 #define FONT_WIN32_MSGOTHIC_TTC 8
 #define FONT_WIN32_MSGOTHIC_TTF 9
 #define FONT_MACOS_HIRAGINO 10
+
+// define for font reset
+#define TTF_STYLE_RESET_LOOKBACK -1
 #endif
 
 #define DEFAULT_WM_TITLE "ONScripter"
@@ -630,6 +633,11 @@ private:
     int  shelter_display_mode;
     int  shelter_refresh_shadow_text_mode;
     Page *cached_page;
+#if defined(INSANI)
+    int cached_ttf_style;
+    bool cached_style_bold;
+    bool cached_style_italics;
+#endif
     ButtonLink *shelter_button_link;
     SelectLink *shelter_select_link;
     ButtonState shelter_mouse_state;

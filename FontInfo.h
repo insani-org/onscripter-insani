@@ -28,6 +28,10 @@
 #include "BaseReader.h"
 #include "Encoding.h"
 
+#if defined(INSANI)
+#define TTF_STYLE_RESET_LOOKBACK -1
+#endif
+
 typedef unsigned char uchar3[3];
 
 class FontInfo{
@@ -68,6 +72,10 @@ public:
     void setTateyokoMode( int tateyoko_mode );
     int getTateyokoMode();
     int getRemainingLine();
+#if defined(INSANI)
+    int getStyle();
+    void setStyle(int style, bool italics, bool bold);
+#endif
     void toggleStyle(int style);
     
     int x(bool use_ruby_offset=true);

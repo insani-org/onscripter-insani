@@ -493,6 +493,9 @@ void ONScripter::restoreTextBuffer(SDL_Surface *surface)
                     }
                     if (ch == 'i'){
 #if defined(INSANI)
+                        // reset font style for log mode
+                        f_info.toggleStyle(TTF_STYLE_RESET_LOOKBACK);
+                        // then do font style anew
                         if(f_info.style_italics && !f_info.style_bold) f_info.openFont(font_file, screen_ratio1, screen_ratio2);
                         else if(f_info.style_italics && f_info.style_bold) f_info.openFont(font_bold_file, screen_ratio1, screen_ratio2);
                         else if(!f_info.style_italics && !f_info.style_bold) f_info.openFont(font_italics_file, screen_ratio1, screen_ratio2);
@@ -503,6 +506,9 @@ void ONScripter::restoreTextBuffer(SDL_Surface *surface)
                     }
                     else if (ch == 'b'){
 #if defined(INSANI)
+                        // reset font style for log mode
+                        f_info.toggleStyle(TTF_STYLE_RESET_LOOKBACK);
+                        // then do font style anew
                         if(f_info.style_bold && !f_info.style_italics) f_info.openFont(font_file, screen_ratio1, screen_ratio2);
                         else if(f_info.style_bold && f_info.style_italics) f_info.openFont(font_italics_file, screen_ratio1, screen_ratio2);
                         else if(!f_info.style_bold && !f_info.style_italics) f_info.openFont(font_bold_file, screen_ratio1, screen_ratio2);
@@ -530,6 +536,10 @@ void ONScripter::restoreTextBuffer(SDL_Surface *surface)
             drawChar(out_text, &f_info, false, false, surface, &text_info);
         }
     }
+#if defined(INSANI)
+    // reset the font style at the end of the log mode page
+    sentence_font.setStyle(0, 0, 0);
+#endif
 }
 
 void ONScripter::enterTextDisplayMode(bool text_flag)
@@ -674,6 +684,11 @@ bool ONScripter::clickNewPage( char *out_text )
         drawChar( out_text, &sentence_font, true, true, accumulation_surface, &text_info );
         num_chars_in_sentence++;
     }
+
+#if defined(INSANI)
+    // reset all font styles with each new line; should not strictly be necessary, as we do this in processText() at the end of the line; this is just to be safe and for certain savefile load conditions
+    sentence_font.setStyle(0, 0, 0);
+#endif
 
     flush( REFRESH_NONE_MODE );
     skip_mode &= ~SKIP_TO_EOL;
@@ -1661,6 +1676,10 @@ bool ONScripter::processText()
         else if (script_h.getStringBuffer()[ string_buffer_offset + 1 ] &&
                  script_h.checkClickstr(&script_h.getStringBuffer()[string_buffer_offset+1]) == 1 &&
                  script_h.getEndStatus() & ScriptHandler::END_1BYTE_CHAR){
+#if defined(INSANI)
+            // reset all font styles at the end of each line
+            sentence_font.setStyle(0, 0, 0);
+#endif
             if ( script_h.getStringBuffer()[ string_buffer_offset + 2 ] &&
                  script_h.checkClickstr(&script_h.getStringBuffer()[string_buffer_offset+2]) > 0){
                 clickstr_state = CLICK_NONE;
