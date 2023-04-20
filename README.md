@@ -250,14 +250,14 @@ will work just fine, it is better to write:
 
 as this will help give your script maximum compatibility across NScripter-derived engines that utilize this font styling syntax.
 
-All other instances of ```~``` are treated like normal printing characters.  This is explicitly only enabled for UTF8 mode at this time.  Although there are some fonts that have the bold and italics styles packaged together (some OTC and TTC files do this for instance), most do not.  As such, we allow you to load those styles as different fonts at startup as follows:
+All other instances of ```~``` are treated like normal printing characters.  This is explicitly only enabled for UTF8 mode at this time.  As of 20230420 "Capcom", faux bold and faux italics styles are provided out-of-the-box.  In future releases, we will allow you to load true bold/italics/bold italics styles as different fonts at startup as follows:
 
 - ```default.ttf/.otf/.ttc/.otc```: normal style
 - ```default-b.ttf/.otf/.ttc/.otc```: bold style
 - ```default-i.ttf/.otf/.ttc/.otc```: italics style
 - ```default-bi.ttf/.otf/.ttc/.otc```: bold italics style
 
-All of the above have to have the same file extension (all ```.ttf``` for instance).
+All of the above will have to have the same file extension (all ```.ttf``` for instance).
 
 ### UTF8 vs. SHIFT_JIS Encoded Files
 Most of the files in this project are encoded as UTF8.  However, there are several files in particular that are encoded as SHIFT_JIS, those being:
