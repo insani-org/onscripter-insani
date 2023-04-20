@@ -686,6 +686,7 @@ bool ONScripter::clickNewPage( char *out_text )
     }
 
 #if defined(INSANI)
+    // reset all font styles with each new line; should not strictly be necessary, as we do this in processText() at the end of the line; this is just to be safe and for certain savefile load conditions
     sentence_font.setStyle(0, 0, 0);
 #endif
 
@@ -1675,6 +1676,10 @@ bool ONScripter::processText()
         else if (script_h.getStringBuffer()[ string_buffer_offset + 1 ] &&
                  script_h.checkClickstr(&script_h.getStringBuffer()[string_buffer_offset+1]) == 1 &&
                  script_h.getEndStatus() & ScriptHandler::END_1BYTE_CHAR){
+#if defined(INSANI)
+            // reset all font styles at the end of each line
+            sentence_font.setStyle(0, 0, 0);
+#endif
             if ( script_h.getStringBuffer()[ string_buffer_offset + 2 ] &&
                  script_h.checkClickstr(&script_h.getStringBuffer()[string_buffer_offset+2]) > 0){
                 clickstr_state = CLICK_NONE;
