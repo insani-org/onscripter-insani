@@ -495,11 +495,6 @@ void ONScripter::restoreTextBuffer(SDL_Surface *surface)
 #if defined(INSANI)
                         // reset font style for log mode
                         f_info.toggleStyle(TTF_STYLE_RESET_LOOKBACK);
-                        // then do font style anew
-                        if(f_info.style_italics && !f_info.style_bold) f_info.openFont(font_file, screen_ratio1, screen_ratio2);
-                        else if(f_info.style_italics && f_info.style_bold) f_info.openFont(font_bold_file, screen_ratio1, screen_ratio2);
-                        else if(!f_info.style_italics && !f_info.style_bold) f_info.openFont(font_italics_file, screen_ratio1, screen_ratio2);
-                        else if(!f_info.style_italics && f_info.style_bold) f_info.openFont(font_bolditalics_file, screen_ratio1, screen_ratio2);
 #endif
                         openFont(&f_info);
                         f_info.toggleStyle(TTF_STYLE_ITALIC);
@@ -508,11 +503,6 @@ void ONScripter::restoreTextBuffer(SDL_Surface *surface)
 #if defined(INSANI)
                         // reset font style for log mode
                         f_info.toggleStyle(TTF_STYLE_RESET_LOOKBACK);
-                        // then do font style anew
-                        if(f_info.style_bold && !f_info.style_italics) f_info.openFont(font_file, screen_ratio1, screen_ratio2);
-                        else if(f_info.style_bold && f_info.style_italics) f_info.openFont(font_italics_file, screen_ratio1, screen_ratio2);
-                        else if(!f_info.style_bold && !f_info.style_italics) f_info.openFont(font_bold_file, screen_ratio1, screen_ratio2);
-                        else if(!f_info.style_bold && f_info.style_italics) f_info.openFont(font_bolditalics_file, screen_ratio1, screen_ratio2);
 #endif
                         openFont(&f_info);
                         f_info.toggleStyle(TTF_STYLE_BOLD);
@@ -1639,22 +1629,10 @@ bool ONScripter::processText()
                 break;
             }
             if (ch == 'i'){
-#if defined(INSANI)
-                if(sentence_font.style_italics && !sentence_font.style_bold) sentence_font.openFont(font_file, screen_ratio1, screen_ratio2);
-                else if(sentence_font.style_italics && sentence_font.style_bold) sentence_font.openFont(font_bold_file, screen_ratio1, screen_ratio2);
-                else if(!sentence_font.style_italics && !sentence_font.style_bold) sentence_font.openFont(font_italics_file, screen_ratio1, screen_ratio2);
-                else if(!sentence_font.style_italics && sentence_font.style_bold) sentence_font.openFont(font_bolditalics_file, screen_ratio1, screen_ratio2);
-#endif
                 openFont(&sentence_font);
                 sentence_font.toggleStyle(TTF_STYLE_ITALIC);
             }
             else if (ch == 'b'){
-#if defined(INSANI)
-                if(sentence_font.style_bold && !sentence_font.style_italics) sentence_font.openFont(font_file, screen_ratio1, screen_ratio2);
-                else if(sentence_font.style_bold && sentence_font.style_italics) sentence_font.openFont(font_italics_file, screen_ratio1, screen_ratio2);
-                else if(!sentence_font.style_bold && !sentence_font.style_italics) sentence_font.openFont(font_bold_file, screen_ratio1, screen_ratio2);
-                else if(!sentence_font.style_bold && sentence_font.style_italics) sentence_font.openFont(font_bolditalics_file, screen_ratio1, screen_ratio2);
-#endif
                 openFont(&sentence_font);
                 sentence_font.toggleStyle(TTF_STYLE_BOLD);
             }
