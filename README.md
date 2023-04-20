@@ -9,7 +9,7 @@
 # English
 
 ## Last Updated
-2023-04-18
+2023-04-20
 
 ## Introduction and History
 onscripter-insani is a branch of [ONScripter](https://onscripter.osdn.jp/onscripter.html), which is an active project as of 2022.  ONScripter is a clean-room open-source implementation of NScripter -- a novel game creation engine that arguably helped to bootstrap the novel game boom in Japan.  Many companies used NScripter in order to create some of the classics of the genre, notable examples being みずいろ (*Mizuiro*) by Nekonekosoft and 月姫 (*Tsukihime*) by TYPE-MOON.
@@ -378,6 +378,31 @@ ONScripter.  Contact us through Github instead:
 
 ## Changelog
 *For more detailed release notes, please go [here](https://github.com/insani-org/onscripter-insani/releases).*
+
+### 20230420 "Capcom"
+#### All
+- New UTF8 mode
+  - onscripter-insani now accepts UTF8-encoded script files; the script file must be named ```0.utf``` (not ```0.utf.txt```) for autodetection
+- Proportional font support in UTF8 mode
+- Completely new pixel-based text wrapping system
+  - Appropriately ignores the length of inline text commands, unlike the previous system (```!s```, ```!sd```, ```!w```, ```!d```, ```#nnnnnn```, ```~i~```, ```~b~```, ```~bi~```)
+  - Truly universal; works with both monospaced and proportional fonts, in both UTF8 and SHIFT_JIS modes
+  - Has special rules for emdashes, horizontal rules, and French spacing for guillemets in UTF8 mode
+- Faux styles (bold and italics) for fonts
+  - Use ```~i~```, ```~b~```, and ```~bi~``` as inline text commands; the first instance enables that style, and the next disables it
+    - ```This is ~i~italics~i~ and this is ~b~bold~b~ and this is ~bi~bold italics~bi~```
+- Expanded font file compatibility; onscripter-insani now accepts OpenType fonts, TrueType collections, and OpenType collections as follows:
+  - ```default.ttf```
+  - ```default.ttc```
+  - ```default.otf```
+  - ```default.ttc```
+#### macOS
+- If no ```default.ttf/.ttc/.otf/.otc``` is found, fallback to system Hiragino Maru Gothic
+- Recompiled SDL_mixer with ```--disable-music-mp3-shared```, making MP3 playback work in macOS app bundles *for real this time around*
+  - Updated ```README.md``` section on [SDL_mixer and MP3 playback](https://github.com/insani-org/onscripter-insani#sdl_mixer-and-mp3-playback) with updated build instructions
+- ```makedist.MacOSX.sh``` updated to 20230420
+#### Windows
+- If no ```default.ttf/.ttc/.otf/.otc``` is found, fallback to system MS Gothic
 
 ### 20230413-1 "BaseSon"
 #### All
