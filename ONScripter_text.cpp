@@ -422,6 +422,10 @@ void ONScripter::restoreTextBuffer(SDL_Surface *surface)
     char out_text[4] = {};
     FontInfo f_info = sentence_font;
     f_info.clear();
+#if defined(INSANI)
+    // reset font style for log mode
+    f_info.setStyle(0, 0, 0);
+#endif
     for (int i=0 ; i<current_page->text_count ; i++){
         if (current_page->text[i] == 0x0a){
             f_info.newLine();
@@ -492,18 +496,10 @@ void ONScripter::restoreTextBuffer(SDL_Surface *surface)
                         break;
                     }
                     if (ch == 'i'){
-#if defined(INSANI)
-                        // reset font style for log mode
-                        f_info.toggleStyle(TTF_STYLE_RESET_LOOKBACK);
-#endif
                         openFont(&f_info);
                         f_info.toggleStyle(TTF_STYLE_ITALIC);
                     }
                     else if (ch == 'b'){
-#if defined(INSANI)
-                        // reset font style for log mode
-                        f_info.toggleStyle(TTF_STYLE_RESET_LOOKBACK);
-#endif
                         openFont(&f_info);
                         f_info.toggleStyle(TTF_STYLE_BOLD);
                     }
@@ -815,9 +811,42 @@ int ONScripter::u8strlen(const char *s)
  * A function to return the pixels taken up by a given string.  A critical part
  * of the insani linewrap algorithm for all non-CJK modes.
  */
-int ONScripter::strpxlen(const char *buf, FontInfo *fi)
+int ONScripter::strpxlen(const char *buf, FontInfo *fi, bool *bold_flag, bool *italics_flag)
 {
     openFont(fi);
+
+    int old_style = fi->getStyle();
+    bool old_bold_flag;
+    bool old_italics_flag;
+
+    switch(old_style)
+    {
+        case 1:
+            old_bold_flag = 1;
+            old_italics_flag = 0;
+            break;
+        case 2:
+            old_bold_flag = 0;
+            old_italics_flag = 1;
+            break;
+        case 3:
+            old_bold_flag = 1;
+            old_italics_flag = 1;
+            break;
+        default:
+            old_bold_flag = 0;
+            old_italics_flag = 0;
+            break;
+    }
+
+    if(*bold_flag == true && *italics_flag == false) fi->setStyle(1, 0, 1);
+    else if(*italics_flag == true && *bold_flag == false) fi->setStyle(2, 1, 0);
+    else if(*bold_flag == true && *italics_flag == true) fi->setStyle(3, 1, 1);
+    else fi->setStyle(0, 0, 0);
+
+    // behold the insani.org debug printf series :3
+    //printf("strpxlen :: b: %d i: %d\n", *bold_flag, *italics_flag);
+    //printf("strpxlen :: s: %s\n", buf);
     
     int w = 0;
     while (buf[0] != '\0')
@@ -834,6 +863,8 @@ int ONScripter::strpxlen(const char *buf, FontInfo *fi)
     }
     w -= fi->pitch_xy[0] - fi->font_size_xy[0];
 
+    fi->setStyle(old_style, old_italics_flag, old_bold_flag);
+
     return w;
 }
 
@@ -843,9 +874,11 @@ int ONScripter::strpxlen(const char *buf, FontInfo *fi)
  * A function to return the pixels taken up by a given string, minus all inline 
  * commands.  A critical part of the insani linewrap algorithm for all non-CJK modes.
  */
-int ONScripter::getPixelLength(const char *buf, FontInfo *fi)
+int ONScripter::getPixelLength(const char *buf, FontInfo *fi, bool *bold_flag, bool *italics_flag)
 {
-    int orig_length = strpxlen(buf, fi);
+    //openFont(fi);
+
+    int orig_length = strpxlen(buf, fi, bold_flag, italics_flag);
     char tmp[256];
     int x = 0;
 
@@ -865,10 +898,10 @@ int ONScripter::getPixelLength(const char *buf, FontInfo *fi)
                     tmp[x] = buf[x];
                 }
                 tmp[x+1] = '\0';
-                orig_length -= strpxlen(tmp, fi);
+                orig_length -= strpxlen(tmp, fi, bold_flag, italics_flag);
             }
             // !sd
-            else if(buf[1] == 's' && buf[2] == 'd') orig_length -= strpxlen("!sd", fi);
+            else if(buf[1] == 's' && buf[2] == 'd') orig_length -= strpxlen("!sd", fi, bold_flag, italics_flag);
             // !s
             else if(buf[1] == 's')
             {
@@ -880,7 +913,7 @@ int ONScripter::getPixelLength(const char *buf, FontInfo *fi)
                     tmp[x] = buf[x];
                 }
                 tmp[x+1] = '\0';
-                orig_length -= strpxlen(tmp, fi);
+                orig_length -= strpxlen(tmp, fi, bold_flag, italics_flag);
             }
             // !w
             else if(buf[1] == 'w')
@@ -893,7 +926,7 @@ int ONScripter::getPixelLength(const char *buf, FontInfo *fi)
                     tmp[x] = buf[x];
                 }
                 tmp[x+1] = '\0';
-                orig_length -= strpxlen(tmp, fi);
+                orig_length -= strpxlen(tmp, fi, bold_flag, italics_flag);
             }
         }
         // #nnnnnn
@@ -906,15 +939,44 @@ int ONScripter::getPixelLength(const char *buf, FontInfo *fi)
                 tmp[x] = buf[x];
             }
             tmp[x+1] = '\0';
-            orig_length -= strpxlen(tmp, fi);
+            orig_length -= strpxlen(tmp, fi, bold_flag, italics_flag);
         }
         // ~i~, ~b~, ~ib~, ~bi~
         else if(buf[0] == '~')
         {
-            if(buf[1] == 'i' && buf[2] == '~') orig_length -= strpxlen("~i~", fi);
-            else if(buf[1] == 'b' && buf[2] == '~') orig_length -= strpxlen("~b~", fi);
-            else if(buf[1] == 'i' && buf[2] == 'b' && buf[3] == '~') orig_length -= strpxlen("~ib~", fi);
-            else if(buf[1] == 'b' && buf[2] == 'i' && buf[3] == '~') orig_length -= strpxlen("~bi~", fi);
+            if(buf[1] == 'i' && buf[2] == '~')
+            {
+                orig_length -= strpxlen("~i~", fi, bold_flag, italics_flag);
+                if(*italics_flag == true) *italics_flag = false;
+                else *italics_flag = true;
+            }
+            else if(buf[1] == 'b' && buf[2] == '~')
+            {
+                orig_length -= strpxlen("~b~", fi, bold_flag, italics_flag);
+                if(*bold_flag == true) *bold_flag = false;
+                else *bold_flag = true;
+            }
+            else if(buf[1] == 'i' && buf[2] == 'b' && buf[3] == '~')
+            {
+                orig_length -= strpxlen("~ib~", fi, bold_flag, italics_flag);
+                if(*italics_flag == true) *italics_flag = false;
+                else *italics_flag = true;
+                if(*bold_flag == true) *bold_flag = false;
+                else *bold_flag = true;
+            }
+            else if(buf[1] == 'b' && buf[2] == 'i' && buf[3] == '~')
+            {
+                orig_length -= strpxlen("~bi~", fi, bold_flag, italics_flag);
+                if(*italics_flag == true) *italics_flag = false;
+                else *italics_flag = true;
+                if(*bold_flag == true) *bold_flag = false;
+                else *bold_flag = true;
+            }
+        }
+        // `
+        else if(buf[0] == '`')
+        {
+            orig_length -= strpxlen("`", fi, bold_flag, italics_flag);
         }
         buf++;
         x = 0;
@@ -1015,6 +1077,9 @@ int ONScripter::textCommand()
         char *original_text = script_h.getStringBuffer();
         int current_line_length = 0;
 
+        bool wrap_style_bold = 0;
+        bool wrap_style_italics = 0;
+
         prev_skip_newline_mode = skip_newline_mode;
         skip_newline_mode = script_h.getSkipNewlineMode();
         if(prev_skip_newline_mode && original_text[strlen(original_text) - 1] == '/') skip_newline_mode = true;
@@ -1025,7 +1090,7 @@ int ONScripter::textCommand()
         // in ScriptHandler.cpp: #define STRING_BUFFER_LENGTH 4096 -- this is the max string buffer length ONScripter supports.
         char *temp_text = (char *) malloc(4096 * sizeof(char));
 
-        int original_text_length = getPixelLength(original_text, &sentence_font);
+        int original_text_length = getPixelLength(original_text, &sentence_font, &wrap_style_bold, &wrap_style_italics);
         int original_text_bytes = strlen(original_text);
         bool char_is_token = true;
         int char_is_token_counter;
@@ -1042,13 +1107,13 @@ int ONScripter::textCommand()
             for(int i = 0; original_text[i] == ' '; i++)
             {
                 temp_text[i] = ' ';
-                space_counter += strpxlen(" ", &sentence_font);
+                space_counter += strpxlen(" ", &sentence_font, &wrap_style_bold, &wrap_style_italics);
             }
-            if(current_line_length + getPixelLength(current_word, &sentence_font) + space_counter <= line_length) current_word = temp_text;
+            if(current_line_length + getPixelLength(current_word, &sentence_font, &wrap_style_bold, &wrap_style_italics) + space_counter <= line_length) current_word = temp_text;
         }
 
         // now parse special cases
-        if(getPixelLength(current_word, &sentence_font) >= line_length)
+        if(getPixelLength(current_word, &sentence_font, &wrap_style_bold, &wrap_style_italics) >= line_length)
         {
             // ... then there's no point in word-wrapping at all, as the word that the writer/translator put in is longer than the limit anyway, so do nothing
         }
@@ -1066,9 +1131,9 @@ int ONScripter::textCommand()
                        original_text[char_is_token_counter] == '@' ||
                        original_text[char_is_token_counter] == '/')
                     {
-                        if(original_text[char_is_token_counter] == '\\') original_text_length -= strpxlen("\\", &sentence_font);
-                        else if(original_text[char_is_token_counter] == '@') original_text_length -= strpxlen("@", &sentence_font);
-                        else if(original_text[char_is_token_counter] == '/') original_text_length -= strpxlen("/", &sentence_font);
+                        if(original_text[char_is_token_counter] == '\\') original_text_length -= strpxlen("\\", &sentence_font, &wrap_style_bold, &wrap_style_italics);
+                        else if(original_text[char_is_token_counter] == '@') original_text_length -= strpxlen("@", &sentence_font, &wrap_style_bold, &wrap_style_italics);
+                        else if(original_text[char_is_token_counter] == '/') original_text_length -= strpxlen("/", &sentence_font, &wrap_style_bold, &wrap_style_italics);
                         char_is_token_counter--;
                     }
                     else char_is_token = false;
@@ -1083,14 +1148,14 @@ int ONScripter::textCommand()
         else
         {
             // first attempt to iterate manually on current_word or next_word
-            if(current_line_length + getPixelLength(current_word, &sentence_font) + strpxlen(" ", &sentence_font) <= line_length)
+            if(current_line_length + getPixelLength(current_word, &sentence_font, &wrap_style_bold, &wrap_style_italics) + strpxlen(" ", &sentence_font, &wrap_style_bold, &wrap_style_italics) <= line_length)
             {
                 strcpy(original_text, current_word);
                 current_word = next_word;
                 next_word = strtok(NULL, " ");
 
                 // we capture this in a variable because we need to reset this to 0 whenever we line break
-                current_line_length += getPixelLength(original_text, &sentence_font);
+                current_line_length += getPixelLength(original_text, &sentence_font, &wrap_style_bold, &wrap_style_italics);
                 if(skip_newline_mode) skip_newline_offset = current_line_length;
                 else skip_newline_offset = 0;
             }
@@ -1102,7 +1167,7 @@ int ONScripter::textCommand()
 
                 // now we've begun the new line, and we set the current line length to the current word
                 strcat(original_text, current_word);
-                current_line_length = getPixelLength(current_word, &sentence_font);
+                current_line_length = getPixelLength(current_word, &sentence_font, &wrap_style_bold, &wrap_style_italics);
                 if(skip_newline_mode) skip_newline_offset = current_line_length;
                 else skip_newline_offset = 0;
 
@@ -1161,14 +1226,14 @@ int ONScripter::textCommand()
                     current_word[null_index + 1] = '\0';
                 }
 
-                if(current_line_length + getPixelLength(current_word, &sentence_font) + strpxlen(" ", &sentence_font) <= line_length)
+                if(current_line_length + getPixelLength(current_word, &sentence_font, &wrap_style_bold, &wrap_style_italics) + strpxlen(" ", &sentence_font, &wrap_style_bold, &wrap_style_italics) <= line_length)
                 {
                     // ... the length of the wrapped text and the current word are still less than the max line length, so ...
                     // ... add a space, then the current word.
                     strcat(original_text, " ");
                     strcat(original_text, current_word);
 
-                    current_line_length = current_line_length + getPixelLength(current_word, &sentence_font) + strpxlen(" ", &sentence_font);
+                    current_line_length = current_line_length + getPixelLength(current_word, &sentence_font, &wrap_style_bold, &wrap_style_italics) + strpxlen(" ", &sentence_font, &wrap_style_bold, &wrap_style_italics);
                     if(skip_newline_mode) skip_newline_offset = current_line_length;
                     else skip_newline_offset = 0;
                 }
@@ -1184,7 +1249,7 @@ int ONScripter::textCommand()
 
                     // now we've begun the new line, and we set the current line length to the current word
                     strcat(original_text, current_word);
-                    current_line_length = getPixelLength(current_word, &sentence_font);
+                    current_line_length = getPixelLength(current_word, &sentence_font, &wrap_style_bold, &wrap_style_italics);
                     if(skip_newline_mode) skip_newline_offset = current_line_length;
                     else skip_newline_offset = 0;
 
@@ -1202,15 +1267,15 @@ int ONScripter::textCommand()
                        original_text[char_is_token_counter] == '@' ||
                        original_text[char_is_token_counter] == '/')
                     {
-                        if(original_text[char_is_token_counter] == '\\') original_text_length -= strpxlen("\\", &sentence_font);
-                        else if(original_text[char_is_token_counter] == '@') original_text_length -= strpxlen("@", &sentence_font);
-                        else if(original_text[char_is_token_counter] == '/') original_text_length -= strpxlen("/", &sentence_font);
+                        if(original_text[char_is_token_counter] == '\\') original_text_length -= strpxlen("\\", &sentence_font, &wrap_style_bold, &wrap_style_italics);
+                        else if(original_text[char_is_token_counter] == '@') original_text_length -= strpxlen("@", &sentence_font, &wrap_style_bold, &wrap_style_italics);
+                        else if(original_text[char_is_token_counter] == '/') original_text_length -= strpxlen("/", &sentence_font, &wrap_style_bold, &wrap_style_italics);
                         char_is_token_counter--;
                     }
                     else char_is_token = false;
                 }
 
-                // printf("%s %d %d\n", current_word, getPixelLength(current_word, &sentence_font), current_line_length);
+                // printf("%s %d %d\n", current_word, getPixelLength(current_word, &sentence_font, &wrap_style_bold, &wrap_style_italics), current_line_length);
 
                 // and finally iterate through the next set of words
                 current_word = next_word;

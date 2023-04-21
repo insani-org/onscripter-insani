@@ -778,6 +778,9 @@ private:
     char *font_italics_file;
     char *font_bold_file;
     char *font_bolditalics_file;
+    bool faux_italics;
+    bool faux_bold;
+    bool faux_bolditalics;
 #endif
     int erase_text_window_mode;
     bool text_on_flag; // suppress the effect of erase_text_window_mode
@@ -801,8 +804,8 @@ private:
     void endRuby(bool flush_flag, bool lookback_flag, SDL_Surface *surface, AnimationInfo *cache_info);
 #if defined(INSANI)
     int  u8strlen(const char *s);
-    int  strpxlen(const char *buf, FontInfo *fi);
-    int  getPixelLength(const char *buf, FontInfo *fi);
+    int  strpxlen(const char *buf, FontInfo *fi, bool *bold_flag, bool *italics_flag);
+    int  getPixelLength(const char *buf, FontInfo *fi, bool *bold_flag, bool *italics_flag);
 #endif
     int  textCommand();
     bool checkLineBreak(const char *buf, FontInfo *fi);

@@ -445,6 +445,7 @@ int ONScripter::init()
     // - on Windows: system MS Gothic (fallback)
     // - on macOS: system Hiragino Gothic (fallback)
     int font_picker = -1;
+    faux_bold = faux_italics = faux_bolditalics = false;
 
     char* archive_default_font_ttf = create_filepath(archive_path, "default.ttf");
     char* archive_default_font_ttc = create_filepath(archive_path, "default.ttc");
@@ -485,9 +486,12 @@ int ONScripter::init()
             font_italics_file = font_file;
             font_bold_file = font_file;
             font_bolditalics_file = font_file;
-            if(file_exists("default-i.ttf")) font_italics_file = create_filepath("", "default-i.ttf");
+            if(file_exists("default-i.ttf")) font_italics_file = create_filepath("", "default-i.ttf"); 
+            else faux_italics = true;
             if(file_exists("default-b.ttf")) font_bold_file = create_filepath("", "default-b.ttf");
+            else faux_bold = true;
             if(file_exists("default-bi.ttf")) font_bolditalics_file = create_filepath("", "default-bi.ttf");
+            else faux_bolditalics = true;
             break;
         case FONT_DEFAULT_TTC:
             font_file = create_filepath("", "default.ttc");
@@ -495,8 +499,11 @@ int ONScripter::init()
             font_bold_file = font_file;
             font_bolditalics_file = font_file;
             if(file_exists("default-i.ttc")) font_italics_file = create_filepath("", "default-i.ttc");
+            else faux_italics = true;
             if(file_exists("default-b.ttc")) font_bold_file = create_filepath("", "default-b.ttc");
+            else faux_bold = true;
             if(file_exists("default-bi.ttc")) font_bolditalics_file = create_filepath("", "default-bi.ttc");
+            else faux_bolditalics = true;
             break;
         case FONT_DEFAULT_OTF:
             font_file = create_filepath("", "default.otf");
@@ -504,8 +511,11 @@ int ONScripter::init()
             font_bold_file = font_file;
             font_bolditalics_file = font_file;
             if(file_exists("default-i.otf")) font_italics_file = create_filepath("", "default-i.otf");
+            else faux_italics = true;
             if(file_exists("default-b.otf")) font_bold_file = create_filepath("", "default-b.otf");
+            else faux_bold = true;
             if(file_exists("default-bi.otf")) font_bolditalics_file = create_filepath("", "default-bi.otf");
+            else faux_bolditalics = true;
             break;
         case FONT_DEFAULT_OTC:
             font_file = create_filepath("", "default.otc");
@@ -513,8 +523,11 @@ int ONScripter::init()
             font_bold_file = font_file;
             font_bolditalics_file = font_file;
             if(file_exists("default-i.otc")) font_italics_file = create_filepath("", "default-i.otc");
+            else faux_italics = true;
             if(file_exists("default-b.otc")) font_bold_file = create_filepath("", "default-b.otc");
+            else faux_bold = true;
             if(file_exists("default-bi.otc")) font_bolditalics_file = create_filepath("", "default-bi.otc");
+            else faux_bolditalics = true;
             break;
         case FONT_ARCHIVE_TTF:
             font_file = archive_default_font_ttf;
@@ -523,18 +536,21 @@ int ONScripter::init()
             {
                 delete font_italics_file;
                 font_italics_file = font_file;
+                faux_italics = true;
             }
             font_bold_file = create_filepath(archive_path, "default-b.ttf");
             if(!file_exists(font_bold_file))
             {
                 delete font_bold_file;
                 font_bold_file = font_file;
+                faux_bold = true;
             }
             font_bolditalics_file = create_filepath(archive_path, "default-bi.ttf");
             if(!file_exists(font_bolditalics_file))
             {
                 delete font_bolditalics_file;
                 font_bolditalics_file = font_file;
+                faux_bolditalics = true;
             }
             delete archive_default_font_ttc;
             delete archive_default_font_otf;
@@ -547,18 +563,21 @@ int ONScripter::init()
             {
                 delete font_italics_file;
                 font_italics_file = font_file;
+                faux_italics = true;
             }
             font_bold_file = create_filepath(archive_path, "default-b.ttc");
             if(!file_exists(font_bold_file))
             {
                 delete font_bold_file;
                 font_bold_file = font_file;
+                faux_bold = true;
             }
             font_bolditalics_file = create_filepath(archive_path, "default-bi.ttc");
             if(!file_exists(font_bolditalics_file))
             {
                 delete font_bolditalics_file;
                 font_bolditalics_file = font_file;
+                faux_bolditalics = true;
             }
             delete archive_default_font_ttf;
             delete archive_default_font_otf;
@@ -571,18 +590,21 @@ int ONScripter::init()
             {
                 delete font_italics_file;
                 font_italics_file = font_file;
+                faux_italics = true;
             }
             font_bold_file = create_filepath(archive_path, "default-b.otf");
             if(!file_exists(font_bold_file))
             {
                 delete font_bold_file;
                 font_bold_file = font_file;
+                faux_bold = true;
             }
             font_bolditalics_file = create_filepath(archive_path, "default-bi.otf");
             if(!file_exists(font_bolditalics_file))
             {
                 delete font_bolditalics_file;
                 font_bolditalics_file = font_file;
+                faux_bolditalics = true;
             }
             delete archive_default_font_ttf;
             delete archive_default_font_ttc;
@@ -595,18 +617,21 @@ int ONScripter::init()
             {
                 delete font_italics_file;
                 font_italics_file = font_file;
+                faux_italics = true;
             }
             font_bold_file = create_filepath(archive_path, "default-b.otc");
             if(!file_exists(font_bold_file))
             {
                 delete font_bold_file;
                 font_bold_file = font_file;
+                faux_bold = true;
             }
             font_bolditalics_file = create_filepath(archive_path, "default-bi.otc");
             if(!file_exists(font_bolditalics_file))
             {
                 delete font_bolditalics_file;
                 font_bolditalics_file = font_file;
+                faux_bolditalics = true;
             }
             delete archive_default_font_ttf;
             delete archive_default_font_ttc;
@@ -618,6 +643,7 @@ int ONScripter::init()
             font_italics_file = font_file;
             font_bold_file = font_file;
             font_bolditalics_file = font_file;
+            faux_italics = faux_bold = faux_bolditalics = true;
             fprintf( stderr, "no font file detected; using system fallback (MS Gothic)\n" );
             break;
         case FONT_WIN32_MSGOTHIC_TTF:
@@ -625,6 +651,7 @@ int ONScripter::init()
             font_italics_file = font_file;
             font_bold_file = font_file;
             font_bolditalics_file = font_file;
+            faux_italics = faux_bold = faux_bolditalics = true;
             fprintf( stderr, "no font file detected; using system fallback (MS Gothic)\n" );
             break;
 #endif
@@ -634,6 +661,7 @@ int ONScripter::init()
             font_italics_file = font_file;
             font_bold_file = font_file;
             font_bolditalics_file = font_file;
+            faux_italics = faux_bold = faux_bolditalics = true;
             fprintf( stderr, "no font file detected; using system fallback (Hiragino Gothic)\n" );
             break;
 #endif
@@ -675,6 +703,8 @@ int ONScripter::init()
         }
 #endif        
     }
+
+    printf("faux: i%d b%d bi%d\n", faux_italics, faux_bold, faux_bolditalics);
 
     if(font_picker == -1)
     {
