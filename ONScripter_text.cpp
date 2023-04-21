@@ -375,6 +375,12 @@ void ONScripter::drawString(const char *str, uchar3 color, FontInfo *info, bool 
                     openFont(info);
                     info->toggleStyle(TTF_STYLE_BOLD);
                 }
+#if defined(INSANI)
+                else if (*str == 'u'){
+                    openFont(info);
+                    info->toggleStyle(TTF_STYLE_UNDERLINE);
+                }
+#endif
             }
             continue;
         }
@@ -424,7 +430,7 @@ void ONScripter::restoreTextBuffer(SDL_Surface *surface)
     f_info.clear();
 #if defined(INSANI)
     // reset font style for log mode
-    f_info.setStyle(0, 0, 0);
+    f_info.setStyle(0, 0, 0, 0);
 #endif
     for (int i=0 ; i<current_page->text_count ; i++){
         if (current_page->text[i] == 0x0a){
@@ -481,8 +487,8 @@ void ONScripter::restoreTextBuffer(SDL_Surface *surface)
             }
             else if (script_h.enc.getEncoding() == Encoding::CODE_UTF8 &&
 #if defined(INSANI)
-                     (current_page->text[i + 1] == 'i' || current_page->text[i + 1] == 'b') &&
-                     (current_page->text[i + 2] == 'i' || current_page->text[i + 2] == 'b' || current_page->text[i + 2] == '~') &&
+                     (current_page->text[i + 1] == 'b' || current_page->text[i + 1] == 'i' || current_page->text[i + 1] == 'u') &&
+                     (current_page->text[i + 2] == 'b' || current_page->text[i + 2] == 'i' || current_page->text[i + 2] == 'u' || current_page->text[i + 2] == '~') &&
 #endif
                      out_text[0] == '~'){
                 while(1){
@@ -503,6 +509,12 @@ void ONScripter::restoreTextBuffer(SDL_Surface *surface)
                         openFont(&f_info);
                         f_info.toggleStyle(TTF_STYLE_BOLD);
                     }
+#if defined(INSANI)
+                    else if (ch == 'u'){
+                        openFont(&f_info);
+                        f_info.toggleStyle(TTF_STYLE_UNDERLINE);
+                    }
+#endif
                 }
                 continue;
             }
@@ -524,7 +536,7 @@ void ONScripter::restoreTextBuffer(SDL_Surface *surface)
     }
 #if defined(INSANI)
     // reset the font style at the end of the log mode page
-    sentence_font.setStyle(0, 0, 0);
+    sentence_font.setStyle(0, 0, 0, 0);
 #endif
 }
 
@@ -673,7 +685,7 @@ bool ONScripter::clickNewPage( char *out_text )
 
 #if defined(INSANI)
     // reset all font styles with each new line; should not strictly be necessary, as we do this in processText() at the end of the line; this is just to be safe and for certain savefile load conditions
-    sentence_font.setStyle(0, 0, 0);
+    sentence_font.setStyle(0, 0, 0, 0);
 #endif
 
     flush( REFRESH_NONE_MODE );
@@ -839,10 +851,10 @@ int ONScripter::strpxlen(const char *buf, FontInfo *fi, bool *bold_flag, bool *i
             break;
     }
 
-    if(*bold_flag == true && *italics_flag == false) fi->setStyle(1, 0, 1);
-    else if(*italics_flag == true && *bold_flag == false) fi->setStyle(2, 1, 0);
-    else if(*bold_flag == true && *italics_flag == true) fi->setStyle(3, 1, 1);
-    else fi->setStyle(0, 0, 0);
+    if(*bold_flag == true && *italics_flag == false) fi->setStyle(1, 1, 0, fi->style_underline);
+    else if(*italics_flag == true && *bold_flag == false) fi->setStyle(2, 0, 1, fi->style_underline);
+    else if(*bold_flag == true && *italics_flag == true) fi->setStyle(3, 1, 1, fi->style_underline);
+    else fi->setStyle(0, 0, 0, 0);
 
     // behold the insani.org debug printf series :3
     //printf("strpxlen :: b: %d i: %d\n", *bold_flag, *italics_flag);
@@ -863,7 +875,7 @@ int ONScripter::strpxlen(const char *buf, FontInfo *fi, bool *bold_flag, bool *i
     }
     w -= fi->pitch_xy[0] - fi->font_size_xy[0];
 
-    fi->setStyle(old_style, old_italics_flag, old_bold_flag);
+    fi->setStyle(old_style, old_bold_flag, old_italics_flag, fi->style_underline);
 
     return w;
 }
@@ -944,15 +956,33 @@ int ONScripter::getPixelLength(const char *buf, FontInfo *fi, bool *bold_flag, b
         // ~i~, ~b~, ~ib~, ~bi~
         else if(buf[0] == '~')
         {
-            if(buf[1] == 'i' && buf[2] == '~')
+            if(buf[1] == 'b' && buf[2] == '~')
+            {
+                orig_length -= strpxlen("~b~", fi, bold_flag, italics_flag);
+                if(*bold_flag == true) *bold_flag = false;
+                else *bold_flag = true;
+            }
+            else if(buf[1] == 'i' && buf[2] == '~')
             {
                 orig_length -= strpxlen("~i~", fi, bold_flag, italics_flag);
                 if(*italics_flag == true) *italics_flag = false;
                 else *italics_flag = true;
             }
-            else if(buf[1] == 'b' && buf[2] == '~')
+            else if(buf[1] == 'u' && buf[2] == '~')
             {
-                orig_length -= strpxlen("~b~", fi, bold_flag, italics_flag);
+                orig_length -= strpxlen("~u~", fi, bold_flag, italics_flag);
+            }
+            else if(buf[1] == 'b' && buf[2] == 'i' && buf[3] == '~')
+            {
+                orig_length -= strpxlen("~bi~", fi, bold_flag, italics_flag);
+                if(*italics_flag == true) *italics_flag = false;
+                else *italics_flag = true;
+                if(*bold_flag == true) *bold_flag = false;
+                else *bold_flag = true;
+            }
+            else if(buf[1] == 'b' && buf[2] == 'u' && buf[3] == '~')
+            {
+                orig_length -= strpxlen("~bu~", fi, bold_flag, italics_flag);
                 if(*bold_flag == true) *bold_flag = false;
                 else *bold_flag = true;
             }
@@ -964,9 +994,40 @@ int ONScripter::getPixelLength(const char *buf, FontInfo *fi, bool *bold_flag, b
                 if(*bold_flag == true) *bold_flag = false;
                 else *bold_flag = true;
             }
-            else if(buf[1] == 'b' && buf[2] == 'i' && buf[3] == '~')
+            else if(buf[1] == 'i' && buf[2] == 'u' && buf[3] == '~')
             {
-                orig_length -= strpxlen("~bi~", fi, bold_flag, italics_flag);
+                orig_length -= strpxlen("~iu~", fi, bold_flag, italics_flag);
+                if(*italics_flag == true) *italics_flag = false;
+                else *italics_flag = true;
+            }
+            else if(buf[1] == 'u' && buf[2] == 'b' && buf[3] == '~')
+            {
+                orig_length -= strpxlen("~ub~", fi, bold_flag, italics_flag);
+                if(*bold_flag == true) *bold_flag = false;
+                else *bold_flag = true;
+            }
+            else if(buf[1] == 'u' && buf[2] == 'i' && buf[3] == '~')
+            {
+                orig_length -= strpxlen("~ui~", fi, bold_flag, italics_flag);
+                if(*italics_flag == true) *italics_flag = false;
+                else *italics_flag = true;
+            }
+            else if( (buf[1] == 'b' && buf[2] == 'i' && buf[3] == 'u' && buf[4] == '~') || 
+                     (buf[1] == 'b' && buf[2] == 'u' && buf[3] == 'i' && buf[4] == '~') || 
+                     (buf[1] == 'i' && buf[2] == 'b' && buf[3] == 'u' && buf[4] == '~') ||
+                     (buf[1] == 'i' && buf[2] == 'u' && buf[3] == 'b' && buf[4] == '~') ||
+                     (buf[1] == 'u' && buf[2] == 'b' && buf[3] == 'i' && buf[4] == '~') ||
+                     (buf[1] == 'u' && buf[2] == 'i' && buf[3] == 'b' && buf[4] == '~') )
+            {
+                char biu[6];
+                biu[0] = '~';
+                biu[1] = buf[1];
+                biu[2] = buf[2];
+                biu[3] = buf[3];
+                biu[4] = buf[4];
+                biu[5] = '\0';
+
+                orig_length -= strpxlen(biu, fi, bold_flag, italics_flag);
                 if(*italics_flag == true) *italics_flag = false;
                 else *italics_flag = true;
                 if(*bold_flag == true) *bold_flag = false;
@@ -1680,8 +1741,8 @@ bool ONScripter::processText()
     }
     else if (script_h.enc.getEncoding() == Encoding::CODE_UTF8 &&
 #if defined(INSANI)
-             (script_h.getStringBuffer()[string_buffer_offset + 1] == 'i' || script_h.getStringBuffer()[string_buffer_offset + 1] == 'b') &&
-             (script_h.getStringBuffer()[string_buffer_offset + 2] == 'i' || script_h.getStringBuffer()[string_buffer_offset + 2] == 'b' || script_h.getStringBuffer()[string_buffer_offset + 2] == '~') &&            
+             (script_h.getStringBuffer()[string_buffer_offset + 1] == 'b' || script_h.getStringBuffer()[string_buffer_offset + 1] == 'i' || script_h.getStringBuffer()[string_buffer_offset + 1] == 'u') &&
+             (script_h.getStringBuffer()[string_buffer_offset + 2] == 'b' || script_h.getStringBuffer()[string_buffer_offset + 2] == 'i' || script_h.getStringBuffer()[string_buffer_offset + 2] == 'u' || script_h.getStringBuffer()[string_buffer_offset + 2] == '~') &&
 #endif
              ch == '~'){
         current_page->add('~');
@@ -1701,6 +1762,12 @@ bool ONScripter::processText()
                 openFont(&sentence_font);
                 sentence_font.toggleStyle(TTF_STYLE_BOLD);
             }
+#if defined(INSANI)
+            else if (ch == 'u'){
+                openFont(&sentence_font);
+                sentence_font.toggleStyle(TTF_STYLE_UNDERLINE);
+            }
+#endif
         }
         
         return true;
@@ -1721,7 +1788,7 @@ bool ONScripter::processText()
                  script_h.getEndStatus() & ScriptHandler::END_1BYTE_CHAR){
 #if defined(INSANI)
             // reset all font styles at the end of each line
-            sentence_font.setStyle(0, 0, 0);
+            sentence_font.setStyle(0, 0, 0, 0);
 #endif
             if ( script_h.getStringBuffer()[ string_buffer_offset + 2 ] &&
                  script_h.checkClickstr(&script_h.getStringBuffer()[string_buffer_offset+2]) > 0){

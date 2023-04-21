@@ -79,8 +79,9 @@ void FontInfo::reset(Encoding *enc)
     is_newline_accepted = false;
 
 #if defined(INSANI)
-    style_italics = false;
     style_bold = false;
+    style_italics = false;
+    style_underline = false;
 #endif
     
     is_line_space_fixed = false;
@@ -169,27 +170,18 @@ int FontInfo::getStyle()
     return TTF_GetFontStyle((TTF_Font*)ttf_font[0]);
 }
 
-void FontInfo::setStyle(int style, bool italics, bool bold)
+void FontInfo::setStyle(int style, bool bold, bool italics, bool underline)
 {
     TTF_SetFontStyle((TTF_Font*)ttf_font[0], style);
     TTF_SetFontStyle((TTF_Font*)ttf_font[1], style);
     style_italics = italics;
     style_bold = bold;
+    style_underline = underline;
 }
 #endif
 
 void FontInfo::toggleStyle(int style)
 {
-#if defined(INSANI)
-    // used only to reset font styles for log mode
-    if(style == TTF_STYLE_RESET_LOOKBACK)
-    {
-        TTF_SetFontStyle((TTF_Font*)ttf_font[0], TTF_STYLE_NORMAL);
-        TTF_SetFontStyle((TTF_Font*)ttf_font[1], TTF_STYLE_NORMAL);
-        style = 0;
-        return;
-    }
-#endif
     for (int i=0; i<2; i++){
         if (ttf_font[i] == NULL) continue;
         int old_style = TTF_GetFontStyle((TTF_Font*)ttf_font[i]);
@@ -204,6 +196,8 @@ void FontInfo::toggleStyle(int style)
     else if(style == TTF_STYLE_ITALIC && style_italics) style_italics = false;
     if(style == TTF_STYLE_BOLD && !style_bold) style_bold = true;
     else if(style == TTF_STYLE_BOLD && !style_bold) style_bold = false;
+    if(style == TTF_STYLE_UNDERLINE && !style_underline) style_underline = true;
+    else if(style == TTF_STYLE_UNDERLINE && !style_underline) style_underline = false;
 
     //printf("italics: %d; bold: %d\n", style_italics, style_bold);
 #endif

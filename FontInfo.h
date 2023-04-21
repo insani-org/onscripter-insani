@@ -58,6 +58,7 @@ public:
 #if defined(INSANI)
     bool style_bold;
     bool style_italics;
+    bool style_underline;
 #endif
 
     int line_offset_xy[2]; // ruby offset for each line
@@ -74,7 +75,7 @@ public:
     int getRemainingLine();
 #if defined(INSANI)
     int getStyle();
-    void setStyle(int style, bool italics, bool bold);
+    void setStyle(int style, bool bold, bool italics, bool underline);
 #endif
     void toggleStyle(int style);
     
