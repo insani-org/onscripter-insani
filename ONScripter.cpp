@@ -704,7 +704,7 @@ int ONScripter::init()
 #endif        
     }
 
-    printf("faux: i%d b%d bi%d\n", faux_italics, faux_bold, faux_bolditalics);
+    //printf("faux: i%d b%d bi%d\n", faux_italics, faux_bold, faux_bolditalics);
 
     if(font_picker == -1)
     {
