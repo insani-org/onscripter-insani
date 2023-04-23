@@ -74,6 +74,7 @@ int ONScripter::drawGlyph( SDL_Surface *dst_surface, FontInfo *info, SDL_Color &
     unsigned short unicode = script_h.enc.getUTF16(text);
 
     int minx, maxx, miny, maxy, advanced;
+    int normal_minx, normal_maxx, normal_miny, normal_maxy, normal_advanced;
 #if 0
     if (TTF_GetFontStyle( (TTF_Font*)info->ttf_font[0] ) !=
         (info->is_bold?TTF_STYLE_BOLD:TTF_STYLE_NORMAL) )
@@ -86,6 +87,8 @@ int ONScripter::drawGlyph( SDL_Surface *dst_surface, FontInfo *info, SDL_Color &
     else if(!info->style_bold && info->style_italics) font_index = 4;
     else if(info->style_bold && info->style_italics) font_index = 6;
     else font_index = 0;
+    TTF_GlyphMetrics( (TTF_Font*)info->ttf_font[0], unicode,
+                      &normal_minx, &normal_maxx, &normal_miny, &normal_maxy, &advanced );
     TTF_GlyphMetrics( (TTF_Font*)info->ttf_font[font_index], unicode,
                       &minx, &maxx, &miny, &maxy, &advanced );
     //printf("min %d %d %d %d %d %d\n", minx, maxx, miny, maxy, advanced,TTF_FontAscent((TTF_Font*)info->ttf_font[font_index])  );
@@ -128,7 +131,8 @@ int ONScripter::drawGlyph( SDL_Surface *dst_surface, FontInfo *info, SDL_Color &
     
     dst_rect.x = xy[0] + minx;
 #if defined(INSANI)
-    dst_rect.y = xy[1] + TTF_FontAscent((TTF_Font*)info->ttf_font[font_index]) - maxy;
+    //dst_rect.y = xy[1] + TTF_FontAscent((TTF_Font*)info->ttf_font[font_index]) - maxy;
+    dst_rect.y = xy[1] + TTF_FontAscent((TTF_Font*)info->ttf_font[0]) - maxy;
 #else
     dst_rect.y = xy[1] + TTF_FontAscent((TTF_Font*)info->ttf_font[0]) - maxy;
 #endif
