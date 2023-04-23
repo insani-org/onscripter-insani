@@ -78,14 +78,30 @@ int ONScripter::drawGlyph( SDL_Surface *dst_surface, FontInfo *info, SDL_Color &
     if (TTF_GetFontStyle( (TTF_Font*)info->ttf_font[0] ) !=
         (info->is_bold?TTF_STYLE_BOLD:TTF_STYLE_NORMAL) )
         TTF_SetFontStyle( (TTF_Font*)info->ttf_font[0], (info->is_bold?TTF_STYLE_BOLD:TTF_STYLE_NORMAL));
-#endif    
+#endif
+#if defined(INSANI)
+    int font_index = 0;
+    if(!info->style_bold && !info->style_italics) font_index = 0;
+    else if(info->style_bold && !info->style_italics) font_index = 2;
+    else if(!info->style_bold && info->style_italics) font_index = 4;
+    else if(info->style_bold && info->style_italics) font_index = 6;
+    else font_index = 0;
+    TTF_GlyphMetrics( (TTF_Font*)info->ttf_font[font_index], unicode,
+                      &minx, &maxx, &miny, &maxy, &advanced );
+    //printf("min %d %d %d %d %d %d\n", minx, maxx, miny, maxy, advanced,TTF_FontAscent((TTF_Font*)info->ttf_font[font_index])  );
+#else
     TTF_GlyphMetrics( (TTF_Font*)info->ttf_font[0], unicode,
                       &minx, &maxx, &miny, &maxy, &advanced );
     //printf("min %d %d %d %d %d %d\n", minx, maxx, miny, maxy, advanced,TTF_FontAscent((TTF_Font*)info->ttf_font[0])  );
+#endif
 
     static SDL_Color fcol={0xff, 0xff, 0xff}, bcol={0, 0, 0};
+#if defined(INSANI)
+    SDL_Surface *tmp_surface = TTF_RenderGlyph_Shaded((TTF_Font*)info->ttf_font[font_index], unicode, fcol, bcol);
+#else
     SDL_Surface *tmp_surface = TTF_RenderGlyph_Shaded((TTF_Font*)info->ttf_font[0], unicode, fcol, bcol);
-    
+#endif
+
     SDL_Color scolor = {0, 0, 0};
     SDL_Surface *tmp_surface_s = tmp_surface;
     if (info->is_shadow && render_font_outline){
@@ -96,7 +112,11 @@ int ONScripter::drawGlyph( SDL_Surface *dst_surface, FontInfo *info, SDL_Color &
         else                  scolor.r = 0;
         scolor.g = scolor.b = scolor.r;
 
+#if defined(INSANI)
+        tmp_surface_s = TTF_RenderGlyph_Shaded((TTF_Font*)info->ttf_font[font_index+1], unicode, fcol, bcol);
+#else
         tmp_surface_s = TTF_RenderGlyph_Shaded((TTF_Font*)info->ttf_font[1], unicode, fcol, bcol);
+#endif
         if (tmp_surface && tmp_surface_s){
             if ((tmp_surface_s->w-tmp_surface->w) & 1) shiftHalfPixelX(tmp_surface_s);
             if ((tmp_surface_s->h-tmp_surface->h) & 1) shiftHalfPixelY(tmp_surface_s);
@@ -107,9 +127,17 @@ int ONScripter::drawGlyph( SDL_Surface *dst_surface, FontInfo *info, SDL_Color &
     if ( info->getTateyokoMode() == FontInfo::TATE_MODE && IS_ROTATION_REQUIRED(text) ) rotate_flag = true;
     
     dst_rect.x = xy[0] + minx;
+#if defined(INSANI)
+    dst_rect.y = xy[1] + TTF_FontAscent((TTF_Font*)info->ttf_font[font_index]) - maxy;
+#else
     dst_rect.y = xy[1] + TTF_FontAscent((TTF_Font*)info->ttf_font[0]) - maxy;
+#endif
     if (script_h.enc.getEncoding() == Encoding::CODE_CP932)
+#if defined(INSANI)
+        dst_rect.y -= (TTF_FontHeight((TTF_Font*)info->ttf_font[font_index]) - info->font_size_xy[1]*screen_ratio1/screen_ratio2)/2;
+#else
         dst_rect.y -= (TTF_FontHeight((TTF_Font*)info->ttf_font[0]) - info->font_size_xy[1]*screen_ratio1/screen_ratio2)/2;
+#endif
 
     if ( rotate_flag ) dst_rect.x += miny - minx;
         
@@ -173,7 +201,9 @@ int ONScripter::drawGlyph( SDL_Surface *dst_surface, FontInfo *info, SDL_Color &
 void ONScripter::openFont(FontInfo *fi)
 {
     if (fi->ttf_font[0] == NULL){
-        if (fi->openFont(font_file, screen_ratio1, screen_ratio2) == NULL){
+#if defined(INSANI)
+        if (fi->openFont(font_file, font_bold_file, font_italics_file, font_bolditalics_file, faux_bold, faux_italics, faux_bolditalics, screen_ratio1, screen_ratio2) == NULL){
+#endif
             fprintf( stderr, "can't open font file: %s\n", font_file );
             quit();
             exit(-1);
@@ -830,18 +860,22 @@ int ONScripter::strpxlen(const char *buf, FontInfo *fi, bool *bold_flag, bool *i
     int old_style = fi->getStyle();
     bool old_bold_flag;
     bool old_italics_flag;
+    int font_index = 0;
 
     switch(old_style)
     {
         case 1:
+        case 5:
             old_bold_flag = 1;
             old_italics_flag = 0;
             break;
         case 2:
+        case 6:
             old_bold_flag = 0;
             old_italics_flag = 1;
             break;
         case 3:
+        case 7:
             old_bold_flag = 1;
             old_italics_flag = 1;
             break;
@@ -851,10 +885,31 @@ int ONScripter::strpxlen(const char *buf, FontInfo *fi, bool *bold_flag, bool *i
             break;
     }
 
-    if(*bold_flag == true && *italics_flag == false) fi->setStyle(1, 1, 0, fi->style_underline);
-    else if(*italics_flag == true && *bold_flag == false) fi->setStyle(2, 0, 1, fi->style_underline);
-    else if(*bold_flag == true && *italics_flag == true) fi->setStyle(3, 1, 1, fi->style_underline);
-    else fi->setStyle(0, 0, 0, 0);
+    if(*bold_flag == false && *italics_flag == false)
+    {
+        fi->setStyle(0, 0, 0, fi->style_underline);
+        font_index = 0;
+    }
+    else if(*bold_flag == true && *italics_flag == false) 
+    {
+        fi->setStyle(1, 1, 0, fi->style_underline);
+        font_index = 2;
+    }
+    else if(*italics_flag == true && *bold_flag == false)
+    {
+        fi->setStyle(2, 0, 1, fi->style_underline);
+        font_index = 4;
+    }
+    else if(*bold_flag == true && *italics_flag == true)
+    {
+        fi->setStyle(3, 1, 1, fi->style_underline);
+        font_index = 6;
+    }
+    else
+    {
+        fi->setStyle(0, 0, 0, 0);
+        font_index = 0;
+    }
 
     // behold the insani.org debug printf series :3
     //printf("strpxlen :: b: %d i: %d\n", *bold_flag, *italics_flag);
@@ -867,7 +922,7 @@ int ONScripter::strpxlen(const char *buf, FontInfo *fi, bool *bold_flag, bool *i
         unsigned short unicode = script_h.enc.getUTF16(buf);
         
         int minx, maxx, miny, maxy, advanced;
-        TTF_GlyphMetrics((TTF_Font*)fi->ttf_font[0], unicode,
+        TTF_GlyphMetrics((TTF_Font*)fi->ttf_font[font_index], unicode,
                          &minx, &maxx, &miny, &maxy, &advanced);
         
         w += advanced + fi->pitch_xy[0] - fi->font_size_xy[0];
@@ -1345,7 +1400,8 @@ int ONScripter::textCommand()
         }
         free(temp_text);
     }
-
+    // reset all font styles at the beginning of every line
+    sentence_font.setStyle(0, 0, 0, 0);
 #endif
 
     enterTextDisplayMode();
@@ -1479,6 +1535,7 @@ bool ONScripter::processText()
     {
         string_buffer_offset++;
         ch = script_h.getStringBuffer()[string_buffer_offset];
+        //sentence_font.setStyle(0, 0, 0, 0);
     }
 #endif
 
@@ -1748,6 +1805,7 @@ bool ONScripter::processText()
         current_page->add('~');
         while(1){
             ch = script_h.getStringBuffer()[++string_buffer_offset];
+            //printf("ch: %c\n", ch);
             if (ch == 0x0a || ch == 0) break;
             current_page->add(ch);
             if (ch == '~'){
@@ -1757,15 +1815,20 @@ bool ONScripter::processText()
             if (ch == 'i'){
                 openFont(&sentence_font);
                 sentence_font.toggleStyle(TTF_STYLE_ITALIC);
+                //printf("changing style: %d\n", sentence_font.getStyle());
+                //printf("style_bold: %d :: style_italics: %d :: style_underline: %d\n", sentence_font.style_bold, sentence_font.style_italics, sentence_font.style_underline);
             }
             else if (ch == 'b'){
                 openFont(&sentence_font);
                 sentence_font.toggleStyle(TTF_STYLE_BOLD);
+                //printf("changing style: %d\n", sentence_font.getStyle());
+                //printf("style_bold: %d :: style_italics: %d :: style_underline: %d\n", sentence_font.style_bold, sentence_font.style_italics, sentence_font.style_underline);
             }
 #if defined(INSANI)
             else if (ch == 'u'){
                 openFont(&sentence_font);
                 sentence_font.toggleStyle(TTF_STYLE_UNDERLINE);
+                printf("changing style: %d\n", sentence_font.getStyle());
             }
 #endif
         }

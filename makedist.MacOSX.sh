@@ -34,9 +34,9 @@ echo "<?xml version=\"1.0\" encoding=\"UTF-8\"?>
   <key>CFBundleIconFile</key>
   <string>$APP_NAME.icns</string>
   <key>CFBundleShortVersionString</key>
-  <string>20230420</string>
+  <string>2023050x</string>
   <key>CFBundleVersion</key>
-  <string>Capcom</string>
+  <string>D3</string>
   <key>CFBundleInfoDictionaryVersion</key>
   <string>6.0</string>
   <key>CFBundlePackageType</key>

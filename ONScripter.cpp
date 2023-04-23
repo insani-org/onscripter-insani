@@ -813,7 +813,11 @@ int ONScripter::init()
 
     readToken();
 
+#if defined(INSANI)
+    if ( sentence_font.openFont( font_file, font_bold_file, font_italics_file, font_bolditalics_file, faux_bold, faux_italics, faux_bolditalics, screen_ratio1, screen_ratio2 ) == NULL ){
+#else
     if ( sentence_font.openFont( font_file, screen_ratio1, screen_ratio2 ) == NULL ){
+#endif
         fprintf( stderr, "can't open font file: %s\n", font_file );
         return -1;
     }

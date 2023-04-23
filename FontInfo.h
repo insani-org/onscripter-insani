@@ -28,10 +28,6 @@
 #include "BaseReader.h"
 #include "Encoding.h"
 
-#if defined(INSANI)
-#define TTF_STYLE_RESET_LOOKBACK -1
-#endif
-
 typedef unsigned char uchar3[3];
 
 class FontInfo{
@@ -39,7 +35,11 @@ public:
     enum { YOKO_MODE = 0,
            TATE_MODE = 1
     };
+#if defined(INSANI)
+    void *ttf_font[8]; // 0...normal rendering, 1...outline rendering, 2...bold rendering, 3...bold outline rendering, 4...italics rendering, 5...italics outline rendering, 6...bold italics rendering, 7...bold italics outline rendering
+#else
     void *ttf_font[2]; // 0...normal rendering, 1...outline rendering
+#endif
     uchar3 color;
     uchar3 on_color, off_color, nofile_color;
     int font_size_xy[2];
@@ -59,6 +59,9 @@ public:
     bool style_bold;
     bool style_italics;
     bool style_underline;
+    bool faux_bold;
+    bool faux_italics;
+    bool faux_bolditalics;
 #endif
 
     int line_offset_xy[2]; // ruby offset for each line
@@ -69,7 +72,11 @@ public:
 
     FontInfo();
     void reset(Encoding *enc);
+#if defined(INSANI)
+    void *openFont( char *font_file, char* font_bold_file, char* font_italics_file, char* font_bolditalics_file, bool ons_faux_bold, bool ons_faux_italics, bool ons_faux_bolditalics, int ratio1, int ratio2 );
+#else
     void *openFont( char *font_file, int ratio1, int ratio2 );
+#endif
     void setTateyokoMode( int tateyoko_mode );
     int getTateyokoMode();
     int getRemainingLine();

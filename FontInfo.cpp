@@ -34,7 +34,11 @@ extern int psp_power_resume_number;
 static struct FontContainer{
     FontContainer *next;
     int size;
+#if defined(INSANI)
+    TTF_Font *font[8];
+#else
     TTF_Font *font[2];
+#endif
 #if defined(PSP)
     SDL_RWops *rw_ops;
     int power_resume_number;
@@ -55,6 +59,10 @@ static struct FontContainer{
 FontInfo::FontInfo()
 {
     ttf_font[0] = ttf_font[1] = NULL;
+#if defined(INSANI)
+    ttf_font[2] = ttf_font[3] = ttf_font[4] = ttf_font[5] = ttf_font[6] = ttf_font[7] = NULL;
+    faux_bold = faux_italics = faux_bolditalics = false;
+#endif
 
     color[0]        = color[1]        = color[2]        = 0xff;
     on_color[0]     = on_color[1]     = on_color[2]     = 0xff;
@@ -82,13 +90,23 @@ void FontInfo::reset(Encoding *enc)
     style_bold = false;
     style_italics = false;
     style_underline = false;
+    faux_bold = faux_italics = faux_bolditalics = false;
 #endif
     
     is_line_space_fixed = false;
 }
 
+#if defined(INSANI)
+void *FontInfo::openFont( char *font_file, char* font_bold_file, char* font_italics_file, char* font_bolditalics_file, bool ons_faux_bold, bool ons_faux_italics, bool ons_faux_bolditalics, int ratio1, int ratio2 )
+#else
 void *FontInfo::openFont( char *font_file, int ratio1, int ratio2 )
+#endif
 {
+#if defined(INSANI)
+    faux_bold = ons_faux_bold;
+    faux_italics = ons_faux_italics;
+    faux_bolditalics = ons_faux_bolditalics;
+#endif
     int font_size = font_size_xy[1];
     if (enc->getEncoding() != Encoding::CODE_UTF8 &&
         font_size_xy[0] < font_size_xy[1])
@@ -125,10 +143,66 @@ void *FontInfo::openFont( char *font_file, int ratio1, int ratio2 )
         SDL_RWops *src = SDL_RWFromMem(buf, length);
         fc->next->font[0] = TTF_OpenFontRW(src, 1, font_size * ratio1 / ratio2);
 #if (SDL_TTF_MAJOR_VERSION>=2) && (SDL_TTF_MINOR_VERSION>=0) && (SDL_TTF_PATCHLEVEL>=10)
+#if defined(INSANI)
+        SDL_RWops *src1 = SDL_RWFromMem(buf, length);
+        fc->next->font[1] = TTF_OpenFontRW(src1, 1, font_size * ratio1 / ratio2);
+#else
         SDL_RWops *src2 = SDL_RWFromMem(buf, length);
         fc->next->font[1] = TTF_OpenFontRW(src2, 1, font_size * ratio1 / ratio2);
+#endif
         TTF_SetFontOutline(fc->next->font[1], 1);
 #endif
+
+#if defined(INSANI)
+        // bold
+        fp = fopen(font_bold_file, "rb");
+        fseek(fp, 0, SEEK_END);
+        length = ftell(fp);
+        buf = new unsigned char[length]; // not released
+        fseek(fp, 0, SEEK_SET);
+        fread(buf, 1, length, fp);
+        fclose(fp);
+        SDL_RWops *src2 = SDL_RWFromMem(buf, length);
+        fc->next->font[2] = TTF_OpenFontRW(src2, 1, font_size * ratio1 / ratio2);
+#if (SDL_TTF_MAJOR_VERSION>=2) && (SDL_TTF_MINOR_VERSION>=0) && (SDL_TTF_PATCHLEVEL>=10)
+        SDL_RWops *src3 = SDL_RWFromMem(buf, length);
+        fc->next->font[3] = TTF_OpenFontRW(src3, 1, font_size * ratio1 / ratio2);
+        TTF_SetFontOutline(fc->next->font[3], 1);
+#endif
+
+        // italics
+        fp = fopen(font_italics_file, "rb");
+        fseek(fp, 0, SEEK_END);
+        length = ftell(fp);
+        buf = new unsigned char[length]; // not released
+        fseek(fp, 0, SEEK_SET);
+        fread(buf, 1, length, fp);
+        fclose(fp);
+        SDL_RWops *src4 = SDL_RWFromMem(buf, length);
+        fc->next->font[4] = TTF_OpenFontRW(src4, 1, font_size * ratio1 / ratio2);
+#if (SDL_TTF_MAJOR_VERSION>=2) && (SDL_TTF_MINOR_VERSION>=0) && (SDL_TTF_PATCHLEVEL>=10)
+        SDL_RWops *src5 = SDL_RWFromMem(buf, length);
+        fc->next->font[5] = TTF_OpenFontRW(src5, 1, font_size * ratio1 / ratio2);
+        TTF_SetFontOutline(fc->next->font[5], 1);
+#endif
+
+        // bold italics
+        fp = fopen(font_bolditalics_file, "rb");
+        fseek(fp, 0, SEEK_END);
+        length = ftell(fp);
+        buf = new unsigned char[length]; // not released
+        fseek(fp, 0, SEEK_SET);
+        fread(buf, 1, length, fp);
+        fclose(fp);
+        SDL_RWops *src6 = SDL_RWFromMem(buf, length);
+        fc->next->font[6] = TTF_OpenFontRW(src6, 1, font_size * ratio1 / ratio2);
+#if (SDL_TTF_MAJOR_VERSION>=2) && (SDL_TTF_MINOR_VERSION>=0) && (SDL_TTF_PATCHLEVEL>=10)
+        SDL_RWops *src7 = SDL_RWFromMem(buf, length);
+        fc->next->font[7] = TTF_OpenFontRW(src7, 1, font_size * ratio1 / ratio2);
+        TTF_SetFontOutline(fc->next->font[7], 1);
+#endif
+#endif
+
 #endif
     }
 #if defined(PSP)
@@ -141,6 +215,18 @@ void *FontInfo::openFont( char *font_file, int ratio1, int ratio2 )
 
     ttf_font[0] = (void*)fc->next->font[0];
     ttf_font[1] = (void*)fc->next->font[1];
+#if defined(INSANI)
+    ttf_font[2] = (void*)fc->next->font[2];
+    ttf_font[3] = (void*)fc->next->font[3];
+    ttf_font[4] = (void*)fc->next->font[4];
+    ttf_font[5] = (void*)fc->next->font[5];
+    ttf_font[6] = (void*)fc->next->font[6];
+    ttf_font[7] = (void*)fc->next->font[7];
+
+    if(faux_bold) setStyle(1, 1, 0, 0);
+    if(faux_italics) setStyle(2, 0, 1, 0);
+    if(faux_bolditalics) setStyle(3, 1, 1, 0);
+#endif
     
     return fc->next->font;
 }
@@ -167,13 +253,37 @@ int FontInfo::getRemainingLine()
 #if defined(INSANI)
 int FontInfo::getStyle()
 {
-    return TTF_GetFontStyle((TTF_Font*)ttf_font[0]);
+    //return TTF_GetFontStyle((TTF_Font*)ttf_font[0]);
+    if(!style_bold && !style_italics && !style_underline) return 0;
+    else if(style_bold && !style_italics && !style_underline) return 1;
+    else if(!style_bold && style_italics && !style_underline) return 2;
+    else if(style_bold && style_italics && !style_underline) return 3;
+    else if(!style_bold && !style_italics && style_underline) return 4;
+    else if(style_bold && !style_italics && style_underline) return 5;
+    else if(!style_bold && style_italics && style_underline) return 6;
+    else if(style_bold && style_italics && style_underline) return 7;
+    else return 0;
 }
 
 void FontInfo::setStyle(int style, bool bold, bool italics, bool underline)
 {
-    TTF_SetFontStyle((TTF_Font*)ttf_font[0], style);
-    TTF_SetFontStyle((TTF_Font*)ttf_font[1], style);
+    if(bold && !italics && faux_bold)
+    {
+        TTF_SetFontStyle((TTF_Font*)ttf_font[2], style);
+         TTF_SetFontStyle((TTF_Font*)ttf_font[3], style);
+    }
+    else if(!bold && italics && faux_italics)
+    {
+        TTF_SetFontStyle((TTF_Font*)ttf_font[4], style);
+        TTF_SetFontStyle((TTF_Font*)ttf_font[5], style);
+    }
+    else if(bold && italics && faux_bolditalics)
+    {
+        TTF_SetFontStyle((TTF_Font*)ttf_font[6], style);
+        TTF_SetFontStyle((TTF_Font*)ttf_font[7], style);
+    }
+    //TTF_SetFontStyle((TTF_Font*)ttf_font[0], style);
+    //TTF_SetFontStyle((TTF_Font*)ttf_font[1], style);
     style_italics = italics;
     style_bold = bold;
     style_underline = underline;
@@ -182,6 +292,58 @@ void FontInfo::setStyle(int style, bool bold, bool italics, bool underline)
 
 void FontInfo::toggleStyle(int style)
 {
+#if defined(INSANI)
+    if(style == TTF_STYLE_ITALIC && !style_italics) style_italics = true;
+    else if(style == TTF_STYLE_ITALIC && style_italics) style_italics = false;
+    if(style == TTF_STYLE_BOLD && !style_bold) style_bold = true;
+    else if(style == TTF_STYLE_BOLD && style_bold) style_bold = false;
+    if(style == TTF_STYLE_UNDERLINE && !style_underline) style_underline = true;
+    else if(style == TTF_STYLE_UNDERLINE && style_underline) style_underline = false;
+
+    //printf("italics: %d; bold: %d\n", style_italics, style_bold);
+#endif
+#if defined(INSANI)
+    if(!style_bold && !style_italics && !style_underline)
+    {
+        TTF_SetFontStyle((TTF_Font*)ttf_font[0], 0);
+        TTF_SetFontStyle((TTF_Font*)ttf_font[1], 0);
+    }
+    else if(style_bold && !style_italics && !style_underline && faux_bold)
+    {
+        TTF_SetFontStyle((TTF_Font*)ttf_font[2], 1);
+        TTF_SetFontStyle((TTF_Font*)ttf_font[3], 1);
+    }
+    else if(!style_bold && style_italics && !style_underline && faux_italics)
+    {
+        TTF_SetFontStyle((TTF_Font*)ttf_font[4], 2);
+        TTF_SetFontStyle((TTF_Font*)ttf_font[5], 2);
+    }
+    else if(style_bold && style_italics && !style_underline && faux_bolditalics)
+    {
+        TTF_SetFontStyle((TTF_Font*)ttf_font[6], 3);
+        TTF_SetFontStyle((TTF_Font*)ttf_font[7], 3);
+    }
+    else if(!style_bold && !style_italics && style_underline)
+    {
+        TTF_SetFontStyle((TTF_Font*)ttf_font[0], 4);
+        TTF_SetFontStyle((TTF_Font*)ttf_font[1], 4);
+    }
+    else if(style_bold && !style_italics && style_underline && faux_bold)
+    {
+        TTF_SetFontStyle((TTF_Font*)ttf_font[2], 5);
+        TTF_SetFontStyle((TTF_Font*)ttf_font[3], 5);
+    }
+    else if(!style_bold && style_italics && style_underline && faux_italics)
+    {
+        TTF_SetFontStyle((TTF_Font*)ttf_font[4], 6);
+        TTF_SetFontStyle((TTF_Font*)ttf_font[5], 6);
+    }
+    else if(style_bold && style_italics && style_underline && faux_bolditalics)
+    {
+        TTF_SetFontStyle((TTF_Font*)ttf_font[6], 7);
+        TTF_SetFontStyle((TTF_Font*)ttf_font[7], 7);
+    }
+#else
     for (int i=0; i<2; i++){
         if (ttf_font[i] == NULL) continue;
         int old_style = TTF_GetFontStyle((TTF_Font*)ttf_font[i]);
@@ -191,15 +353,6 @@ void FontInfo::toggleStyle(int style)
         //printf("new_style: %d\n", new_style);
         TTF_SetFontStyle((TTF_Font*)ttf_font[i], new_style);
     }
-#if defined(INSANI)
-    if(style == TTF_STYLE_ITALIC && !style_italics) style_italics = true;
-    else if(style == TTF_STYLE_ITALIC && style_italics) style_italics = false;
-    if(style == TTF_STYLE_BOLD && !style_bold) style_bold = true;
-    else if(style == TTF_STYLE_BOLD && !style_bold) style_bold = false;
-    if(style == TTF_STYLE_UNDERLINE && !style_underline) style_underline = true;
-    else if(style == TTF_STYLE_UNDERLINE && !style_underline) style_underline = false;
-
-    //printf("italics: %d; bold: %d\n", style_italics, style_bold);
 #endif
 }
 

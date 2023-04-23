@@ -178,7 +178,11 @@ void ONScripter::setupAnimationInfo( AnimationInfo *anim, FontInfo *info )
         }
 
         if (f_info.ttf_font[0] == NULL)
+#if defined(INSANI)
+            f_info.openFont( font_file, font_bold_file, font_italics_file, font_bolditalics_file, faux_bold, faux_italics, faux_bolditalics, screen_ratio1, screen_ratio2 );
+#else
             f_info.openFont( font_file, screen_ratio1, screen_ratio2 );
+#endif
 
         SDL_Rect pos;
         if (anim->is_tight_region){
