@@ -1828,7 +1828,8 @@ bool ONScripter::processText()
             else if (ch == 'u'){
                 openFont(&sentence_font);
                 sentence_font.toggleStyle(TTF_STYLE_UNDERLINE);
-                printf("changing style: %d\n", sentence_font.getStyle());
+                //printf("changing style: %d\n", sentence_font.getStyle());
+                //printf("style_bold: %d :: style_italics: %d :: style_underline: %d\n", sentence_font.style_bold, sentence_font.style_italics, sentence_font.style_underline);
             }
 #endif
         }
@@ -1850,8 +1851,8 @@ bool ONScripter::processText()
                  script_h.checkClickstr(&script_h.getStringBuffer()[string_buffer_offset+1]) == 1 &&
                  script_h.getEndStatus() & ScriptHandler::END_1BYTE_CHAR){
 #if defined(INSANI)
-            // reset all font styles at the end of each line
-            sentence_font.setStyle(0, 0, 0, 0);
+            // reset all font styles at the end of each line -- this is no longer necessary as of release "D3"
+            //sentence_font.setStyle(0, 0, 0, 0);
 #endif
             if ( script_h.getStringBuffer()[ string_buffer_offset + 2 ] &&
                  script_h.checkClickstr(&script_h.getStringBuffer()[string_buffer_offset+2]) > 0){
