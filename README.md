@@ -9,7 +9,7 @@
 # English
 
 ## Last Updated
-2023-04-20
+2023-04-23
 
 ## Introduction and History
 onscripter-insani is a branch of [ONScripter](https://onscripter.osdn.jp/onscripter.html), which is an active project as of 2022.  ONScripter is a clean-room open-source implementation of NScripter -- a novel game creation engine that arguably helped to bootstrap the novel game boom in Japan.  Many companies used NScripter in order to create some of the classics of the genre, notable examples being みずいろ (*Mizuiro*) by Nekonekosoft and 月姫 (*Tsukihime*) by TYPE-MOON.
@@ -203,7 +203,7 @@ For Windows, the MINGW64 DLLs are widely compatible with any modern version of x
 ## Errata and Curiosities
 
 ### Fonts
-onscripter-insani relies upon having a default font file available to it.  Historically, this had to be named ```default.ttf``` and placed in the same directory as the onscripter-insani executable or, in the case of macOS App Bundles, the Contents/Resources subdirectory of the App Bundle in question.  As of 20230420 "Capcom", though, there is support for OpenType and for OpenType/TrueType font collections, so onscripter-insani now looks for, in order:
+onscripter-insani relies upon having a default font file available to it.  Historically, this had to be named ```default.ttf``` and placed in the same directory as the onscripter-insani executable or, in the case of macOS App Bundles, the Contents/Resources subdirectory of the App Bundle in question.  We now provide support for OpenType and for OpenType/TrueType font collections, so onscripter-insani now looks for, in order:
 
 - ```default.ttf```
 - ```default.ttc```
@@ -223,14 +223,14 @@ For *maximum compatibility with Japanese language games*, you will want a defaul
 - [Migu 2M/2M Bold](http://mix-mplus-ipa.osdn.jp/)
 - [Sazanami Gothic](https://osdn.net/projects/efont/releases/)
 
-However, since 20230420 "Capcom" onscripter-insani has production UTF8 and proportional font support -- meaning that you can use just about any font with your translation project so long as it has the necessary glyphs.  For instance, an English-language translation project will generally only need a font that covers the Latin-1 spectrum (which is most fonts in existence).  A sampling of proportional fonts known to work well with 20230420 "Capcom" and above in English includes:
+However, onscripter-insani has production UTF8 and proportional font support -- meaning that you can use just about any font with your translation project so long as it has the necessary glyphs.  For instance, an English-language translation project will generally only need a font that covers the Latin-1 spectrum (which is most fonts in existence).  A sampling of proportional fonts known to work well with onscripter-insani in English includes:
 
 - [The DejaVu Family](https://dejavu-fonts.github.io/)
 - [The Noto Family](https://fonts.google.com/noto)
 - [Comic Sans](https://en.wikipedia.org/wiki/Comic_Sans)
 
 #### Bold and Italics
-If you wish to enable these text styles, as of 20230420 "Capcom" you may use the following syntax within text:
+If you wish to enable these text styles, you may use the following syntax within text:
 
 ```
 `This is ~b~bold~b~; this is ~i~italics~i~; this is ~bi~bold italics~bi~.
@@ -250,14 +250,14 @@ will work just fine, it is better to write:
 
 as this will help give your script maximum compatibility across NScripter-derived engines that utilize this font styling syntax.
 
-All other instances of ```~``` are treated like normal printing characters.  This is explicitly only enabled for UTF8 mode at this time.  As of 20230420 "Capcom", faux bold and faux italics styles are provided out-of-the-box.  In future releases, we will allow you to load true bold/italics/bold italics styles as different fonts at startup as follows:
+All other instances of ```~``` are treated like normal printing characters.  This is explicitly only enabled for UTF8 mode at this time.  Faux bold and faux italics styles are provided out-of-the-box if you only specify a single default font file.  We also allow you to specify true bold/italics/bold italics styles as different fonts at startup as follows:
 
 - ```default.ttf/.otf/.ttc/.otc```: normal style
 - ```default-b.ttf/.otf/.ttc/.otc```: bold style
 - ```default-i.ttf/.otf/.ttc/.otc```: italics style
 - ```default-bi.ttf/.otf/.ttc/.otc```: bold italics style
 
-All of the above will have to have the same file extension (all ```.ttf``` for instance).
+All of the above will have to have the same file extension (all ```.ttf``` for instance).  If you specify a true bold/italics/bold italics font file, the corresponding faux will be turned off accordingly -- for instance, if you have a ```default.ttf``` and a ```default-i.ttf``` but nothing else, faux italics will be off, but faux bold and faux bold italics will remain on.  This is in support of cases where you simply wish to use a different font rather than using the actual bold/italics/bold italics style of the same font.
 
 ### UTF8 vs. SHIFT_JIS Encoded Files
 Most of the files in this project are encoded as UTF8.  However, there are several files in particular that are encoded as SHIFT_JIS, those being:
