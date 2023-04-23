@@ -259,6 +259,8 @@ All other instances of ```~``` are treated like normal printing characters.  Thi
 
 All of the above will have to have the same file extension (all ```.ttf``` for instance).  If you specify a true bold/italics/bold italics font file, the corresponding faux will be turned off accordingly -- for instance, if you have a ```default.ttf``` and a ```default-i.ttf``` but nothing else, faux italics will be off, but faux bold and faux bold italics will remain on.  This is in support of cases where you simply wish to use a different font rather than using the actual bold/italics/bold italics style of the same font.
 
+We have also added experimental support of underlining (```~u~```, predictably), but this support is highly experimental and we do not recommend that you use it at this time.
+
 ### UTF8 vs. SHIFT_JIS Encoded Files
 Most of the files in this project are encoded as UTF8.  However, there are several files in particular that are encoded as SHIFT_JIS, those being:
 
