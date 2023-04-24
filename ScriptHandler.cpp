@@ -1070,13 +1070,25 @@ int ScriptHandler::readScript( char *path )
         encrypt_mode = 0;
         file_extension = ".utf";
         enc.setEncoding(Encoding::CODE_UTF8);
-        printf("0.utf detected.  Entering UTF8 Mode.\n");
+        printf("0.utf detected; entering UTF8 Mode\n");
+    }
+    else if ((fp = fopen("0.utf.txt", "rb")) != NULL){
+        encrypt_mode = 0;
+        file_extension = ".utf.txt";
+        enc.setEncoding(Encoding::CODE_UTF8);
+        printf("0.utf.txt detected; entering UTF8 Mode\n");
     }
     else if ((fp = fopen("00.utf", "rb")) != NULL){
         encrypt_mode = 0;
         file_extension = ".utf";
         enc.setEncoding(Encoding::CODE_UTF8);
-        printf("00.utf detected.  Entering UTF8 Mode.\n");
+        printf("00.utf detected; entering UTF8 Mode\n");
+    }
+    else if ((fp = fopen("00.utf.txt", "rb")) != NULL){
+        encrypt_mode = 0;
+        file_extension = ".utf.txt";
+        enc.setEncoding(Encoding::CODE_UTF8);
+        printf("00.utf.txt detected; entering UTF8 Mode\n");
     }
 #endif
     else if ((fp = fopen("nscr_sec.dat", "rb")) != NULL){
