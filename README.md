@@ -200,9 +200,14 @@ dependent in a way that the dylibs are not.  Furthermore, for the purposes of ma
 
 For Windows, the MINGW64 DLLs are widely compatible with any modern version of x86-64 Windows, and in the case that they become incompatible, replacement with updated versions will be easy.
 
-## Errata and Curiosities
+## Features and Errata
 
-### Fonts
+### Features
+
+#### UTF8 Mode
+onscripter-insani has a fully-supported, backward-compatible UTF8 Mode.  It will automatically enter UTF8 mode if you have a ```0.utf``` or a ```0.utf.txt``` instead of a ```0.txt```.
+
+#### Fonts
 onscripter-insani relies upon having a default font file available to it.  Historically, this had to be named ```default.ttf``` and placed in the same directory as the onscripter-insani executable or, in the case of macOS App Bundles, the Contents/Resources subdirectory of the App Bundle in question.  We now provide support for OpenType and for OpenType/TrueType font collections, so onscripter-insani now looks for, in order:
 
 - ```default.ttf```
@@ -229,7 +234,7 @@ However, onscripter-insani has production UTF8 and proportional font support -- 
 - [The Noto Family](https://fonts.google.com/noto)
 - [Comic Sans](https://en.wikipedia.org/wiki/Comic_Sans)
 
-#### Bold and Italics
+##### Bold and Italics
 If you wish to enable these text styles, you may use the following syntax within text:
 
 ```
@@ -261,7 +266,9 @@ All of the above will have to have the same file extension (all ```.ttf``` for i
 
 We have also added experimental support of underlining (```~u~```, predictably), but this support is highly experimental and we do not recommend that you use it at this time.
 
-### UTF8 vs. SHIFT_JIS Encoded Files
+### Errata
+
+#### UTF8 vs. SHIFT_JIS Encoded Files
 Most of the files in this project are encoded as UTF8.  However, there are several files in particular that are encoded as SHIFT_JIS, those being:
 
 - ```ONScripter_rmenu.cpp```
@@ -273,10 +280,10 @@ That is because these files have several strings that *must be in their original
 
 All this to say: if you want to contribute to onscripter-insani, **make extra sure that these files are encoded as SHIFT_JIS and not UTF8**.  You will cause random crashes all over the place, usually upon startup in UTF8 mode, if you do not.
 
-### SDL_mixer and MP3 Playback
+#### SDL_mixer and MP3 Playback
 The default precompiled libraries for SDL_mixer on both MSYS2 and Homebrew do not enable support for MP3 playback.  If you want MP3 playback, you are going to have to compile your own SDL_mixer as an end result.  Instructions below:
 
-#### macOS
+##### macOS
 The easiest way to achieve a redistributable SDL_mixer 1.2.12 with MP3 playback enabled on Homebrew is to edit the Formula for SDL_mixer.  Do as follows:
 
 ```
@@ -339,7 +346,7 @@ This should rebuild SDL_mixer with MP3 support, and put it in the right place.
 
 As a final note, it's been known for the source code download to fail.  You may have to use [this URL](https://downloads.sourceforge.net/project/libsdl/SDL_mixer/1.2.12/SDL_mixer-1.2.12.tar.gz?ts=gAAAAABkOLOQCC9jEAqgEZajvI2a4ok_TF2WDqrk-rDCCOnmq8w2pI0vwLB3egonw2e-xodO02o2vCytb1anEdOZOVBY1Z7DKg%3D%3D) instead of the default listed URL in the Formula.
 
-#### Windows
+##### Windows
 Download the [SDL_mixer 1.2.12 source zip](https://sourceforge.net/projects/libsdl/files/SDL_mixer/1.2.12/SDL_mixer-1.2.12.zip/download), and unzip it into your MSYS2 home folder (```C:\msys64\home\username```).  Open up the MINGW64 environment of MSYS2, go to the ```SDL_mixer-1.2.12``` directory, then run:
 
 ```
@@ -349,7 +356,7 @@ make
 
 Once this is done, you can navigate into the ```build``` subdirectory and find ```SDL_mixer.dll```.  This is the DLL you should be packaging alongside your onscripter-insani redistributable.  There is no need to recompile onscripter-insani; simply use this DLL and MP3 playback will automagically work.
 
-### The Behavior of ```@```
+#### The Behavior of ```@```
 In NScripter, the presence of an ```@``` in a text block triggers what is known as the clickwait state.  In this state, the program waits for you to click before advancing the text any further.  It's often used to create a deliberate pause for dramatic or comedic effect.  The way ```@``` is supposed to work, if you had a line that goes
 
 ```
