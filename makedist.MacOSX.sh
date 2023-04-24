@@ -34,7 +34,7 @@ echo "<?xml version=\"1.0\" encoding=\"UTF-8\"?>
   <key>CFBundleIconFile</key>
   <string>$APP_NAME.icns</string>
   <key>CFBundleShortVersionString</key>
-  <string>2023050x</string>
+  <string>20230423</string>
   <key>CFBundleVersion</key>
   <string>D3</string>
   <key>CFBundleInfoDictionaryVersion</key>
