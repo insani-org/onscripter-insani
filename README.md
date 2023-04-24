@@ -388,6 +388,26 @@ ONScripter.  Contact us through Github instead:
 ## Changelog
 *For more detailed release notes, please go [here](https://github.com/insani-org/onscripter-insani/releases).*
 
+### 20230423 "D3"
+#### All
+- True bold, italics, and bold italics font style supported through supplemental font files (but no proper kerning yet):
+  - ```default-b.ttf/.ttc/.otf/.otc``` for bold
+  - ```default-i.ttf/.ttc/.otf/.otc``` for italics
+  - ```default-bi.ttf/.ttc/.otf/.otc``` for bold italics
+  - All font files must have the same file extension; in other words, they must all be ```.ttf``` or all ```.ttc``` or all ```.otf``` or all ```.otc```
+- Mixing and matching of entirely different fonts is possible through the above
+- Proper glyph metrics and hinting for faux font styles (but not proper kerning yet)
+- ```0.utf.txt``` and ```00.utf.txt``` are now acceptable script names for UTF8-encoded script files
+- *Highly experimental* support for underlines (```~u~```, predictably)
+  - Use at your own risk
+  - Here there be dragons
+  - OMGWTFOTL :3
+- Version string updated to 20230423 "D3"
+#### macOS
+- ```makedist.MacOSX.sh``` updated to 20230423 "D3"
+#### YMMV
+- See ```README.md``` section about [updated font requirements](https://github.com/insani-org/onscripter-insani#fonts)
+
 ### 20230420 "Capcom"
 #### All
 - New UTF8 mode
