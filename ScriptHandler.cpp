@@ -1104,7 +1104,7 @@ int ScriptHandler::readScript( char *path )
         encrypt_mode = 1;
         enc.setEncoding(Encoding::CODE_UTF8);
 #if defined(INSANI)
-        printf("pscript.dat detected.  Entering UTF8 Mode.\n");
+        printf("pscript.dat detected; entering UTF8 Mode\n");
 #endif
     }
 

@@ -227,13 +227,13 @@ int ONScripter::drawGlyph( SDL_Surface *dst_surface, FontInfo *info, SDL_Color &
         SDL_FreeSurface(tmp_surface);
 
 #if defined(INSANI)
-    if((info->style_bold && !info->style_italics && faux_bold) || (!info->style_bold && info->style_italics && faux_italics) || (info->style_bold && info->style_italics && faux_bolditalics))
+    if(!english_mode || (info->style_bold && !info->style_italics && faux_bold) || (!info->style_bold && info->style_italics && faux_italics) || (info->style_bold && info->style_italics && faux_bolditalics))
     {
-        // do not use harfbuzz metrics if we are in a faux style
+        // do not use harfbuzz metrics if we are in a faux style or we are not in English mode
     }
-    else
+    else if(script_h.enc.getEncoding() == Encoding::CODE_UTF8)
     {
-        // for normal, true bold, true italics, and true bold italics, use harfbuzz
+        // for normal, true bold, true italics, and true bold italics, whilst in UTF8 mode, use harfbuzz
         hb_buffer_t *hb_buf;
         hb_buf = hb_buffer_create();
         hb_buffer_add_utf8(hb_buf, text, strlen(text), 0, strlen(text));
@@ -261,6 +261,11 @@ int ONScripter::drawGlyph( SDL_Surface *dst_surface, FontInfo *info, SDL_Color &
         double hb_advanced = (double) glyph_pos[0].x_advance * (double) ptem / (double) upem;
         advanced = round(hb_advanced);
         //printf("drawGlyph :: advanced: %d : hb_advanced: %f\n", advanced, hb_advanced);
+
+        hb_buffer_destroy(hb_buf);
+        hb_font_destroy(hb_font);
+        hb_face_destroy(hb_face);
+        hb_blob_destroy(blob);
     }
 #endif
     
