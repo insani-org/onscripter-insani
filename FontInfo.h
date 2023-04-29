@@ -62,6 +62,7 @@ public:
     bool faux_bold;
     bool faux_italics;
     bool faux_bolditalics;
+    int point_size;
 #endif
 
     int line_offset_xy[2]; // ruby offset for each line
@@ -83,6 +84,7 @@ public:
 #if defined(INSANI)
     int getStyle();
     void setStyle(int style, bool bold, bool italics, bool underline);
+    inline int getPointSize() { return point_size; }
 #endif
     void toggleStyle(int style);
     

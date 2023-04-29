@@ -62,6 +62,7 @@ FontInfo::FontInfo()
 #if defined(INSANI)
     ttf_font[2] = ttf_font[3] = ttf_font[4] = ttf_font[5] = ttf_font[6] = ttf_font[7] = NULL;
     faux_bold = faux_italics = faux_bolditalics = false;
+    point_size = 0;
 #endif
 
     color[0]        = color[1]        = color[2]        = 0xff;
@@ -111,6 +112,10 @@ void *FontInfo::openFont( char *font_file, int ratio1, int ratio2 )
     if (enc->getEncoding() != Encoding::CODE_UTF8 &&
         font_size_xy[0] < font_size_xy[1])
         font_size = font_size_xy[0];
+
+#if defined(INSANI)
+    point_size = font_size * ratio1 / ratio2;
+#endif
     
     FontContainer *fc = &root_font_container;
     while( fc->next ){

@@ -804,6 +804,7 @@ private:
     int  u8strlen(const char *s);
     int  strpxlen(const char *buf, FontInfo *fi, bool *bold_flag, bool *italics_flag);
     int  getPixelLength(const char *buf, FontInfo *fi, bool *bold_flag, bool *italics_flag);
+    void getNextChar(const char *buf, int offset, const char *curr_char, const char *next_char);
 #endif
     int  textCommand();
     bool checkLineBreak(const char *buf, FontInfo *fi);

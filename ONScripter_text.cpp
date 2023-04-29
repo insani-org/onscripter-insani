@@ -22,6 +22,10 @@
  */
 
 #include "ONScripter.h"
+#if defined(INSANI)
+#include <hb.h>
+#include <math.h>
+#endif
 
 extern unsigned short convSJIS2UTF16( unsigned short in );
 
@@ -71,7 +75,30 @@ void ONScripter::shiftHalfPixelY(SDL_Surface *surface)
 
 int ONScripter::drawGlyph( SDL_Surface *dst_surface, FontInfo *info, SDL_Color &color, char* text, int xy[2], AnimationInfo *cache_info, SDL_Rect *clip, SDL_Rect &dst_rect )
 {
+#if defined(INSANI)
+    char first_text[4];
+    first_text[0] = first_text[1] = first_text[2] = first_text[3] = '\0';
+    int first_text_bytes = script_h.enc.getBytes(text[0]);
+    switch(first_text_bytes)
+    {
+        case 1:
+            first_text[0] = text[0];
+            break;
+        case 2:
+            first_text[0] = text[0];
+            first_text[1] = text[1];
+            break;
+        case 3:
+            first_text[0] = text[0];
+            first_text[1] = text[1];
+            first_text[2] = text[2];
+        default:
+            break;
+    }
+    unsigned short unicode = script_h.enc.getUTF16(first_text);
+#else
     unsigned short unicode = script_h.enc.getUTF16(text);
+#endif
 
     int minx, maxx, miny, maxy, advanced;
     int normal_minx, normal_maxx, normal_miny, normal_maxy, normal_advanced;
@@ -88,7 +115,7 @@ int ONScripter::drawGlyph( SDL_Surface *dst_surface, FontInfo *info, SDL_Color &
     else if(info->style_bold && info->style_italics) font_index = 6;
     else font_index = 0;
     TTF_GlyphMetrics( (TTF_Font*)info->ttf_font[0], unicode,
-                      &normal_minx, &normal_maxx, &normal_miny, &normal_maxy, &advanced );
+                      &normal_minx, &normal_maxx, &normal_miny, &normal_maxy, &normal_advanced );
     TTF_GlyphMetrics( (TTF_Font*)info->ttf_font[font_index], unicode,
                       &minx, &maxx, &miny, &maxy, &advanced );
     //printf("min %d %d %d %d %d %d\n", minx, maxx, miny, maxy, advanced,TTF_FontAscent((TTF_Font*)info->ttf_font[font_index])  );
@@ -198,6 +225,44 @@ int ONScripter::drawGlyph( SDL_Surface *dst_surface, FontInfo *info, SDL_Color &
         SDL_FreeSurface(tmp_surface_s);
     if (tmp_surface)
         SDL_FreeSurface(tmp_surface);
+
+#if defined(INSANI)
+    if((info->style_bold && !info->style_italics && faux_bold) || (!info->style_bold && info->style_italics && faux_italics) || (info->style_bold && info->style_italics && faux_bolditalics))
+    {
+        // do not use harfbuzz metrics if we are in a faux style
+    }
+    else
+    {
+        // for normal, true bold, true italics, and true bold italics, use harfbuzz
+        hb_buffer_t *hb_buf;
+        hb_buf = hb_buffer_create();
+        hb_buffer_add_utf8(hb_buf, text, strlen(text), 0, strlen(text));
+        hb_buffer_guess_segment_properties(hb_buf);
+
+        hb_blob_t *blob = NULL;
+
+        if(!info->style_bold && !info->style_italics) blob = hb_blob_create_from_file(font_file);
+        else if(info->style_bold && !info->style_italics) blob = hb_blob_create_from_file(font_bold_file);
+        else if(!info->style_bold && info->style_italics) blob = hb_blob_create_from_file(font_italics_file);
+        else if(info->style_bold && info->style_italics) blob = hb_blob_create_from_file(font_bolditalics_file);
+
+        hb_face_t *hb_face = hb_face_create(blob, 0);
+        hb_font_t *hb_font = hb_font_create(hb_face);
+        int ptem = info->getPointSize();
+        //printf("drawGlyph :: ptem: %d\n", ptem);
+        hb_font_set_ptem(hb_font, ptem);
+        unsigned int upem = hb_face_get_upem(hb_face);
+        //printf("drawGlyph :: upem: %d\n", upem);
+
+        hb_shape(hb_font, hb_buf, NULL, 0);
+        unsigned int glyph_count = 0;
+        hb_glyph_info_t *glyph_info = hb_buffer_get_glyph_infos(hb_buf, &glyph_count);
+        hb_glyph_position_t *glyph_pos = hb_buffer_get_glyph_positions(hb_buf, &glyph_count);
+        double hb_advanced = (double) glyph_pos[0].x_advance * (double) ptem / (double) upem;
+        advanced = round(hb_advanced);
+        //printf("drawGlyph :: advanced: %d : hb_advanced: %f\n", advanced, hb_advanced);
+    }
+#endif
     
     return advanced;
 }
@@ -1103,6 +1168,24 @@ int ONScripter::getPixelLength(const char *buf, FontInfo *fi, bool *bold_flag, b
     }
 
     return orig_length;
+}
+
+/*
+ * void getNextChar(const char *buf, int offset, const char *curr_char, const char *next_char)
+ * --
+ * A function that returns the current true printing character (curr_char) and
+ * next true printing character (next_char) in the current buffer.  This buffer
+ * will usually be script_h's stringBuffer, but can also be current_page->text
+ * in log mode.  In essence this is a helper function, as otherwise we would
+ * have to do this over and over in different sections.  Assumes that both
+ * curr_char and next_char are char[4].
+ */
+void ONScripter::getNextChar(const char *buf, int offset, const char *curr_char, const char *next_char)
+{
+    // first, try to find first printable character
+    int i = offset;
+    //curr_char = buf[i];
+
 }
 
 #endif
