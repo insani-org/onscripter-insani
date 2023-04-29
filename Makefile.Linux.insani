@@ -24,7 +24,7 @@ EXT_OBJS =
 # mandatory: SDL, SDL_ttf, SDL_image, SDL_mixer, bzip2, libjpeg
 DEFS = -DLINUX
 INCS = `sdl-config --cflags`
-LIBS = `sdl-config --libs` -lSDL_ttf -lSDL_image -lSDL_mixer -lbz2 -ljpeg -lm
+LIBS = `sdl-config --libs` -lSDL_ttf -lSDL_image -lSDL_mixer -lbz2 -ljpeg -lm -lharfbuzz
 
 # recommended: smpeg
 DEFS += -DUSE_SMPEG
