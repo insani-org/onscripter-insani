@@ -9,7 +9,7 @@
 # English
 
 ## Last Updated
-2023-04-30
+2023-05-01
 
 ## Introduction and History
 onscripter-insani is a branch of [ONScripter](https://onscripter.osdn.jp/onscripter.html), which is an active project as of 2022.  ONScripter is a clean-room open-source implementation of NScripter -- a novel game creation engine that arguably helped to bootstrap the novel game boom in Japan.  Many companies used NScripter in order to create some of the classics of the genre, notable examples being みずいろ (*Mizuiro*) by Nekonekosoft and 月姫 (*Tsukihime*) by TYPE-MOON.
@@ -267,7 +267,7 @@ All of the above will have to have the same file extension (all ```.ttf``` for i
 We have also added experimental support of underlining (```~u~```, predictably), but this support is highly experimental and we do not recommend that you use it at this time.
 
 #### Kerning and Ligatures
-As of 2023050x "élf", onscripter-insani supports true kerning of proportional fonts.  onscripter-insani only enters true kerning mode when the following conditions are satisfied:
+As of 20230501 "élf", onscripter-insani supports true kerning of proportional fonts.  onscripter-insani only enters true kerning mode when the following conditions are satisfied:
 
 - UTF8 mode (your script file is named ```0.utf```, ```00.utf```, ```0.utf.txt```, or ```00.utf.txt``` and is properly UTF8-encoded)
 - The font is a proportional font (for obvious reasons; you can't very well kern a monospaced font)
@@ -403,6 +403,20 @@ ONScripter.  Contact us through Github instead:
 
 ## Changelog
 *For more detailed release notes, please go [here](https://github.com/insani-org/onscripter-insani/releases).*
+
+### 20230501 "élf"
+#### All
+- Integrated harfbuzz for accuracy of glyph shaping and kerning
+- True kerning in UTF8 mode for proportional fonts
+  - Kerning will not function for faux font styles
+  - Due to harfbuzz integration, will work with every font that has either a ```kern``` table or a ```GPOS``` table (that's any modern font)
+- Floating point precision for glyph placement
+- Several bugfixes now trigger on ```english_mode``` rather than ```legacy_english_mode```
+- Version string updated to 20230501 "élf"
+#### macOS
+- ```makedist.MacOSX.sh``` updated to 20230501 "élf"
+#### YMMV
+- See ```README.md``` section about [kerning and ligatures](https://github.com/insani-org/onscripter-insani#kerning-and-ligatures) and how to trigger true kerning mode
 
 ### 20230423 "D3"
 #### All
