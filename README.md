@@ -9,7 +9,7 @@
 # English
 
 ## Last Updated
-2023-04-23
+2023-04-30
 
 ## Introduction and History
 onscripter-insani is a branch of [ONScripter](https://onscripter.osdn.jp/onscripter.html), which is an active project as of 2022.  ONScripter is a clean-room open-source implementation of NScripter -- a novel game creation engine that arguably helped to bootstrap the novel game boom in Japan.  Many companies used NScripter in order to create some of the classics of the genre, notable examples being みずいろ (*Mizuiro*) by Nekonekosoft and 月姫 (*Tsukihime*) by TYPE-MOON.
@@ -265,6 +265,22 @@ All other instances of ```~``` are treated like normal printing characters.  Thi
 All of the above will have to have the same file extension (all ```.ttf``` for instance).  If you specify a true bold/italics/bold italics font file, the corresponding faux will be turned off accordingly -- for instance, if you have a ```default.ttf``` and a ```default-i.ttf``` but nothing else, faux italics will be off, but faux bold and faux bold italics will remain on.  This is in support of cases where you simply wish to use a different font rather than using the actual bold/italics/bold italics style of the same font.
 
 We have also added experimental support of underlining (```~u~```, predictably), but this support is highly experimental and we do not recommend that you use it at this time.
+
+#### Kerning and Ligatures
+As of 2023050x "élf", onscripter-insani supports true kerning of proportional fonts.  onscripter-insani only enters true kerning mode when the following conditions are satisfied:
+
+- UTF8 mode (your script file is named ```0.utf```, ```00.utf```, ```0.utf.txt```, or ```00.utf.txt``` and is properly UTF8-encoded)
+- The font is a proportional font (for obvious reasons; you can't very well kern a monospaced font)
+- The font you are using is a true font, and not a faux font style
+  - In practice, this means that the default normal-style font will always use true kerning in UTF8 mode, so long as it's a proportional font
+  - If you supply proportional fonts as ```default-b/-i/-bi.ttf/.ttc/.otf/.otc``` they too will be properly kerned
+
+Anything else defaults to either monospaced mode (if your font is monospaced) or, for proportional fonts, safe kerning mode, in which no attempt to kern past the standard x- and y-advance of each glyph as a singleton is made.
+
+If ligatures exist as single characters to begin with, those ligatures will be treated as single characters.  A notable example of such a ligature is ```ß``` (otherwise known as an Eszett), the German ligature for "ss/sz".  On the other hand, there exist synthesized ligatures for common pairs/tuples of characters.  In english, ```fi```, ```ff```, and ```ffi``` are all convertable into single-glyph ligatures and are often so converted for print purposes.  In the case of these synthesized ligatures, onscripter-insani deliberately makes sure that these ligatures are disallowed in the character drawing process.  The reasons behind this are as follows:
+
+1. NScripter displays characters *one character after another*, with a timed delay on a per-character basis; allowing synthesized ligatures necessarily means that several characters will appear to print *at the same time*
+2. NScripter, through the ```setwindow``` series of commands, allows you to set per-character pixel padding; *it is impossible to allow synthesized ligatures in this setting*
 
 ### Errata
 
