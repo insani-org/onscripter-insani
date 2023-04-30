@@ -788,7 +788,11 @@ private:
     
     void shiftHalfPixelX(SDL_Surface *surface);
     void shiftHalfPixelY(SDL_Surface *surface);
+#if defined(INSANI)
+    float drawGlyph( SDL_Surface *dst_surface, FontInfo *info, SDL_Color &color, char *text, int xy[2], AnimationInfo *cache_info, SDL_Rect *clip, SDL_Rect &dst_rect );
+#else
     int  drawGlyph( SDL_Surface *dst_surface, FontInfo *info, SDL_Color &color, char *text, int xy[2], AnimationInfo *cache_info, SDL_Rect *clip, SDL_Rect &dst_rect );
+#endif
     void openFont(FontInfo *fi);
     void drawChar( char* text, FontInfo *info, bool flush_flag, bool lookback_flag, SDL_Surface *surface, AnimationInfo *cache_info, SDL_Rect *clip=NULL );
     void drawString( const char *str, uchar3 color, FontInfo *info, bool flush_flag, SDL_Surface *surface, SDL_Rect *rect = NULL, AnimationInfo *cache_info=NULL, bool pack_hankaku=true );
@@ -802,9 +806,9 @@ private:
     void endRuby(bool flush_flag, bool lookback_flag, SDL_Surface *surface, AnimationInfo *cache_info);
 #if defined(INSANI)
     int  u8strlen(const char *s);
-    int  strpxlen(const char *buf, FontInfo *fi, bool *bold_flag, bool *italics_flag);
-    int  getPixelLength(const char *buf, FontInfo *fi, bool *bold_flag, bool *italics_flag);
-    void getNextChar(const char *buf, int offset, const char *curr_char, const char *next_char);
+    float strpxlen(const char *buf, FontInfo *fi, bool *bold_flag, bool *italics_flag);
+    float getPixelLength(const char *buf, FontInfo *fi, bool *bold_flag, bool *italics_flag);
+    void getNextChar(const char *buf, int offset, char *out_chars);
 #endif
     int  textCommand();
     bool checkLineBreak(const char *buf, FontInfo *fi);
