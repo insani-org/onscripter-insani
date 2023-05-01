@@ -17,11 +17,13 @@ cp "$APP_NAME.icns" "$APP_NAME.app/Contents/Resources/$APP_NAME.icns"
 dylibbundler -od -b -x "$APP_NAME.app/Contents/MacOS/$APP_NAME" -p @executable_path/../Frameworks/ -d "$APP_NAME.app/Contents/Frameworks/"
 
 # Look for libSDL2-2.0.0.dylib in the right place depending on whether we're on an arm64 or an x86-64 Mac
-if [[ $ARCH -eq "arm64" ]]
+if [[ $ARCH = "arm64" ]]
 then
-    cp /opt/homebrew/Cellar/sdl2/2.26.5/lib/libSDL2-2.0.0.dylib "$APP_NAME.app/Contents/Frameworks"
+    SDL2LOC=$(readlink /opt/homebrew/lib/libSDL2-2.0.0.dylib)
+    cp /opt/homebrew/lib/$SDL2LOC "$APP_NAME.app/Contents/Frameworks"
 else
-    cp /usr/local/Cellar/sdl2/2.26.5/lib/libSDL2-2.0.0.dylib "$APP_NAME.app/Contents/Frameworks"
+    SDL2LOC=$(readlink /usr/local/lib/libSDL2-2.0.0.dylib)
+    cp /usr/local/lib/$SDL2LOC "$APP_NAME.app/Contents/Frameworks"
 fi
 
 echo "<?xml version=\"1.0\" encoding=\"UTF-8\"?>
