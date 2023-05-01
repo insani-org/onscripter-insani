@@ -103,8 +103,7 @@
 #
 # https://stackoverflow.com/questions/64652704/how-to-notarize-an-macos-command-line-tool-created-outside-of-xcode
 #
-ARCH := $(shell arch)
-ifeq ($ARCH,arm64)
+ifeq ($(shell arch), arm64)
 # Turn this on for ARM64
 INCS = `sdl-config --cflags` `smpeg-config --cflags` `freetype-config --cflags` -I/opt/homebrew/include -I/opt/homebrew/include/harfbuzz
 else
