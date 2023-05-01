@@ -18,7 +18,7 @@
 # omit sardec and nsadec, and instead build using MINGW64 -- which is
 # maximally compatible with every modern Windows version in existence.
 #
-INCS = `sdl-config --cflags` `smpeg-config --cflags` -IC:\msys64\mingw64\include\freetype2 -IC:\msys64\mingw64\include\libpng16 -IC:\msys64\mingw64\include\harfbuzz
+INCS = `sdl-config --cflags` `smpeg-config --cflags` -IC:/msys64/mingw64/include/freetype2 -IC:/msys64/mingw64/include/libpng16 -IC:/msys64/mingw64/include/harfbuzz
 
 LIBS = `sdl-config --libs` `smpeg-config --libs` -lfreetype -lSDL_ttf -lSDL_image -lSDL_mixer -lbz2 -lm -ljpeg -liconv -logg -lvorbis -lharfbuzz
 DEFS = -DWIN32 -DUSE_CDROM -DUTF8_CAPTION -DUNICODE -D_UNICODE -DUSE_OGG_VORBIS -DENABLE_1BYTE_CHAR -DFORCE_1BYTE_CHAR -DINSANI
