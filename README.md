@@ -58,6 +58,7 @@ Should you wish to contribute code to onscripter-insani, we'd ask that you follo
 ### Required Libraries
 - libjpeg
 - bzip2
+- harfbuzz
 - One of:
   - SDL-2.0 **and** SDL1.2-compat
   - SDL-1.2
@@ -70,7 +71,6 @@ Should you wish to contribute code to onscripter-insani, we'd ask that you follo
 - SMPEG
 - libogg
 - libvorbis
-- libmad
 
 ### Required Utilities (macOS)
 - dylibbundler
@@ -85,7 +85,7 @@ Every Linux distribution will have its own package manager.  Simply make sure yo
 After you have installed [Homebrew](https://brew.sh), simply do:
 
 ```
-brew install jpeg jpeg-turbo bzip2 sdl2 sdl12-compat sdl_image sdl_mixer sdl_ttf smpeg libogg libvorbis mad make dylibbundler
+brew install jpeg jpeg-turbo bzip2 harfbuzz sdl2 sdl12-compat sdl_image sdl_mixer sdl_ttf smpeg libogg libvorbis mad make dylibbundler
 ```
 
 You will want to make sure that Homebrew's libraries directory:
@@ -118,7 +118,7 @@ pacman -Syuu
 This will likely cause MSYS2 to close.  Relaunch into the MINGW64 environment and run that command again until nothing further happens.  Then run:
 
 ```
-pacman -S mingw-w64-x86_64-SDL mingw-w64-x86_64-SDL_ttf mingw-w64-x86_64-SDL_mixer mingw-w64-x86_64-SDL_image mingw-w64-x86_64-bzip2 mingw-w64-x86_64-libogg mingw-w64-x86_64-libvorbis mingw-w64-x86_64-freetype mingw-w64-x86_64-smpeg mingw-w64-x86_64-iconv mingw-w64-x86_64-zlib mingw-w64-x86_64-toolchain
+pacman -S mingw-w64-x86_64-SDL mingw-w64-x86_64-SDL_ttf mingw-w64-x86_64-SDL_mixer mingw-w64-x86_64-SDL_image mingw-w64-x86_64-bzip2 mingw-w64-x86_64-libogg mingw-w64-x86_64-libvorbis mingw-w64-x86_64-freetype mingw-w64-x86_64-smpeg mingw-w64-x86_64-iconv mingw-w64-x86_64-zlib mingw-w64-x86_64-toolchain mingw-w64-x86_64-harfbuzz
 ```
 
 ## Compilation Instructions
