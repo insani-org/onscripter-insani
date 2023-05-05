@@ -5,12 +5,11 @@
 *.exe
 *.app
 *.dmg
+dmg/**
 onscripter
 nsadec
 nsaconv
 sardec
 sarconv
-dmg/**
-*.dmg
 winDLL/**
 dist/**
