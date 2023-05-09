@@ -525,9 +525,17 @@ void ONScripter::drawString(const char *str, uchar3 color, FontInfo *info, bool 
             text[0] = *str++;
             if (*str && *str != 0x0a && pack_hankaku &&
                 script_h.enc.getEncoding() == Encoding::CODE_CP932)
+#if defined(INSANI)
+            {
+                if(english_mode || legacy_english_mode) text[1] = *(str+1);
+                else text[1] = *str++;
+            }
+#else
                 text[1] = *str++;
+#endif
             else
                 text[1] = 0;
+            printf("drawString :: text: %s\n", text);
             drawChar( text, info, false, false, surface, cache_info );
         }
     }
