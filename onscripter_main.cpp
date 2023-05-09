@@ -395,7 +395,7 @@ int main( int argc, char **argv )
             break;
         case 1:
             printf("ERO\\4TW Unprotected Mode Run-time version %s\n", INSANI_VERSION);
-            printf("Copyright (c) Irrational Insanity Spirit, Inc. 2005-2023\n");
+            printf("Copyright (c) Irrational Insanity Spirit, Inc. 2005-present\n");
             break;
         case 0:
         default:
