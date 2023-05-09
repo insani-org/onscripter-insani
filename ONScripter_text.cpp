@@ -535,7 +535,6 @@ void ONScripter::drawString(const char *str, uchar3 color, FontInfo *info, bool 
 #endif
             else
                 text[1] = 0;
-            printf("drawString :: text: %s\n", text);
             drawChar( text, info, false, false, surface, cache_info );
         }
     }
