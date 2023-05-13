@@ -52,6 +52,7 @@ All changes made by onscripter-insani are wrapped in ```#if defined(INSANI) ... 
 Should you wish to contribute code to onscripter-insani, we'd ask that you follow that convention.
   
 ## Required and Recommended Libraries/Utilities
+- For GNU/Linux, our build system assumes that you are using [Arch Linux](https://archlinux.org/) or a derivative (*e.g.* [EndeavourOS](https://endeavouros.com/))
 - For macOS, our build system assumes that you are using [Homebrew](https://brew.sh)
 - For Windows, our build system assumes that you are using [MSYS2](https://msys2.org)
 
@@ -64,7 +65,7 @@ Should you wish to contribute code to onscripter-insani, we'd ask that you follo
   - SDL-1.2
 - SDL_image
 - SDL_mixer
-  - For MP3 support on Homebrew and MSYS2, you will need to recompile this library, as detailed [here](#sdl_mixer-and-mp3-playback)
+  - For MP3 support, you will need to recompile this library, as detailed [here](#sdl_mixer-and-mp3-playback)
 - SDL_ttf
 
 ### Recommended Libraries
@@ -78,8 +79,20 @@ Should you wish to contribute code to onscripter-insani, we'd ask that you follo
 
 ## Preparing Your Development and Build Environment
 
-### GNU/Linux
-Every Linux distribution will have its own package manager.  Simply make sure you get the required libraries using that package manager.  If you are on a decently modern Linux distribution version, then make sure that you go the SDL2 + SDL1.2-compat route, as opposed to the pure SDL1.2 route.  You will get breakage otherwise.
+### Arch Linux
+Open a terminal window, and run:
+
+```
+yay -S gcc binutils bzip2 lua51 sdl2 sdl12-compat sdl_mixer sdl_image smpeg0 libogg libvorbis harfbuzz libjpeg-turbo
+```
+
+If you don't have ```yay```, you can get it by running:
+
+```
+sudo pacman -S yay
+```
+
+If you want working MP3 playback in your build, you are going to have to rebuild ```sdl_mixer```.  Instructions for this can be found in this [errata section](#sdil-mixer-and-mp3-playback) below.
 
 ### macOS
 After you have installed [Homebrew](https://brew.sh), simply do:
@@ -87,6 +100,8 @@ After you have installed [Homebrew](https://brew.sh), simply do:
 ```
 brew install jpeg jpeg-turbo bzip2 harfbuzz sdl2 sdl12-compat sdl_image sdl_mixer sdl_ttf smpeg libogg libvorbis mad make dylibbundler
 ```
+
+If you want working MP3 playback in your build, you are going to have to rebuild ```sdl_mixer```.  Instructions for this can be found in this [errata section](#sdil-mixer-and-mp3-playback) below.
 
 You will want to make sure that Homebrew's libraries directory:
 
@@ -123,7 +138,7 @@ pacman -S mingw-w64-x86_64-SDL mingw-w64-x86_64-SDL_ttf mingw-w64-x86_64-SDL_mix
 
 ## Compilation Instructions
 
-### GNU/Linux
+### Arch Linux
 ```
 make -f Makefile.Linux.insani
 ```
@@ -298,6 +313,91 @@ All this to say: if you want to contribute to onscripter-insani, **make extra su
 
 #### SDL_mixer and MP3 Playback
 The default precompiled libraries for SDL_mixer on both MSYS2 and Homebrew do not enable support for MP3 playback.  If you want MP3 playback, you are going to have to compile your own SDL_mixer as an end result.  Instructions below:
+
+##### Arch Linux
+The easiest way to get an operational SDL_mixer with MP3 playback is to rebuild the arch package itself.  Begin by running:
+
+```
+sudo pacman -S base-devel asp
+```
+
+After this finishes, go to the directory in which you wish to do your package editing work (we use ```~/Documents/Packages```, for instance), and then run:
+
+```
+asp checkout sdl_mixer
+```
+
+This should create a directory called ```sdl_mixer```.  Therefore:
+
+```
+cd sdl_mixer/repos
+```
+
+Once there, you should have at least one directory that looks like ```community-<architecture>``` (e.g. ```community-x86_64```).  ```cd``` into the appropriate one.  Once there, check to see that there is a file called ```PKGBUILD```.  If there is, do a:
+
+```
+nano PKGBUILD
+```
+
+This will open up a text editor with the ```PKGBUILD``` file opened up.  Make the following changes:
+
+First, the line that reads
+
+```
+pkgrel=<some number; 12 at the time of the writing of this README>
+```
+
+should be changed to some unlikely number of your choice; for instance, we recommend
+
+```
+pkgrel=69
+```
+
+Next, the line that reads
+
+```
+depends=(libmikmod libvorbis sdl)
+```
+
+needs to be changed to
+
+```
+depends=(libmikmod libvorbis sdl smpeg0)
+```
+
+and then the section that reads
+
+```
+build() {
+  cd SDL_mixer-$pkgver
+  ./configure --prefix=/usr --disable-static
+  make
+}
+```
+
+needs to be changed to
+
+```
+build() {
+  cd SDL_mixer-$pkgver
+  ./configure --prefix=/usr --disable-static --enable-music-mp3 --disable-music-mp3-shared --enable-music-ogg --enable-music-flac --disable-music-ogg-shared --disable-music-mod-shared
+  make
+}
+```
+
+Once you have made these changes, hit ```CTRL-O``` to save, then hit ```Enter```.  Then hit ```CTRL-X``` to finish.  All this done, run:
+
+```
+makepkg --clean --syncdeps --rmdeps
+```
+
+and finally, run
+
+```
+sudo pacman -U <zst file here>
+```
+
+where the zst file will be named something like ```sdl_mixer-1.2.12-69-x86_64.pkg.tar.zst```, and you should be off to the proverbial races.
 
 ##### macOS
 The easiest way to achieve a redistributable SDL_mixer 1.2.12 with MP3 playback enabled on Homebrew is to edit the Formula for SDL_mixer.  Do as follows:
