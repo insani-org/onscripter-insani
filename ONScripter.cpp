@@ -82,7 +82,7 @@ void ONScripter::initSDL()
     }
 
 #if defined(INSANI)
-#if defined(WIN32)
+#if defined(WIN32) || defined(LINUX)
 	 SDL_WM_SetIcon(IMG_Load("icon.png"), NULL);
 #endif
 #endif

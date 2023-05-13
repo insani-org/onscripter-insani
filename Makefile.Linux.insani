@@ -23,7 +23,7 @@ EXT_OBJS =
 
 # mandatory: SDL, SDL_ttf, SDL_image, SDL_mixer, bzip2, libjpeg
 DEFS = -DLINUX
-INCS = `sdl-config --cflags`
+INCS = `sdl-config --cflags` -I/usr/include/harfbuzz
 LIBS = `sdl-config --libs` -lSDL_ttf -lSDL_image -lSDL_mixer -lbz2 -ljpeg -lm -lharfbuzz
 
 # recommended: smpeg
@@ -47,11 +47,11 @@ LIBS += -logg -lvorbis -lvorbisfile
 DEFS += -DUSE_CDROM
 
 # optional: avifile
-DEFS += -DUSE_AVIFILE
-INCS += `avifile-config --cflags`
-LIBS += `avifile-config --libs`
-TARGET += simple_aviplay$(EXESUFFIX)
-EXT_OBJS += AVIWrapper$(OBJSUFFIX)
+#DEFS += -DUSE_AVIFILE
+#INCS += `avifile-config --cflags`
+#LIBS += `avifile-config --libs`
+#TARGET += simple_aviplay$(EXESUFFIX)
+#EXT_OBJS += AVIWrapper$(OBJSUFFIX)
 
 # optional: lua
 DEFS += -DUSE_LUA
