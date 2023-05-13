@@ -92,7 +92,7 @@ If you don't have ```yay```, you can get it by running:
 sudo pacman -S yay
 ```
 
-If you want working MP3 playback in your build, you are going to have to rebuild ```sdl_mixer```.  Instructions for this can be found in this [errata section](#sdil-mixer-and-mp3-playback) below.
+If you want working MP3 playback in your build, you are going to have to rebuild ```sdl_mixer```.  Instructions for this can be found in this [errata section](#sdl-mixer-and-mp3-playback) below.
 
 ### macOS
 After you have installed [Homebrew](https://brew.sh), simply do:
@@ -101,7 +101,7 @@ After you have installed [Homebrew](https://brew.sh), simply do:
 brew install jpeg jpeg-turbo bzip2 harfbuzz sdl2 sdl12-compat sdl_image sdl_mixer sdl_ttf smpeg libogg libvorbis mad make dylibbundler
 ```
 
-If you want working MP3 playback in your build, you are going to have to rebuild ```sdl_mixer```.  Instructions for this can be found in this [errata section](#sdil-mixer-and-mp3-playback) below.
+If you want working MP3 playback in your build, you are going to have to rebuild ```sdl_mixer```.  Instructions for this can be found in this [errata section](#sdl-mixer-and-mp3-playback) below.
 
 You will want to make sure that Homebrew's libraries directory:
 
