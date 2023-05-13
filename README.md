@@ -347,10 +347,11 @@ First, the line that reads
 pkgrel=<some number; 12 at the time of the writing of this README>
 ```
 
-should be changed to some unlikely number of your choice; for instance, we recommend
+should be changed to some unlikely number of your choice, and we need to add a line so ```yay``` and ```pacman``` later ignore any upstream updates to ```sdl_mixer```; you will want something like:
 
 ```
 pkgrel=69
+groups=('modified')
 ```
 
 Next, the line that reads
@@ -385,7 +386,27 @@ build() {
 }
 ```
 
-Once you have made these changes, hit ```CTRL-O``` to save, then hit ```Enter```.  Then hit ```CTRL-X``` to finish.  All this done, run:
+Once you have made these changes, hit ```CTRL-O``` to save, then hit ```Enter```.  Then hit ```CTRL-X``` to finish.  Then, run:
+
+```
+sudo nano /etc/pacman.conf
+```
+
+go to the line that reads reads
+
+```
+#IgnoreGroup =
+```
+
+and modify it so it reads
+
+```
+IgnoreGroup = modified
+```
+
+Once you've made this modification, hit ```CTRL-O``` to save, then hit ```Enter```.  Then hit ```CTRL-X``` to finish.
+
+All this done, run:
 
 ```
 makepkg --clean --syncdeps --rmdeps
