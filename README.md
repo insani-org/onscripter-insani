@@ -312,7 +312,7 @@ That is because these files have several strings that *must be in their original
 All this to say: if you want to contribute to onscripter-insani, **make extra sure that these files are encoded as SHIFT_JIS and not UTF8**.  You will cause random crashes all over the place, usually upon startup in UTF8 mode, if you do not.
 
 #### SDL_mixer and MP3 Playback
-The default precompiled libraries for SDL_mixer on both MSYS2 and Homebrew do not enable support for MP3 playback.  If you want MP3 playback, you are going to have to compile your own SDL_mixer as an end result.  Instructions below:
+The default precompiled libraries for SDL_mixer on most platforms (including Homebrew and Arch Linux, for instance) do not enable support for MP3 playback.  If you want MP3 playback, you are going to have to compile your own SDL_mixer as an end result.  Instructions below:
 
 ##### Arch Linux
 The easiest way to get an operational SDL_mixer with MP3 playback is to rebuild the arch package itself.  Begin by running:
