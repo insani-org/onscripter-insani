@@ -17,13 +17,19 @@ cp "$APP_NAME.icns" "$APP_NAME.app/Contents/Resources/$APP_NAME.icns"
 dylibbundler -od -b -x "$APP_NAME.app/Contents/MacOS/$APP_NAME" -p @executable_path/../Frameworks/ -d "$APP_NAME.app/Contents/Frameworks/"
 
 # Look for libSDL2-2.0.0.dylib in the right place depending on whether we're on an arm64 or an x86-64 Mac
-if [[ $ARCH = "arm64" ]]
+if [ -d "/opt/local/etc/macports" ]
 then
-    SDL2LOC=$(readlink /opt/homebrew/lib/libSDL2-2.0.0.dylib)
-    cp /opt/homebrew/lib/$SDL2LOC "$APP_NAME.app/Contents/Frameworks"
+    echo "Macports detected; building Macports-based universal app bundle"
 else
-    SDL2LOC=$(readlink /usr/local/lib/libSDL2-2.0.0.dylib)
-    cp /usr/local/lib/$SDL2LOC "$APP_NAME.app/Contents/Frameworks"
+    echo "Assuming Homebrew; building Homebrew-based thin app bundle"    
+    if [[ $ARCH = "arm64" ]]
+    then
+        SDL2LOC=$(readlink /opt/homebrew/lib/libSDL2-2.0.0.dylib)
+        cp /opt/homebrew/lib/$SDL2LOC "$APP_NAME.app/Contents/Frameworks"
+    else
+        SDL2LOC=$(readlink /usr/local/lib/libSDL2-2.0.0.dylib)
+        cp /usr/local/lib/$SDL2LOC "$APP_NAME.app/Contents/Frameworks"
+    fi
 fi
 
 echo "<?xml version=\"1.0\" encoding=\"UTF-8\"?>
@@ -53,9 +59,29 @@ echo "<?xml version=\"1.0\" encoding=\"UTF-8\"?>
 </dict>
 </plist>" > "$APP_NAME.app/Contents/Info.plist"
 
-rm *.o
-rm onscripter
-rm nsaconv
-rm nsadec
-rm sarconv
-rm sardec
+if [ -f "ONScripter.o" ]
+then
+    rm *.o
+fi
+if [ -f "onscripter" ]
+then
+    rm onscripter
+fi
+if [ -f "nsaconv" ]
+then
+    rm nsaconv
+fi
+if [ -f "nsadec" ]
+then
+    rm nsadec
+fi
+if [ -f "sarconv" ]
+then
+    rm sarconv
+fi
+if [ -f "sardec" ]
+then
+    rm sardec
+fi
+
+lipo -info "$APP_NAME.app/Contents/MacOS/$APP_NAME"

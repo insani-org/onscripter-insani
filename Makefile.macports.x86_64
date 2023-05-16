@@ -1,0 +1,31 @@
+INCS = `sdl-config --cflags` `smpeg-config --cflags` `freetype-config --cflags` -I/opt/local/include/harfbuzz
+
+# Turn this on to debug
+#LIBS = `sdl-config --libs` `smpeg-config --libs` `freetype-config --libs` -lSDL_ttf -lSDL_image -lSDL_mixer -lbz2 -lm -ljpeg -lmpg123 -F/Library/Frameworks -framework AVFoundation -framework CoreFoundation -framework Foundation -framework SDL2 -framework Cocoa
+# Turn this on for redist build
+LIBS = `sdl-config --libs` `smpeg-config --libs` `freetype-config --libs` -lSDL_ttf -lSDL_image -lSDL_mixer -lbz2 -lm -ljpeg -lharfbuzz -framework AVFoundation -framework CoreFoundation -framework Foundation
+DEFS = -DMACOSX -DUSE_CDROM -DUTF8_CAPTION -DUSE_OGG_VORBIS -DUTF8_FILESYSTEM -DINSANI -DENABLE_1BYTE_CHAR -DFORCE_1BYTE_CHAR
+#DEFS += -DAPPBUNDLE
+
+EXESUFFIX =
+OBJSUFFIX = .o
+
+.SUFFIXES:
+.SUFFIXES: $(OBJSUFFIX) .cpp .h
+
+CC = clang++ -target x86_64-apple-macos
+# Turn this on to debug
+#LD = c++ -fsanitize=address -fno-omit-frame-pointer -o
+# Turn this on for redist build
+LD = clang++ -target x86_64-apple-macos -o
+
+# Turn this on to debug
+#CFLAGS = -g -ObjC++ -Wall -fsanitize=address -fno-omit-frame-pointer -Wpointer-arith -pipe -c $(INCS) $(DEFS)
+# Turn this on for redist build
+CFLAGS = -target x86_64-apple-macos -g -ObjC++ -O3 -Wall -Wpointer-arith -pipe -c $(INCS) $(DEFS)
+LDFLAGS = -target x86_64-apple-macos -o
+RM = rm -f
+
+TARGET = onscripter$(EXESUFFIX) sardec$(EXESUFFIX) nsadec$(EXESUFFIX) sarconv$(EXESUFFIX) nsaconv$(EXESUFFIX)
+
+include Makefile.onscripter
