@@ -391,12 +391,12 @@ int main( int argc, char **argv )
     switch(uwu)
     {
         case 4:
-            printf("UWUCHAAAAAAAAAAAAAAAT~!!!!!!!!!\n", INSANI_VERSION, " -copychat-");
-            printf("Freedom to cat the cat; beginning-end\n");
+            printf("UWUCHAAAAAAAAAAAAAAAT~!!!!!!!!!\n%s -copychat-\n", INSANI_VERSION);
+            printf("Ego te absolvo, in nomine cattus\n");
             break;
         case 3:
-            printf("Autodetect: UWUNSCRIPTER\n", INSANI_VERSION);
-            printf("rm: cannot remove GPL: user is in the group software-freedom", INSANI_VERSION);
+            printf("Autodetect: UWUNSCRIPTER %s\n", INSANI_VERSION);
+            printf("rm: cannot remove GPL: user is in the group software-freedom\n");
             break;
         case 2:
             printf("HEWWO UWU %s UWUS YOUWU\n", INSANI_VERSION);
