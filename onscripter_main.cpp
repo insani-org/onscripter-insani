@@ -25,7 +25,7 @@
 #include "version.h"
 
 #if defined(INSANI)
-#define INSANI_VERSION "202305xx \"FC01\""
+#define INSANI_VERSION "20230523 \"FC01\""
 #endif
 
 ONScripter ons;
