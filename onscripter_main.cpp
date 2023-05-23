@@ -387,9 +387,17 @@ int main( int argc, char **argv )
     printf("ONScripter version %s(%d.%02d)\n", ONS_VERSION, NSC_VERSION/100, NSC_VERSION%100 );
 
 #if defined(INSANI)
-    int uwu = rand() % 3;
+    int uwu = rand() % 5;
     switch(uwu)
     {
+        case 4:
+            printf("UWUCHAAAAAAAAAAAAAAAT~!!!!!!!!!\n", INSANI_VERSION, " -copychat-");
+            printf("Freedom to cat the cat; beginning-end\n");
+            break;
+        case 3:
+            printf("Autodetect: UWUNSCRIPTER\n", INSANI_VERSION);
+            printf("rm: cannot remove GPL: user is in the group software-freedom", INSANI_VERSION);
+            break;
         case 2:
             printf("HEWWO UWU %s UWUS YOUWU\n", INSANI_VERSION);
             break;
