@@ -1123,9 +1123,9 @@ int ScriptHandler::readScript( char *path )
     if (encrypt_mode == 0){
         fclose(fp);
         for (i=1 ; i<100 ; i++){
-            sprintf(filename, "%d.txt", i);
+            sprintf(filename, "%d%s", i, file_extension);
             if ((fp = fopen(filename, "rb")) == NULL){
-                sprintf(filename, "%02d.txt", i);
+                sprintf(filename, "%02d%s", i, file_extension);
                 fp = fopen(filename, "rb");
             }
             if (fp){
