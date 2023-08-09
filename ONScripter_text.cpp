@@ -1472,6 +1472,8 @@ int ONScripter::textCommand()
         // now get the first two words in the script
         char *current_word = strtok(temp_text, " ");
         char *next_word = strtok(NULL, " ");
+        if (current_word == NULL)
+            current_word = "";
 
         // check for padding spaces in the first word
         if(&current_word[0] != &temp_text[0])
