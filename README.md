@@ -525,6 +525,19 @@ ONScripter.  Contact us through Github instead:
 ## Changelog
 *For more detailed release notes, please go [here](https://github.com/insani-org/onscripter-insani/releases).*
 
+### 20230523 "FC01"
+#### All
+- Fixed an error by which every other letter was skipped when at a choice point or other system string
+- Version string updated to 20230523 "FC01"
+#### Arch
+- Updated Makefile to allow proper compilation on Arch
+- **Highly** experimental static Makefile; it likely will not work for you
+#### macOS
+- Starting with this release, **all binaries are Universal binaries, capable of running on both Intel and Apple Silicon Macs**
+  - This system requires MacPorts rather than Homebrew
+  - These binaries require macOS 11 "Big Sur" or above as a result
+- ```makedist.MacOSX.sh``` updated to 20230501 "FC01"
+
 ### 20230501 "élf"
 #### All
 - Integrated harfbuzz for accuracy of glyph shaping and kerning
@@ -949,6 +962,19 @@ Veuillez vous abstenir de contacter Ogapee à propos de tout ce que vous trouver
 
 ## Journal des modifications
 *Pour des notes de mise à jour plus détaillées, veuillez vous rendre [ici](https://github.com/insani-org/onscripter-insani/releases).*
+
+### 20230523 'FC01'
+#### Tous
+- Correction d'une erreur qui faisait sauter toutes les autres lettres lorsque l'on se trouvait à un point de choix ou à une autre chaîne système
+- Chaîne de caractères de version mis à jour 20230523 'FC01'
+#### Arch
+- Makefile mis à jour pour compilation sur Arch
+- Makefile statique **hautement expérimental** ; il est probable qu'il ne fonctionnera pas pour vous
+#### macOS
+- À partir de cette version, **tous les binaires sont des binaires universels, capables de fonctionner à la fois sur les Mac Intel et Apple Silicon**
+  - Ceci requiert MacPorts et non Homebrew
+  - Ces binaires demandent alors macOS 11 'Big Sur' ou sup.
+- ```makedist.MacOSX.sh``` mis à jour 20230501 'FC01'
 
 ### 20230501 'élf'
 #### Tous
