@@ -631,7 +631,7 @@ A copy of the GPLv2 can be found under ```COPYING``` in this source directory.
 # Français
 
 ## Dernière mise à jour
-2023-04-13
+2023-10-03
 
 ## Introduction et histoire
 onscripter-insani est une branche d'[ONScripter](https://onscripter.osdn.jp/onscripter.html), qui est un projet actif en date de 2022.  ONScripter est une implémentation libre, clone de NScripter -- un moteur de création de romans vidéoludiques qui a sans doute contribué à l'essor de ceux-ci au Japon.  De nombreuses entreprises ont utilisé NScripter pour créer certains des classiques du genre, comme par exemple *Mizuiro* de Nekonekosoft et *Tsukihime* de TYPE-MOON.
@@ -667,12 +667,14 @@ Tous les changements effectués par onscripter-insani sont enveloppés dans des 
 Si vous souhaitez contribuer au code d'onscripter-insani, nous vous demandons de suivre cette convention.
 
 ## Bibliothèques/Utilitaires requis et recommandés
+- Pour GNU/Linux, le système de compilation suppose l'utilisation de [Arch](https://archlinux.org/) ou dérivé - e.g. [EndeavourOS](https://endeavouros.com/)
 - Pour macOS, le système de compilation suppose l'utilisation de [Homebrew](https://brew.sh)
 - Pour Windows, le système de compilation suppose l'utilisation de [MSYS2](https://msys.org)
 
 ### Bibliothèques requises
 - libjpeg
 - bzip2
+- harfbuzz
 - Au choix :
   - SDL-2.0 **et** SDL1.2-compat
   - SDL-1.2
@@ -685,7 +687,6 @@ Si vous souhaitez contribuer au code d'onscripter-insani, nous vous demandons de
 - SMPEG
 - libogg
 - libvorbis
-- libmad
 
 ### Utilitaires requis (macOS)
 - dylibbundler
@@ -696,12 +697,29 @@ Si vous souhaitez contribuer au code d'onscripter-insani, nous vous demandons de
 ### GNU/Linux
 Chaque distribution GNU/Linux dispose de son propre gestionnaire de paquets.  Assurez-vous simplement d'obtenir les bibliothèques nécessaires en utilisant ce gestionnaire de paquets.  Si vous êtes sur une dist. plus ou moins moderne, assurez-vous d'opter pour la SDL2 + SDL1.2-compat, par opposition à SDL1.2 pur.  Vous aurez des pannes dans le cas contraire.
 
+#### Arch
+Ouvrez un terminal, puis entrez :
+
+```
+yay -S gcc binutils bzip2 lua51 sdl2 sdl12-compat sdl_mixer sdl_image smpeg0 libogg libvorbis harfbuzz libjpeg-turbo
+```
+
+Si vous ne disposez pas de ```yay```, installez-le via :
+
+```
+sudo pacman -S yay
+```
+
+Si vous voulez une lecture MP3 fonctionnelle dans votre version, vous devrez recompiler ```sdl_mixer```.  Les instructions pour ce faire sont section [errata](#sdl_mixer-et-lecture-de-mp3) plus bas.
+
 ### macOS
 Après avoir installé [Homebrew](https://brew.sh), il suffit de faire :
 
 ```
 brew install jpeg jpeg-turbo bzip2 sdl2 sdl12-compat sdl_image sdl_mixer sdl_ttf smpeg libogg libvorbis make dylibbundler
 ```
+
+Si vous voulez une lecture MP3 fonctionnelle dans votre version, vous devrez recompiler ```sdl_mixer```.  Les instructions pour ce faire sont section [errata](#sdl_mixer-et-lecture-de-mp3) plus bas.
 
 Vous devrez vous assurer que le répertoire des bibliothèques de Homebrew
 
@@ -741,7 +759,7 @@ pacman -S mingw-w64-x86_64-SDL mingw-w64-x86_64-SDL_ttf mingw-w64-x86_64-SDL_mix
 make -f Makefile.Linux.insani
 ```
 
-Sous GNU/Linux et gcc, vous pouvez assez facilement faire une compilation statique de votre binaire en passant l'option ```-static``` à gcc au bon endroit dans le Makefile.  Vous pourriez être intéressé par [ceci](https://github.com/insani-org/onscripter-en-msys2-configure-makefile) pour un exemple de Makefile (pour notre projet jumeau) qui résulte en un binaire portable compilé statiquement - bien que pour Windows ; et non, onscripter-insani ne se compilera pas avec ce Makefile donc n'essayez pas.
+Sous GNU/Linux (encore une fois, préférez Arch comme indiqué) et gcc, vous pouvez assez facilement faire une compilation statique de votre binaire en passant l'option ```-static``` à gcc au bon endroit dans le Makefile.  Vous pourriez être intéressé par [ceci](https://github.com/insani-org/onscripter-en-msys2-configure-makefile) pour un exemple de Makefile (pour notre projet jumeau) qui résulte en un binaire portable compilé statiquement - bien que pour Windows ; et non, onscripter-insani ne se compilera pas avec ce Makefile donc n'essayez pas.
 
 ### macOS
 ```
@@ -932,12 +950,72 @@ Veuillez vous abstenir de contacter Ogapee à propos de tout ce que vous trouver
 ## Journal des modifications
 *Pour des notes de mise à jour plus détaillées, veuillez vous rendre [ici](https://github.com/insani-org/onscripter-insani/releases).*
 
+### 20230501 'élf'
+#### Tous
+- Intégration de harfbuzz pour la précision de la mise en forme des glyphes et du crénage
+- Vrai crénage en mode UTF8 mode pour les fontes proportionnelles
+  - Le crénage ne fonctionnera pas pour les faux styles de fonte
+  - En raison de l'intégration de harfbuzz, cela fonctionnera avec toutes les fontes qui ont une table ```kern``` ou une table ```GPOS``` (c'est à dire toutes les fontes modernes)
+- Précision en virgule flottante pour le placement des glyphes
+- Plusieurs corrections de bogues sont maintenant déclenchées par ```english_mode``` plutôt que par ```legacy_english_mode```
+- Chaîne de caractères de version mis à jour 20230501 'élf'
+#### macOS
+- ```makedist.MacOSX.sh``` mis à jour 20230501 'élf'
+#### Note
+- Voir ```README.md```, section [crénage et ligatures](https://github.com/insani-org/onscripter-insani#kerning-and-ligatures) et comment activer le mode vrai crénage
+
+### 20230423 'D3'
+#### Tous
+- Les vrais gras, italiques, et gras italiques sont pris en charge par des fichiers de fontes supplémentaires (mais pas de crénage convenable pour le moment) :
+  - ```default-b.ttf/.ttc/.otf/.otc``` pour le gras
+  - ```default-i.ttf/.ttc/.otf/.otc``` pour l'italique
+  - ```default-bi.ttf/.ttc/.otf/.otc``` pour le gras italique
+  - Tous les fichiers de fonts doivent avoir la même extension de fichier ; en d'autres mots, tous doivent être ```.ttf``` ou tous ```.ttc``` ou tous ```.otf``` ou tous ```.otc```
+- Il est possible de mélanger et d'assortir des fontes entièrement différentes grâce à l'option ci-dessus
+- Métriques de glyphes et indices appropriés pour les faux styles de fontes (mais pas de crénage convenable pour le moment)
+- ```0.utf.txt``` et ```00.utf.txt``` sont désormais des noms de script acceptables pour les fichiers de script codés en UTF8
+- Prise en charge *hautement expérimentale* pour le soulignage (```~u~```, que c'est prévisible !)
+  - À utiliser à vos propres risques
+  - Hic sunt dracones
+  - OMGWTFOTL :3
+- Chaîne de caractères de version mis à jour 20230423 'D3'
+#### macOS
+- ```makedist.MacOSX.sh``` mis à jour 20230423 'D3'
+#### Note
+- Voir ```README.md```, section [updated font requirements](https://github.com/insani-org/onscripter-insani#fonts)
+
+### 20230420 'Capcom'
+#### Tous
+- Nouveau mode UTF8
+  - onscripter-insani accepte maintenant les fichiers de script codés en UTF8 ; le fichier de script doit être nommé ```0.utf``` (non ```0.utf.txt```) pour l'autodétection
+- Prise en charge des fontes proportionnelles en mode UTF8
+- Nouveau système de coupe du texte en pixels
+  - Ignore de manière appropriée la longueur des commandes de texte en ligne, contrairement au système précédent (```!s```, ```!sd```, ```!w```, ```!d```, ```#nnnnnn```, ```~i~```, ```~b~```, ```~bi~```)
+  - Vraiment universel ; fonctionne avec fontes non-proportionnelles comme proportionnelles, en mode UTF8 et SHIFT_JIS
+  - Dispose de règles spéciales pour les tirets moyens, les tirets longs, et l'espacement français pour les guillemets en mode UTF8
+  - Espaces insécable (U+00A0) respectées en mode UTF8
+- Faux styles (gras et italique) pour toutes fontes
+  - Utilisez ```~i~```, ```~b~```, and ```~bi~``` comme commandes en ligne ; la première active le style, et l'autre le désactive
+    - ```Voici l'~i~italique~i~ et le ~b~gras~b~ et ceci est du ~bi~gras italique~bi~```
+- Compatibilité élargie des fichiers de fontes ; onscripter-insani accepte désormais les fontes OpenType, les collections TrueType, et les collections OpenType comme suit :
+  - ```default.ttf```
+  - ```default.ttc```
+  - ```default.otf```
+  - ```default.otc```
+#### macOS
+- Si aucun ```default.ttf/.ttc/.otf/.otc``` n'est trouvé, utilise la fonte Hiragino Maru Gothic
+- SDL_mixer recompilé avec ```--disable-music-mp3-shared```, rendant la lecture MP3 fonctionnelle pour les app bundles macOS *pour de vrai de vrai de vrai c'te fois*
+  - Mise à jour de ```README.md```, section [SDL_mixer et lecture de MP3](https://github.com/insani-org/onscripter-insani#sdl_mixer-et-lecture-de-mp3) avec des instructions mise à jour de complilation
+- ```makedist.MacOSX.sh``` mis à jour 20230420
+#### Windows
+- Si aucun ```default.ttf/.ttc/.otf/.otc``` n'est trouvé, utilise la fonte MS Gothic
+
 ### 20230413-1 'BaseSon'
 #### Tous
 - Avec 100 % plus de capacité à lire des MP3
   - ```README.md``` contient maintenant des informations sur la compilation de votre propre SDL_mixer avec prise en charge des MP3
 #### macOS
-- ```makedist.MacOSX.sh``` mis à jour vers 20230413-1
+- ```makedist.MacOSX.sh``` mis à jour 20230413-1
 
 ### 20230413 'Baldr'
 #### Tous
